@@ -6,6 +6,9 @@ class Settings(BaseSettings):
     jwt_secret: str = "development-only-change-me"
     admin_username: str = "admin"
     admin_password: str = "change-me"
+    # Reserved for the optional SRS email-alert integration.
+    smtp_host: str = ""
+    smtp_port: int = 587
     # SRS-tunable values: keep them in configuration, not source code.
     rapid_submission_limit: int = 3
     rapid_submission_window_seconds: int = 60
@@ -17,4 +20,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-
