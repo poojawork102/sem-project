@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DSADPS Admin Dashboard</title>
+  <style>
+    body{font:15px system-ui,sans-serif;max-width:1100px;margin:32px auto;padding:0 18px;background:#f8fafc;color:#172033}h1{margin-bottom:4px}.muted{color:#5b6475}section{background:white;border:1px solid #dbe2ea;border-radius:8px;padding:18px;margin:20px 0}input,button,select{padding:9px;margin:3px;border:1px solid #b7c2d0;border-radius:5px}button{background:#1d4ed8;color:#fff;cursor:pointer}table{width:100%;border-collapse:collapse;margin-top:12px}td,th{padding:10px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:top}th{background:#eff6ff}.block{color:#b91c1c;font-weight:700}.captcha{color:#a16207;font-weight:700}.allow{color:#15803d;font-weight:700}#app{display:none}
+  </style>
+</head>
+<body>
+  <h1>Data Shuffling Attack Detection</h1><p class="muted">Live review console. Refreshes every five seconds.</p>
+  <section id="login"><h2>Admin login</h2><input id="username" placeholder="Username" value="admin"><input id="password" type="password" placeholder="Password"><button onclick="login()">Sign in</button><p id="error" class="block"></p></section>
+  <main id="app"><section><button onclick="downloadReport('daily.csv')">Download daily CSV</button><button onclick="downloadReport('weekly-trend.png')">Download weekly graph</button><button onclick="load()">Refresh now</button><span id="summary" class="muted"></span></section><section><h2>Incoming decisions</h2><table><thead><tr><th>Time</th><th>Applicant / IP</th><th>Score</th><th>Why</th><th>Decision</th><th>Override</th></tr></thead><tbody id="rows"></tbody></table></section></main>
+  <script>
+    let token=''; const headers=()=>({Authorization:'Bearer '+token});
+    async function login(){const r=await fetch('/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:username.value,password:password.value})});if(!r.ok){error.textContent='Login failed';return}token=(await r.json()).access_token;login.parentElement.style.display='none';app.style.display='block';load();setInterval(load,5000)}
+    async function load(){const [a,s]=await Promise.all([fetch('/v1/admin/activity?limit=100',{headers:headers()}),fetch('/v1/admin/reports/summary',{headers:headers()})]);if(!a.ok)return;const items=await a.json(),sum=await s.json();summary.textContent=` Last 7 days: ${sum.total_flagged_or_logged} decisions`;rows.innerHTML=items.map(x=>`<tr><td>${new Date(x.created_at+'Z').toLocaleString()}</td><td>${x.full_name}<br><small>${x.email}<br>${x.ip_address}</small></td><td>${x.risk_score}</td><td>${x.reasons.join('<br>')}</td><td class="${x.final_action}">${x.final_action}</td><td><select id="action-${x.id}"><option>allow</option><option>captcha</option><option>block</option></select><button onclick="override(${x.id})">Save</button></td></tr>`).join('')}
+    async function override(id){const action=document.getElementById('action-'+id).value;const note=prompt('Reason for this admin decision (required):');if(!note)return;await fetch(`/v1/admin/activity/${id}/override`,{method:'PUT',headers:{...headers(),'Content-Type':'application/json'},body:JSON.stringify({action,note})});load()}
+    async function downloadReport(kind){const r=await fetch('/v1/admin/reports/'+kind,{method:'POST',headers:headers()});const b=await r.blob(),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=kind;a.click();URL.revokeObjectURL(u)}
+  </script>
+</body></html>

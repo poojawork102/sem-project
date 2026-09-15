@@ -1,0 +1,26 @@
+services:
+  api:
+    build: .
+    env_file: .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./reports:/app/reports
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: dsadps
+      POSTGRES_PASSWORD: dsadps_dev_password
+      POSTGRES_DB: dsadps
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dsadps -d dsadps"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+
