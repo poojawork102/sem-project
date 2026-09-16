@@ -10,6 +10,7 @@ Backend-first implementation of the **Data Shuffling Attack Detection and Preven
 | REQ-2 duplicate detection | exact email and 90% name-similarity checks; indexed database fields |
 | REQ-3 per-IP rate limiting | configurable 3 submissions per minute signal |
 | REQ-4 and REQ-5 risk score | explainable weighted score: IP 40%, duplicate 30%, velocity 30% |
+| AI anomaly detection | optional Isolation Forest trained only from approved normal submissions; shown separately from the SRS rule score |
 | REQ-6 to REQ-8 actions | allow below 40, CAPTCHA at 40–80, block above 80 |
 | REQ-9 and REQ-10 dashboard | authenticated live dashboard, activity feed, and admin override endpoint |
 | REQ-11 reporting | midnight UTC daily CSV generation, authenticated export, and weekly trend graph |
@@ -48,6 +49,16 @@ Backend-first implementation of the **Data Shuffling Attack Detection and Preven
    ```powershell
    pytest
    ```
+
+## Train the AI agent
+
+The AI model needs at least 20 **normal, allowed** submissions before it can learn a baseline. With the API running, use a second terminal:
+
+```powershell
+python scripts/simulate_normal_traffic.py --count 25
+```
+
+Log in to the dashboard, click **Train AI agent**, then run a new attack simulation. The AI column will show a 0-100 anomaly score and `normal` or `anomaly`. The original rule score remains the authoritative SRS decision because it is directly explainable.
 
 ## Admin workflow
 

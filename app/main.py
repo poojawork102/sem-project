@@ -5,11 +5,12 @@ from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from .config import settings
-from .database import Base, engine, get_db
+from .database import ensure_schema, get_db
 from .detector import analyse_submission, choose_action
 from .models import ActivityLog, Application
 from .reports import daily_csv, summary, weekly_trend_png
 from .scheduler import scheduler, start_scheduler
+from .ml_agent import assess as assess_ai, status as ai_status, train as train_ai
 from .schemas import DecisionOut, LoginIn, OverrideIn, SubmissionIn
 from .security import create_access_token, require_admin
 
@@ -19,7 +20,7 @@ app = FastAPI(title="DSADPS Agent API", version="1.0.0")
 @app.on_event("startup")
 def start() -> None:
     Path("data").mkdir(exist_ok=True)
-    Base.metadata.create_all(bind=engine)
+    ensure_schema()
     start_scheduler()
 
 
@@ -50,15 +51,16 @@ def login(data: LoginIn):
 def assess_submission(data: SubmissionIn, db: Session = Depends(get_db)):
     """Integration endpoint the admission portal calls over TLS in production."""
     score, reasons = analyse_submission(db, data.full_name, data.email, data.ip_address)
+    ai_score, agent_status = assess_ai(db, data.full_name, str(data.email), data.ip_address, len(json.dumps(data.payload).encode("utf-8")))
     action = choose_action(score)
     application = Application(full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, status=action, payload=json.dumps(data.payload))
     db.add(application)
     db.flush()
-    log = ActivityLog(application_id=application.id, full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, risk_score=score, suggested_action=action, final_action=action, reasons=reasons)
+    log = ActivityLog(application_id=application.id, full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, risk_score=score, ai_anomaly_score=ai_score, ai_status=agent_status, suggested_action=action, final_action=action, reasons=reasons)
     db.add(log)
     db.commit()
     db.refresh(log)
-    return DecisionOut(activity_id=log.id, risk_score=score, action=action, reasons=reasons, created_at=log.created_at)
+    return DecisionOut(activity_id=log.id, risk_score=score, ai_anomaly_score=ai_score, ai_status=agent_status, action=action, reasons=reasons, created_at=log.created_at)
 
 
 @app.get("/v1/admin/activity")
@@ -82,6 +84,16 @@ def override(activity_id: int, data: OverrideIn, admin: str = Depends(require_ad
 @app.get("/v1/admin/reports/summary")
 def report_summary(_admin: str = Depends(require_admin), db: Session = Depends(get_db)):
     return summary(db)
+
+
+@app.get("/v1/admin/ai/status")
+def agent_status(_admin: str = Depends(require_admin)):
+    return ai_status()
+
+
+@app.post("/v1/admin/ai/train")
+def train_agent(_admin: str = Depends(require_admin), db: Session = Depends(get_db)):
+    return train_ai(db)
 
 
 @app.post("/v1/admin/reports/daily.csv")

@@ -27,9 +27,10 @@ class ActivityLog(Base):
     ip_address: Mapped[str] = mapped_column(String(64), index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
     risk_score: Mapped[float] = mapped_column(Float)
+    ai_anomaly_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    ai_status: Mapped[str] = mapped_column(String(32), default="not_trained")
     suggested_action: Mapped[str] = mapped_column(String(24))
     final_action: Mapped[str] = mapped_column(String(24))
     reasons: Mapped[dict] = mapped_column(JSON)
     admin_override_by: Mapped[str | None] = mapped_column(String(160), nullable=True)
     admin_note: Mapped[str | None] = mapped_column(Text, nullable=True)
-

@@ -13,6 +13,8 @@ class SubmissionIn(BaseModel):
 class DecisionOut(BaseModel):
     activity_id: int
     risk_score: float
+    ai_anomaly_score: float | None = None
+    ai_status: str
     action: Literal["allow", "captcha", "block"]
     reasons: list[str]
     created_at: datetime
@@ -26,4 +28,3 @@ class OverrideIn(BaseModel):
 class LoginIn(BaseModel):
     username: str
     password: str
-
