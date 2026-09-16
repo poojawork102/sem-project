@@ -1,6 +1,6 @@
 # DSADPS Agent API
 
-Backend-first implementation of the **Data Shuffling Attack Detection and Prevention System** described in the supplied SRS. It is designed as a separate service that an admission portal calls before committing an application.
+Working college-admission portal plus the **Data Shuffling Attack Detection and Prevention System** described in the supplied SRS. Every applicant submission passes through the security agent before being recorded.
 
 ## What is implemented
 
@@ -36,7 +36,7 @@ Backend-first implementation of the **Data Shuffling Attack Detection and Preven
    uvicorn app.main:app --reload
    ```
 
-4. Open `http://127.0.0.1:8000/` for the admin dashboard or `http://127.0.0.1:8000/docs` for the API. Use `POST /v1/submissions` as the admission portal integration endpoint.
+4. Open `http://127.0.0.1:8000/` for the applicant admission portal, `http://127.0.0.1:8000/admin` for the protected dashboard, or `http://127.0.0.1:8000/docs` for the API. Use `POST /v1/submissions` as the integration endpoint for an external admission portal.
 
 5. Simulate repeated bot submissions in a second terminal.
 

@@ -1,7 +1,8 @@
 import json
+import secrets
 from datetime import datetime, timedelta
 from pathlib import Path
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from .config import settings
@@ -11,7 +12,7 @@ from .models import ActivityLog, Application
 from .reports import daily_csv, summary, weekly_trend_png
 from .scheduler import scheduler, start_scheduler
 from .ml_agent import assess as assess_ai, status as ai_status, train as train_ai
-from .schemas import DecisionOut, LoginIn, OverrideIn, SubmissionIn
+from .schemas import ApplicationStatusIn, DecisionOut, LoginIn, OverrideIn, PortalApplicationIn, PortalDecisionOut, SubmissionIn
 from .security import create_access_token, require_admin
 
 app = FastAPI(title="DSADPS Agent API", version="1.0.0")
@@ -36,6 +37,11 @@ def health():
 
 
 @app.get("/", include_in_schema=False)
+def admission_portal():
+    return FileResponse("app/static/portal.html")
+
+
+@app.get("/admin", include_in_schema=False)
 def dashboard():
     return FileResponse("app/static/index.html")
 
@@ -47,13 +53,13 @@ def login(data: LoginIn):
     return {"access_token": create_access_token(data.username), "token_type": "bearer"}
 
 
-@app.post("/v1/submissions", response_model=DecisionOut)
-def assess_submission(data: SubmissionIn, db: Session = Depends(get_db)):
-    """Integration endpoint the admission portal calls over TLS in production."""
+def process_submission(data: SubmissionIn, db: Session) -> DecisionOut:
+    """Shared security gate used by the portal and a future external portal integration."""
     score, reasons = analyse_submission(db, data.full_name, data.email, data.ip_address)
     ai_score, agent_status = assess_ai(db, data.full_name, str(data.email), data.ip_address, len(json.dumps(data.payload).encode("utf-8")))
     action = choose_action(score)
-    application = Application(full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, status=action, payload=json.dumps(data.payload))
+    reference_code = f"CAP-{datetime.utcnow():%Y%m%d}-{secrets.token_hex(3).upper()}"
+    application = Application(full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, status=action, reference_code=reference_code, phone=str(data.payload.get("phone", "")), program=str(data.payload.get("program", "")), payload=json.dumps(data.payload))
     db.add(application)
     db.flush()
     log = ActivityLog(application_id=application.id, full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, risk_score=score, ai_anomaly_score=ai_score, ai_status=agent_status, suggested_action=action, final_action=action, reasons=reasons)
@@ -61,6 +67,30 @@ def assess_submission(data: SubmissionIn, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(log)
     return DecisionOut(activity_id=log.id, risk_score=score, ai_anomaly_score=ai_score, ai_status=agent_status, action=action, reasons=reasons, created_at=log.created_at)
+
+
+@app.post("/v1/submissions", response_model=DecisionOut)
+def assess_submission(data: SubmissionIn, db: Session = Depends(get_db)):
+    """Integration endpoint for an existing admission portal over TLS in production."""
+    return process_submission(data, db)
+
+
+@app.post("/v1/portal/applications", response_model=PortalDecisionOut)
+def submit_portal_application(data: PortalApplicationIn, request: Request, db: Session = Depends(get_db)):
+    client_ip = request.client.host if request.client else "unknown"
+    payload = data.model_dump(exclude={"full_name", "email"})
+    result = process_submission(SubmissionIn(full_name=data.full_name, email=data.email, ip_address=client_ip, payload=payload), db)
+    application = db.get(Application, db.get(ActivityLog, result.activity_id).application_id)
+    return PortalDecisionOut(**result.model_dump(), reference_code=application.reference_code or "")
+
+
+@app.post("/v1/portal/application-status")
+def portal_application_status(data: ApplicationStatusIn, db: Session = Depends(get_db)):
+    application = db.query(Application).filter(Application.reference_code == data.reference_code.upper(), Application.email == str(data.email)).first()
+    if not application:
+        raise HTTPException(status_code=404, detail="No application matches that reference and email.")
+    labels = {"allow": "Application received", "captcha": "Verification required", "block": "Application held for review"}
+    return {"reference_code": application.reference_code, "program": application.program, "submitted_at": application.submitted_at, "status": labels.get(application.status, application.status)}
 
 
 @app.get("/v1/admin/activity")
