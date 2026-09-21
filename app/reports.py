@@ -1,6 +1,8 @@
 import csv
 from datetime import datetime, timedelta
 from pathlib import Path
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from sqlalchemy import func
 from sqlalchemy.orm import Session

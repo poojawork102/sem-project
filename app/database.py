@@ -29,6 +29,10 @@ def ensure_schema() -> None:
             connection.execute(text("ALTER TABLE flagged_activity_log ADD COLUMN ai_anomaly_score FLOAT"))
         if "ai_status" not in columns:
             connection.execute(text("ALTER TABLE flagged_activity_log ADD COLUMN ai_status VARCHAR(32) DEFAULT 'not_trained'"))
+        if "xgb_prediction" not in columns:
+            connection.execute(text("ALTER TABLE flagged_activity_log ADD COLUMN xgb_prediction VARCHAR(24)"))
+        if "xgb_confidence" not in columns:
+            connection.execute(text("ALTER TABLE flagged_activity_log ADD COLUMN xgb_confidence FLOAT"))
     app_columns = {column["name"] for column in inspect(engine).get_columns("applications")}
     with engine.begin() as connection:
         if "reference_code" not in app_columns:

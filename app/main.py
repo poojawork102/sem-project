@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from .config import settings
 from .database import ensure_schema, get_db
@@ -12,10 +13,13 @@ from .models import ActivityLog, Application
 from .reports import daily_csv, summary, weekly_trend_png
 from .scheduler import scheduler, start_scheduler
 from .ml_agent import assess as assess_ai, status as ai_status, train as train_ai
-from .schemas import ApplicationStatusIn, DecisionOut, LoginIn, OverrideIn, PortalApplicationIn, PortalDecisionOut, SubmissionIn
+from .xgboost_agent import predict as xgb_predict, status as xgb_status, train as xgb_train
+from .chatbot import chat_with_gemini
+from .schemas import ApplicationStatusIn, ChatMessageIn, DecisionOut, LoginIn, OverrideIn, PortalApplicationIn, PortalDecisionOut, SubmissionIn
 from .security import create_access_token, require_admin
 
 app = FastAPI(title="DSADPS Agent API", version="1.0.0")
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 
 @app.on_event("startup")
@@ -56,13 +60,16 @@ def login(data: LoginIn):
 def process_submission(data: SubmissionIn, db: Session) -> DecisionOut:
     """Shared security gate used by the portal and a future external portal integration."""
     score, reasons = analyse_submission(db, data.full_name, data.email, data.ip_address)
-    ai_score, agent_status = assess_ai(db, data.full_name, str(data.email), data.ip_address, len(json.dumps(data.payload).encode("utf-8")))
+    payload_bytes = len(json.dumps(data.payload).encode("utf-8"))
+    ai_score, agent_status = assess_ai(db, data.full_name, str(data.email), data.ip_address, payload_bytes)
+    program = str(data.payload.get("program", ""))
+    xgb_pred, xgb_conf = xgb_predict(db, data.full_name, str(data.email), data.ip_address, payload_bytes, program)
     action = choose_action(score)
     reference_code = f"CAP-{datetime.utcnow():%Y%m%d}-{secrets.token_hex(3).upper()}"
-    application = Application(full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, status=action, reference_code=reference_code, phone=str(data.payload.get("phone", "")), program=str(data.payload.get("program", "")), payload=json.dumps(data.payload))
+    application = Application(full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, status=action, reference_code=reference_code, phone=str(data.payload.get("phone", "")), program=program, payload=json.dumps(data.payload))
     db.add(application)
     db.flush()
-    log = ActivityLog(application_id=application.id, full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, risk_score=score, ai_anomaly_score=ai_score, ai_status=agent_status, suggested_action=action, final_action=action, reasons=reasons)
+    log = ActivityLog(application_id=application.id, full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, risk_score=score, ai_anomaly_score=ai_score, ai_status=agent_status, suggested_action=action, final_action=action, reasons=reasons, xgb_prediction=xgb_pred, xgb_confidence=xgb_conf)
     db.add(log)
     db.commit()
     db.refresh(log)
@@ -90,7 +97,69 @@ def portal_application_status(data: ApplicationStatusIn, db: Session = Depends(g
     if not application:
         raise HTTPException(status_code=404, detail="No application matches that reference and email.")
     labels = {"allow": "Application received", "captcha": "Verification required", "block": "Application held for review"}
-    return {"reference_code": application.reference_code, "program": application.program, "submitted_at": application.submitted_at, "status": labels.get(application.status, application.status)}
+    payload_data = {}
+    try:
+        payload_data = json.loads(application.payload) if application.payload else {}
+    except Exception:
+        payload_data = {}
+    return {
+        "reference_code": application.reference_code,
+        "program": application.program,
+        "submitted_at": application.submitted_at,
+        "status": labels.get(application.status, application.status),
+        "raw_status": application.status,
+        "full_name": application.full_name,
+        "email": application.email,
+        "phone": application.phone,
+        "details": payload_data,
+    }
+
+
+@app.get("/v1/admin/applications")
+def list_applications(_admin: str = Depends(require_admin), db: Session = Depends(get_db)):
+    apps = db.query(Application).order_by(Application.submitted_at.desc()).all()
+    logs = {log.application_id: log for log in db.query(ActivityLog).all() if log.application_id}
+    result = []
+    for app_item in apps:
+        log = logs.get(app_item.id)
+        payload_data = {}
+        try:
+            payload_data = json.loads(app_item.payload) if app_item.payload else {}
+        except Exception:
+            payload_data = {}
+        result.append({
+            "id": app_item.id,
+            "full_name": app_item.full_name,
+            "email": app_item.email,
+            "reference_code": app_item.reference_code,
+            "phone": app_item.phone,
+            "program": app_item.program,
+            "ip_address": app_item.ip_address,
+            "submitted_at": app_item.submitted_at.isoformat() if app_item.submitted_at else None,
+            "status": app_item.status,
+            "confirmed_spam": app_item.confirmed_spam,
+            "payload": payload_data,
+            "activity_id": log.id if log else None,
+            "risk_score": log.risk_score if log else 0.0,
+            "ai_anomaly_score": log.ai_anomaly_score if log else None,
+            "ai_status": log.ai_status if log else "not_trained",
+            "reasons": log.reasons if log else [],
+            "admin_override_by": log.admin_override_by if log else None,
+            "admin_note": log.admin_note if log else None,
+            "xgb_prediction": log.xgb_prediction if log else None,
+            "xgb_confidence": log.xgb_confidence if log else None,
+        })
+    return result
+
+
+@app.put("/v1/admin/applications/{app_id}/spam")
+def toggle_spam(app_id: int, confirmed: bool = True, _admin: str = Depends(require_admin), db: Session = Depends(get_db)):
+    app_item = db.get(Application, app_id)
+    if not app_item:
+        raise HTTPException(status_code=404, detail="Application not found")
+    app_item.confirmed_spam = confirmed
+    db.commit()
+    return {"id": app_item.id, "confirmed_spam": app_item.confirmed_spam}
 
 
 @app.get("/v1/admin/activity")
@@ -124,6 +193,21 @@ def agent_status(_admin: str = Depends(require_admin)):
 @app.post("/v1/admin/ai/train")
 def train_agent(_admin: str = Depends(require_admin), db: Session = Depends(get_db)):
     return train_ai(db)
+
+
+@app.get("/v1/admin/ai/xgboost/status")
+def xgboost_status(_admin: str = Depends(require_admin)):
+    return xgb_status()
+
+
+@app.post("/v1/admin/ai/xgboost/train")
+def train_xgboost(_admin: str = Depends(require_admin), db: Session = Depends(get_db)):
+    return xgb_train(db)
+
+
+@app.post("/v1/admin/chat")
+def admin_chat(data: ChatMessageIn, _admin: str = Depends(require_admin), db: Session = Depends(get_db)):
+    return chat_with_gemini(data.message, data.history, db)
 
 
 @app.post("/v1/admin/reports/daily.csv")

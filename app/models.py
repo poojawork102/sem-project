@@ -37,3 +37,5 @@ class ActivityLog(Base):
     reasons: Mapped[dict] = mapped_column(JSON)
     admin_override_by: Mapped[str | None] = mapped_column(String(160), nullable=True)
     admin_note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    xgb_prediction: Mapped[str | None] = mapped_column(String(24), nullable=True)
+    xgb_confidence: Mapped[float | None] = mapped_column(Float, nullable=True)

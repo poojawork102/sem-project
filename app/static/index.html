@@ -1,33 +1,695 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>DSADPS Admin Dashboard</title>
-  <style>
-    body{font:15px system-ui,sans-serif;max-width:1100px;margin:32px auto;padding:0 18px;background:#f8fafc;color:#172033}h1{margin-bottom:4px}.muted{color:#5b6475}section{background:white;border:1px solid #dbe2ea;border-radius:8px;padding:18px;margin:20px 0}input,button,select{padding:9px;margin:3px;border:1px solid #b7c2d0;border-radius:5px}button{background:#1d4ed8;color:#fff;cursor:pointer}table{width:100%;border-collapse:collapse;margin-top:12px}td,th{padding:10px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:top}th{background:#eff6ff}.block{color:#b91c1c;font-weight:700}.captcha{color:#a16207;font-weight:700}.allow{color:#15803d;font-weight:700}#app{display:none}
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northstar Admissions Console | DSADPS Admin SaaS Dashboard</title>
+  <meta name="description" content="Production-ready admissions management and security threat monitoring dashboard for university administrators.">
+
+  <!-- Shared Design System & Admin Stylesheets -->
+  <link rel="stylesheet" href="/static/css/design-system.css?v=2">
+  <link rel="stylesheet" href="/static/css/admin.css?v=2">
+  <link rel="stylesheet" href="/static/css/chatbot.css?v=2">
 </head>
-<body>
-  <h1>Data Shuffling Attack Detection</h1><p class="muted">Live review console. Refreshes every five seconds.</p>
-  <section id="login"><h2>Admin login</h2><input id="username" placeholder="Username" value="admin"><input id="password" type="password" placeholder="Password"><button onclick="login()">Sign in</button><p id="error" class="block"></p></section>
-  <main id="app"><section><button onclick="trainAgent()">Train AI agent</button><span id="ai" class="muted"></span><br><br><button onclick="downloadReport('daily.csv')">Download daily CSV</button><button onclick="downloadReport('weekly-trend.png')">Download weekly graph</button><button onclick="load()">Refresh now</button><span id="summary" class="muted"></span></section><section><h2>Incoming decisions</h2><table><thead><tr><th>Time</th><th>Applicant / IP</th><th>Rule score</th><th>AI</th><th>Why</th><th>Decision</th><th>Override</th></tr></thead><tbody id="rows"></tbody></table></section></main>
-  <script>
-    let token='';
-    const headers=()=>({Authorization:'Bearer '+token});
-    const loginPanel=document.getElementById('login');
-    const appPanel=document.getElementById('app');
-    const usernameInput=document.getElementById('username');
-    const passwordInput=document.getElementById('password');
-    const errorBox=document.getElementById('error');
-    async function login(){
-      const r=await fetch('/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:usernameInput.value,password:passwordInput.value})});
-      if(!r.ok){errorBox.textContent='Login failed. Check ADMIN_USERNAME and ADMIN_PASSWORD in .env.';return}
-      token=(await r.json()).access_token;
-      loginPanel.style.display='none'; appPanel.style.display='block'; load(); setInterval(load,5000);
-    }
-    async function load(){const [a,s,m]=await Promise.all([fetch('/v1/admin/activity?limit=100',{headers:headers()}),fetch('/v1/admin/reports/summary',{headers:headers()}),fetch('/v1/admin/ai/status',{headers:headers()})]);if(!a.ok)return;const items=await a.json(),sum=await s.json(),model=await m.json();summary.textContent=` Last 7 days: ${sum.total_flagged_or_logged} decisions · Refreshed ${new Date().toLocaleTimeString()}`;ai.textContent=model.trained?` AI trained on ${model.samples} normal submissions`:` AI needs ${model.minimum_samples} approved normal submissions before training`;rows.innerHTML=items.length?items.map(x=>`<tr><td>${new Date(x.created_at+'Z').toLocaleString()}</td><td>${x.full_name}<br><small>${x.email}<br>${x.ip_address}</small></td><td>${x.risk_score}</td><td>${x.ai_anomaly_score===null?'Not trained':x.ai_anomaly_score+' '+x.ai_status}</td><td>${x.reasons.join('<br>')}</td><td class="${x.final_action}">${x.final_action}</td><td><select id="action-${x.id}"><option>allow</option><option>captcha</option><option>block</option></select><button onclick="override(${x.id})">Save</button></td></tr>`).join(''):'<tr><td colspan="7">No submissions received yet. Run the simulator or send an application through the portal endpoint.</td></tr>'}
-    async function trainAgent(){const r=await fetch('/v1/admin/ai/train',{method:'POST',headers:headers()});const result=await r.json();alert(result.message);load()}
-    async function override(id){const action=document.getElementById('action-'+id).value;const note=prompt('Reason for this admin decision (required):');if(!note)return;await fetch(`/v1/admin/activity/${id}/override`,{method:'PUT',headers:{...headers(),'Content-Type':'application/json'},body:JSON.stringify({action,note})});load()}
-    async function downloadReport(kind){const r=await fetch('/v1/admin/reports/'+kind,{method:'POST',headers:headers()});const b=await r.blob(),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=kind;a.click();URL.revokeObjectURL(u)}
-  </script>
-</body></html>
+<body class="admin-body">
+
+  <!-- ====================================================================
+       AUTHENTICATION VIEW (Sign In)
+       ==================================================================== -->
+  <div id="loginView" style="display: flex; align-items: center; justify-content: center; min-height: 100vh; width: 100%; background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-900) 100%); padding: 24px; position: fixed; top: 0; left: 0; z-index: 999;">
+    <div class="card" style="max-width: 440px; width: 100%; box-shadow: var(--shadow-xl); border: 1px solid var(--navy-700); background: #ffffff; padding: 36px;">
+      
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+        <div class="brand-crest" style="width: 44px; height: 44px;">
+          <svg style="width: 26px; height: 26px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+          </svg>
+        </div>
+        <div>
+          <h3 style="font-size: 1.25rem; color: var(--navy-900);">Northstar University</h3>
+          <span style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--brand-blue); letter-spacing: 0.05em;">Admissions Command Console</span>
+        </div>
+      </div>
+
+      <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 24px;">
+        Sign in to review applicant dossiers, inspect DSADPS security telemetry, and manage admission decisions.
+      </p>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label">Admin Username</label>
+          <input type="text" id="adminUsername" class="form-control" value="admin" required autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="adminPassword" class="form-control" value="123" required autocomplete="current-password">
+        </div>
+
+        <div id="loginError" style="display: none; padding: 10px 14px; background: var(--danger-bg); border: 1px solid var(--danger-border); border-radius: var(--radius-sm); color: var(--danger); font-size: 0.825rem; font-weight: 600; margin-bottom: 18px;"></div>
+
+        <div style="background: var(--bg-card-subtle); padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.775rem; color: var(--text-muted); margin-bottom: 20px;">
+          💡 <strong>Demo Credentials:</strong> Username: <code>admin</code> / Password: <code>123</code> (configured in <code>.env</code>)
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+          Sign In to Console →
+        </button>
+      </form>
+
+      <div style="margin-top: 24px; text-align: center; border-top: 1px solid var(--border-light); padding-top: 18px;">
+        <a href="/" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 600;">
+          ← Return to Student Admission Portal
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MAIN ADMIN APP LAYOUT (Authenticated)
+       ==================================================================== -->
+  <div id="adminApp" style="display: none; width: 100%;">
+
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-crest">
+          <svg style="width: 20px; height: 20px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+          </svg>
+        </div>
+        <div>
+          <span>Northstar</span> Admin
+        </div>
+      </div>
+
+      <ul class="sidebar-menu">
+        <li class="sidebar-label">Operations</li>
+        <li class="sidebar-item active">
+          <a data-admin-tab="admin-tab-dashboard">
+            <svg class="sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+            Dashboard
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a data-admin-tab="admin-tab-applications">
+            <svg class="sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Applications Registry
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a data-admin-tab="admin-tab-documents">
+            <svg class="sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+            Document Verification
+          </a>
+        </li>
+
+        <li class="sidebar-label">Intelligence & Threat</li>
+        <li class="sidebar-item">
+          <a data-admin-tab="admin-tab-security">
+            <svg class="sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            DSADPS Security & AI
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a data-admin-tab="admin-tab-analytics">
+            <svg class="sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            Admissions Analytics
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a data-admin-tab="admin-tab-settings">
+            <svg class="sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Settings & Limits
+          </a>
+        </li>
+      </ul>
+
+      <!-- User Profile Card -->
+      <div class="sidebar-user">
+        <div class="flex items-center gap-3">
+          <div class="sidebar-user-avatar">AD</div>
+          <div>
+            <strong style="color: #ffffff; font-size: 0.825rem; display: block;">Admissions Admin</strong>
+            <span style="font-size: 0.725rem; color: #10B981;">● Online</span>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="logoutBtn" title="Sign Out" style="color: #94A3B8; padding: 6px;">
+          <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper Area -->
+    <div class="admin-wrapper">
+      
+      <!-- Top Navigation Bar -->
+      <header class="admin-topbar">
+        <div class="topbar-left">
+          <button class="btn btn-ghost btn-sm mobile-toggle" id="sidebarToggleBtn" style="display: none; padding: 8px;">
+            <svg style="width: 22px; height: 22px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+          </button>
+
+          <!-- Global Instant Search -->
+          <div class="global-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            <input type="text" id="globalSearchInput" placeholder="Quick search applicant, email, reference, IP… (Ctrl+K)">
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Engine Live Status -->
+          <div class="engine-status-pill">
+            <span class="badge-dot" style="background: var(--success); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);"></span>
+            <span>DSADPS Protection Active</span>
+          </div>
+
+          <!-- Polling Controls -->
+          <div class="flex items-center gap-2">
+            <select id="pollIntervalSelect" class="form-control" style="padding: 6px 10px; font-size: 0.8rem; width: auto;">
+              <option value="5000">Auto-refresh: 5s</option>
+              <option value="15000">Auto-refresh: 15s</option>
+              <option value="0">Paused</option>
+            </select>
+
+            <button class="btn btn-secondary btn-sm" id="manualRefreshBtn" title="Refresh Now">
+              <svg id="refreshSpinner" style="width: 14px; height: 14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+            </button>
+          </div>
+
+          <a href="/" target="_blank" class="btn btn-secondary btn-sm" title="Open Public Student Portal">
+            View Portal ↗
+          </a>
+        </div>
+      </header>
+
+      <!-- Main Tab Content Area -->
+      <main class="admin-main">
+
+        <!-- ================================================================
+             TAB 1: DASHBOARD OVERVIEW
+             ================================================================ -->
+        <div id="admin-tab-dashboard" class="admin-tab-pane">
+          
+          <div class="flex items-center justify-between" style="margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h2 style="font-size: 1.6rem; color: var(--navy-900);">Admissions Command Dashboard</h2>
+              <p style="font-size: 0.875rem; color: var(--text-muted);">Real-time applicant inflow, risk telemetry, and AI anomaly tracking.</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Last updated: <strong id="lastRefreshedTime">Just now</strong></span>
+              <button class="btn btn-primary btn-sm" id="trainAiBtn">
+                Train AI Agent Now
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Main KPI Cards -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-title">Total Applications</span>
+                <div class="kpi-icon" style="background: #EFF6FF; color: var(--brand-blue);">
+                  <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpiTotalApps">0</div>
+              <div class="kpi-subtext">All submissions recorded</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-title">Allowed / Cleared</span>
+                <div class="kpi-icon" style="background: #ECFDF5; color: var(--success);">
+                  <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpiAllowedApps">0</div>
+              <div class="kpi-subtext" id="kpiAllowedSubtext">0% acceptance rate</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-title">Captcha Required</span>
+                <div class="kpi-icon" style="background: #FFFBEB; color: var(--warning);">
+                  <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpiCaptchaApps">0</div>
+              <div class="kpi-subtext">Secondary verification pending</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-title">Security Blocked</span>
+                <div class="kpi-icon" style="background: #FEF2F2; color: var(--danger);">
+                  <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpiBlockedApps">0</div>
+              <div class="kpi-subtext" id="kpiBlockedSubtext">High risk bot / flood attempts</div>
+            </div>
+          </div>
+
+          <!-- Charts Grid -->
+          <div class="charts-grid">
+            <div class="chart-card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Weekly Submission Velocity & Threat Influx</h3>
+                  <span class="card-subtitle">Last 7 days volume with security screening distribution</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button class="btn btn-secondary btn-sm" id="downloadGraphBtn">
+                    Download Graph PNG
+                  </button>
+                  <button class="btn btn-secondary btn-sm" id="downloadCsvBtn">
+                    Export CSV
+                  </button>
+                </div>
+              </div>
+              <div id="weeklyTrendSvgContainer" style="height: 180px; width: 100%;"></div>
+            </div>
+
+            <div class="chart-card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Decisions Breakdown</h3>
+                  <span class="card-subtitle">Status ratio</span>
+                </div>
+              </div>
+              <div id="donutChartContainer" style="padding-top: 10px;"></div>
+            </div>
+          </div>
+
+          <!-- Live Feed Section -->
+          <div class="card" style="box-shadow: var(--shadow-sm);">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Live Admission Activity & Screening Log</h3>
+                <span class="card-subtitle">Real-time incoming submissions evaluated by DSADPS engine</span>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="switchAdminTab('admin-tab-applications')">
+                View All Applications →
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Candidate</th>
+                    <th>IP Telemetry</th>
+                    <th>Risk Score</th>
+                    <th>Decision</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="liveFeedRows">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ================================================================
+             TAB 2: APPLICATIONS REGISTRY (Search & Filter)
+             ================================================================ -->
+        <div id="admin-tab-applications" class="admin-tab-pane" style="display: none;">
+          
+          <div class="flex items-center justify-between" style="margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h2 style="font-size: 1.6rem; color: var(--navy-900);">Applications Registry</h2>
+              <p style="font-size: 0.875rem; color: var(--text-muted);">Manage candidate profiles, academic records, and decision overrides.</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span id="applicationsTotalCount" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Showing records</span>
+            </div>
+          </div>
+
+          <!-- Table Toolbar Controls -->
+          <div class="card" style="padding: 16px 20px; margin-bottom: 20px;">
+            <div class="table-toolbar" style="margin-bottom: 0;">
+              <div class="global-search" style="max-width: 320px;">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                <input type="text" id="tableSearchInput" placeholder="Filter by name, email, IP, ref…">
+              </div>
+
+              <div class="filter-group">
+                <select id="statusFilterSelect" class="form-control" style="width: auto; padding: 8px 12px; font-size: 0.85rem;">
+                  <option value="all">All Statuses</option>
+                  <option value="allow">Allowed (Cleared)</option>
+                  <option value="captcha">Captcha (Secondary Review)</option>
+                  <option value="block">Blocked (Held)</option>
+                  <option value="spam">Confirmed Spam Only</option>
+                </select>
+
+                <select id="programFilterSelect" class="form-control" style="width: auto; padding: 8px 12px; font-size: 0.85rem;">
+                  <option value="all">All Degree Programs</option>
+                  <option value="Computer Science">Computer Science & AI</option>
+                  <option value="Data Science">Data Science</option>
+                  <option value="Business">Business Administration</option>
+                  <option value="Psychology">Psychology</option>
+                </select>
+
+                <select id="riskFilterSelect" class="form-control" style="width: auto; padding: 8px 12px; font-size: 0.85rem;">
+                  <option value="all">All Risk Levels</option>
+                  <option value="low">Low Risk (&lt; 40)</option>
+                  <option value="med">Medium Risk (40–80)</option>
+                  <option value="high">High Risk (&gt; 80)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Applications Data Table -->
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Candidate</th>
+                  <th>Reference & Program</th>
+                  <th>Submission & IP</th>
+                  <th>Rule Score</th>
+                  <th>AI Detection</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="applicationsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <!-- ================================================================
+             TAB 3: DOCUMENT VERIFICATION HUB
+             ================================================================ -->
+        <div id="admin-tab-documents" class="admin-tab-pane" style="display: none;">
+          <div class="flex items-center justify-between" style="margin-bottom: 24px;">
+            <div>
+              <h2 style="font-size: 1.6rem; color: var(--navy-900);">Document Verification Queue</h2>
+              <p style="font-size: 0.875rem; color: var(--text-muted);">Audit high school marksheets, transcripts, and official photo ID uploads.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-4" id="verificationCardsGrid" style="gap: 20px;">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- ================================================================
+             TAB 4: SECURITY & DSADPS INTELLIGENCE
+             ================================================================ -->
+        <div id="admin-tab-security" class="admin-tab-pane" style="display: none;">
+          
+          <div class="flex items-center justify-between" style="margin-bottom: 24px;">
+            <div>
+              <h2 style="font-size: 1.6rem; color: var(--navy-900);">DSADPS Threat Intelligence Console</h2>
+              <p style="font-size: 0.875rem; color: var(--text-muted);">Data Shuffling Attack Detection & Prevention System Controls</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2" style="gap: 24px; margin-bottom: 24px;">
+            <!-- AI Isolation Forest Card -->
+            <div class="card">
+              <span class="badge badge-info" style="margin-bottom: 8px;">Unsupervised ML</span>
+              <h3 style="font-size: 1.15rem; color: var(--navy-900); margin-bottom: 6px;">Isolation Forest Anomaly Model</h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">
+                Trained exclusively on approved normal applicant submissions to detect statistical anomalies in packet size and velocity.
+              </p>
+              <div style="background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 16px;">
+                <div class="flex items-center justify-between" style="margin-bottom: 6px;">
+                  <span>Status:</span>
+                  <strong id="secAiTrained">Checking…</strong>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Baseline Samples:</span>
+                  <strong id="secAiSamples">0 / 20</strong>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-sm" style="width: 100%;" id="trainAiBtn">
+                Train Isolation Forest
+              </button>
+            </div>
+
+            <!-- XGBoost Supervised Classifier Card -->
+            <div class="card">
+              <span class="badge badge-success" style="margin-bottom: 8px;">Supervised ML</span>
+              <h3 style="font-size: 1.15rem; color: var(--navy-900); margin-bottom: 6px;">XGBoost Fraud Classifier</h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">
+                Supervised gradient-boosted classifier trained on labeled data (allow/captcha/block) with 8 engineered features.
+              </p>
+              <div style="background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 16px;">
+                <div class="flex items-center justify-between" style="margin-bottom: 6px;">
+                  <span>Status:</span>
+                  <strong id="secXgbTrained">Checking…</strong>
+                </div>
+                <div class="flex items-center justify-between" style="margin-bottom: 6px;">
+                  <span>Training Samples:</span>
+                  <strong id="secXgbSamples">0 / 30</strong>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Accuracy:</span>
+                  <strong id="secXgbAccuracy">—</strong>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-sm" style="width: 100%;" id="trainXgbBtn">
+                Train XGBoost Model
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2" style="gap: 24px; margin-bottom: 30px;">
+
+            <!-- REQ-12 Safe Spam Cleanup Card -->
+            <div class="card">
+              <span class="badge badge-danger" style="margin-bottom: 8px;">REQ-12 Compliance</span>
+              <h3 style="font-size: 1.15rem; color: var(--navy-900); margin-bottom: 6px;">Safe Spam Cleanup</h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">
+                Only applications explicitly flagged as <code>confirmed_spam=true</code> by an admin can be deleted. Audit logs are preserved permanently.
+              </p>
+              <div style="background: #FEF2F2; padding: 14px; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 16px; color: var(--danger-text);">
+                <div class="flex items-center justify-between">
+                  <span>Marked for Deletion:</span>
+                  <strong id="secSpamRecordsCount">0 records</strong>
+                </div>
+              </div>
+              <button class="btn btn-danger btn-sm" style="width: 100%;" id="openCleanupModalBtn">
+                Purge Confirmed Spam Records
+              </button>
+            </div>
+
+            <!-- Export Center Card -->
+            <div class="card">
+              <span class="badge badge-success" style="margin-bottom: 8px;">REQ-11 Reporting</span>
+              <h3 style="font-size: 1.15rem; color: var(--navy-900); margin-bottom: 6px;">Audit Reports & Exports</h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">
+                Download official midnight UTC compliance CSVs and weekly trend graphs generated from immutable audit logs.
+              </p>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button class="btn btn-secondary btn-sm" id="downloadCsvBtn">
+                  Download Daily CSV (.csv)
+                </button>
+                <button class="btn btn-secondary btn-sm" id="downloadGraphBtn">
+                  Download Weekly Trend (.png)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Explainable Risk Formula Breakdown -->
+          <div class="card">
+            <h3 style="font-size: 1.1rem; color: var(--navy-900); margin-bottom: 12px;">Explainable Weighted Risk Score Architecture</h3>
+            <div class="grid grid-cols-3" style="gap: 16px;">
+              <div style="background: var(--bg-card-subtle); padding: 16px; border-radius: var(--radius-md);">
+                <strong style="color: var(--brand-blue); display: block; margin-bottom: 4px;">Per-IP Velocity (40% Weight)</strong>
+                <p style="font-size: 0.8rem; color: var(--text-secondary);">Triggers if an IP submits more than 3 applications in a 60-second window.</p>
+              </div>
+              <div style="background: var(--bg-card-subtle); padding: 16px; border-radius: var(--radius-md);">
+                <strong style="color: var(--brand-indigo); display: block; margin-bottom: 4px;">Duplicate Detection (30% Weight)</strong>
+                <p style="font-size: 0.8rem; color: var(--text-secondary);">Exact email match check and 90% name-similarity metric against registered database.</p>
+              </div>
+              <div style="background: var(--bg-card-subtle); padding: 16px; border-radius: var(--radius-md);">
+                <strong style="color: var(--success); display: block; margin-bottom: 4px;">Flood Velocity (30% Weight)</strong>
+                <p style="font-size: 0.8rem; color: var(--text-secondary);">Rolling 5-minute counter against configurable 700-submission flood threshold.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ================================================================
+             TAB 5: ADMISSIONS ANALYTICS
+             ================================================================ -->
+        <div id="admin-tab-analytics" class="admin-tab-pane" style="display: none;">
+          <div class="flex items-center justify-between" style="margin-bottom: 24px;">
+            <div>
+              <h2 style="font-size: 1.6rem; color: var(--navy-900);">Admissions Demographics & Program Analytics</h2>
+              <p style="font-size: 0.875rem; color: var(--text-muted);">Enrollment funnel metrics and academic demand distribution.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2" style="gap: 24px;">
+            <div class="card">
+              <h3 class="card-title" style="margin-bottom: 16px;">Applications by Academic Program</h3>
+              <div id="programsChartContainer"></div>
+            </div>
+
+            <div class="card">
+              <h3 class="card-title" style="margin-bottom: 16px;">Enrollment Funnel Conversion</h3>
+              <div style="display: flex; flex-direction: column; gap: 14px;">
+                <div>
+                  <div class="flex items-center justify-between" style="font-size: 0.85rem; margin-bottom: 4px;">
+                    <strong>Portal Registrations Initiated</strong>
+                    <span>100%</span>
+                  </div>
+                  <div style="background: var(--bg-card-subtle); height: 8px; border-radius: 4px; overflow: hidden;">
+                    <div style="width: 100%; height: 100%; background: var(--brand-blue);"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between" style="font-size: 0.85rem; margin-bottom: 4px;">
+                    <strong>Security Screening Cleared (DSADPS)</strong>
+                    <span>88%</span>
+                  </div>
+                  <div style="background: var(--bg-card-subtle); height: 8px; border-radius: 4px; overflow: hidden;">
+                    <div style="width: 88%; height: 100%; background: var(--brand-indigo);"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between" style="font-size: 0.85rem; margin-bottom: 4px;">
+                    <strong>Credentials Verified</strong>
+                    <span>74%</span>
+                  </div>
+                  <div style="background: var(--bg-card-subtle); height: 8px; border-radius: 4px; overflow: hidden;">
+                    <div style="width: 74%; height: 100%; background: var(--success);"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================================================
+             TAB 6: SETTINGS & SYSTEM THRESHOLDS
+             ================================================================ -->
+        <div id="admin-tab-settings" class="admin-tab-pane" style="display: none;">
+          <div class="flex items-center justify-between" style="margin-bottom: 24px;">
+            <div>
+              <h2 style="font-size: 1.6rem; color: var(--navy-900);">System Configuration & SRS Thresholds</h2>
+              <p style="font-size: 0.875rem; color: var(--text-muted);">Active environment settings defined in <code>config.py</code> and <code>.env</code>.</p>
+            </div>
+          </div>
+
+          <div class="card" style="max-width: 780px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 0.875rem;">
+              <div style="background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md);">
+                <span style="color: var(--text-muted); font-size: 0.775rem;">Rapid Submission Window:</span>
+                <strong style="display: block; color: var(--navy-900);">60 seconds</strong>
+              </div>
+              <div style="background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md);">
+                <span style="color: var(--text-muted); font-size: 0.775rem;">Rapid Submission Limit:</span>
+                <strong style="display: block; color: var(--navy-900);">3 submissions / min</strong>
+              </div>
+              <div style="background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md);">
+                <span style="color: var(--text-muted); font-size: 0.775rem;">Flood Window:</span>
+                <strong style="display: block; color: var(--navy-900);">300 seconds (5 mins)</strong>
+              </div>
+              <div style="background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md);">
+                <span style="color: var(--text-muted); font-size: 0.775rem;">Flood Batch Limit:</span>
+                <strong style="display: block; color: var(--navy-900);">700 submissions</strong>
+              </div>
+              <div style="background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md);">
+                <span style="color: var(--text-muted); font-size: 0.775rem;">Captcha Threshold Score:</span>
+                <strong style="display: block; color: var(--warning);">Score 40–80</strong>
+              </div>
+              <div style="background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md);">
+                <span style="color: var(--text-muted); font-size: 0.775rem;">High Risk Block Threshold:</span>
+                <strong style="display: block; color: var(--danger);">&gt; Score 80</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+
+  </div>
+
+  <!-- ====================================================================
+       STUDENT DOSSIER DRAWER (Slide-Over)
+       ==================================================================== -->
+  <div class="drawer-backdrop" id="dossierDrawerBackdrop">
+    <div class="drawer">
+      
+      <div class="drawer-header">
+        <div>
+          <span class="badge badge-outline" id="dossierRefCode" style="font-family: var(--font-mono); margin-bottom: 4px;">CAP</span>
+          <h3 style="font-size: 1.25rem; color: var(--navy-900);" id="dossierCandidateName">Eleanor Vance</h3>
+          <span style="font-size: 0.8rem; color: var(--text-muted);" id="dossierCandidateEmail">eleanor.vance@example.com</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="badge badge-success" id="dossierStatusBadge">allow</span>
+          <button class="btn btn-ghost btn-sm" id="closeDossierBtn" style="padding: 6px;">
+            <svg style="width: 20px; height: 20px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="drawer-body" id="dossierTabOverview">
+        <!-- Dynamically rendered dossier content -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       SAFE SPAM CLEANUP CONFIRMATION MODAL (REQ-12)
+       ==================================================================== -->
+  <div class="modal-backdrop" id="spamCleanupModal">
+    <div class="modal-content">
+      <div class="card-header">
+        <h3 style="color: var(--danger); font-size: 1.25rem;">Safe Spam Cleanup (REQ-12)</h3>
+      </div>
+      <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px;">
+        You are about to permanently purge <strong id="cleanupTargetCount" style="color: var(--danger);">0</strong> applications explicitly marked as <code>confirmed_spam=true</code> by an admissions officer.
+      </p>
+      <div style="background: #FEF2F2; border: 1px solid #FECACA; padding: 14px; border-radius: var(--radius-md); font-size: 0.825rem; color: #991B1B; margin-bottom: 24px;">
+        <strong>Audit Compliance Notice:</strong> Records in <code>flagged_activity_log</code> are retained permanently for legal and audit traceability. Only the unverified portal application row is removed.
+      </div>
+      <div class="flex items-center justify-end gap-3">
+        <button type="button" class="btn btn-secondary" id="closeCleanupModalBtn">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmPurgeSpamBtn">Confirm Safe Purge</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Scripts -->
+  <script src="/static/js/api.js?v=2"></script>
+  <script src="/static/js/admin.js?v=2"></script>
+  <script src="/static/js/chatbot.js?v=2"></script>
+</body>
+</html>

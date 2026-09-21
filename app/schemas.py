@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Literal
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class SubmissionIn(BaseModel):
@@ -11,6 +11,8 @@ class SubmissionIn(BaseModel):
 
 
 class PortalApplicationIn(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
     full_name: str = Field(min_length=2, max_length=160)
     email: EmailStr
     phone: str = Field(min_length=7, max_length=32)
@@ -47,3 +49,8 @@ class OverrideIn(BaseModel):
 class LoginIn(BaseModel):
     username: str
     password: str
+
+
+class ChatMessageIn(BaseModel):
+    message: str = Field(min_length=1, max_length=2000)
+    history: list[dict] = Field(default_factory=list)

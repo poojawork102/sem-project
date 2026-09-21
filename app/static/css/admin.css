@@ -1,0 +1,415 @@
+/* ==========================================================================
+   Northstar University - Admin SaaS Admission Management Stylesheet
+   ========================================================================== */
+
+/* Admin Body & Layout */
+body.admin-body {
+  background-color: #F8FAFC;
+  color: var(--navy-900);
+  margin: 0;
+  display: flex;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Admin Sidebar */
+.admin-sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, var(--navy-950) 0%, var(--navy-900) 100%);
+  color: #94A3B8;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 150;
+  border-right: 1px solid var(--navy-800);
+  transition: transform var(--transition-smooth);
+}
+
+.sidebar-brand {
+  height: 72px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--navy-800);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.15rem;
+}
+
+.sidebar-crest {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--brand-blue) 0%, #4F46E5 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.sidebar-menu {
+  padding: 20px 14px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  list-style: none;
+}
+
+.sidebar-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748B;
+  padding: 12px 12px 6px;
+}
+
+.sidebar-item a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #94A3B8;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sidebar-item a:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.sidebar-item.active a {
+  color: #ffffff;
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0.25) 0%, rgba(37, 99, 235, 0.05) 100%);
+  border-left: 3px solid var(--brand-blue);
+}
+
+.sidebar-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.sidebar-user {
+  padding: 18px 20px;
+  border-top: 1px solid var(--navy-800);
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--brand-blue);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* Main Admin Layout Wrapper */
+.admin-wrapper {
+  margin-left: 260px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: calc(100% - 260px);
+}
+
+/* Admin Top Bar */
+.admin-topbar {
+  height: 72px;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--border-light);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex: 1;
+  max-width: 450px;
+}
+
+.global-search {
+  position: relative;
+  width: 100%;
+}
+
+.global-search input {
+  width: 100%;
+  padding: 9px 14px 9px 38px;
+  font-size: 0.875rem;
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.global-search input:focus {
+  background-color: #ffffff;
+  border-color: var(--brand-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.global-search svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--text-light);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Status Indicator Pill */
+.engine-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background-color: var(--success-bg);
+  border: 1px solid var(--success-border);
+  color: var(--success-text);
+  border-radius: var(--radius-full);
+  font-size: 0.775rem;
+  font-weight: 600;
+}
+
+/* Admin Main Content Area */
+.admin-main {
+  padding: 32px;
+  flex: 1;
+}
+
+/* Stat KPI Cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.kpi-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+}
+
+.kpi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.kpi-title {
+  font-size: 0.825rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.kpi-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kpi-value {
+  font-family: var(--font-display);
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: var(--navy-900);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.kpi-subtext {
+  font-size: 0.775rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Charts Grid */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.chart-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Table Toolbar Filters */
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Score Indicators */
+.score-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.score-low {
+  background: var(--success-bg);
+  color: var(--success-text);
+  border: 1px solid var(--success-border);
+}
+
+.score-med {
+  background: var(--warning-bg);
+  color: var(--warning-text);
+  border: 1px solid var(--warning-border);
+}
+
+.score-high {
+  background: var(--danger-bg);
+  color: var(--danger-text);
+  border: 1px solid var(--danger-border);
+}
+
+/* Reason tags */
+.reason-chip {
+  display: inline-block;
+  font-size: 0.725rem;
+  background: var(--bg-card-subtle);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+/* Application Detail Drawer Styles */
+.dossier-nav {
+  display: flex;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-card-subtle);
+  padding: 0 28px;
+}
+
+.dossier-tab {
+  padding: 14px 18px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.dossier-tab.active {
+  color: var(--brand-blue);
+  border-bottom-color: var(--brand-blue);
+  background: #ffffff;
+}
+
+/* Action Area */
+.action-box {
+  background: var(--bg-card-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-top: 20px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 1100px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .charts-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 800px) {
+  .admin-sidebar {
+    transform: translateX(-100%);
+  }
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+  .admin-wrapper {
+    margin-left: 0;
+    width: 100%;
+  }
+  .kpi-grid { grid-template-columns: 1fr; }
+  .admin-topbar { padding: 0 16px; }
+  .admin-main { padding: 18px 16px; }
+}

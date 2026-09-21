@@ -1,22 +1,1079 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Northstar College Admissions</title>
-  <style>
-    :root{--navy:#102a43;--blue:#1565c0;--pale:#eff6ff;--ink:#172033}*{box-sizing:border-box}body{margin:0;font:16px system-ui,sans-serif;color:var(--ink);background:#f7fafc}header{padding:20px max(6vw,24px);background:var(--navy);color:white;display:flex;justify-content:space-between;align-items:center}header a{color:white;text-decoration:none;font-weight:700}main{max-width:1040px;margin:42px auto;padding:0 22px}.hero{display:grid;grid-template-columns:1.25fr .75fr;gap:28px;align-items:center;margin-bottom:32px}.hero h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.05;margin:0 0 16px}.tag{color:#1d4ed8;font-weight:700;letter-spacing:.05em;text-transform:uppercase}.card{background:#fff;border:1px solid #d8e1ec;border-radius:12px;padding:26px;box-shadow:0 3px 12px #102a4310}h2{margin-top:0}form{display:grid;grid-template-columns:1fr 1fr;gap:16px}.full{grid-column:1/-1}label{font-size:.9rem;font-weight:650}input,select,textarea,button{width:100%;padding:11px;margin-top:5px;border:1px solid #b8c6d9;border-radius:6px;font:inherit}textarea{min-height:105px;resize:vertical}button{background:var(--blue);color:white;border:0;font-weight:700;cursor:pointer}.notice{display:none;margin-top:18px;padding:14px;border-radius:7px;background:var(--pale)}.status{margin-top:28px}small{color:#526173}@media(max-width:700px){.hero,form{grid-template-columns:1fr}header{display:block}header a{display:inline-block;margin-top:10px}}
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northstar University | Undergraduate & Graduate Admissions 2026</title>
+  <meta name="description" content="Apply to Northstar University undergraduate and graduate degree programs. Real-time application tracking, document verification, and academic guidance.">
+  
+  <!-- Shared Design System & Portal Stylesheets -->
+  <link rel="stylesheet" href="/static/css/design-system.css">
+  <link rel="stylesheet" href="/static/css/portal.css">
 </head>
 <body>
-  <header><strong>Northstar College</strong><a href="/admin">Admissions staff sign in →</a></header>
+
+  <!-- Top Navigation Header -->
+  <header class="portal-header">
+    <div class="container portal-nav">
+      <a href="#" class="brand-logo" data-tab-target="tab-overview">
+        <div class="brand-crest">
+          <svg style="width: 24px; height: 24px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+          </svg>
+        </div>
+        <div>
+          <span>Northstar</span> University
+          <span style="font-size: 0.65rem; display: block; font-weight: 500; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase;">Admissions Portal 2026</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <ul class="nav-links" id="navMenu">
+        <li><a class="nav-link active" data-tab-target="tab-overview">Overview & Programs</a></li>
+        <li><a class="nav-link" data-tab-target="tab-dashboard">Student Dashboard</a></li>
+        <li><a class="nav-link" data-tab-target="tab-apply">Apply Now</a></li>
+        <li><a class="nav-link" data-tab-target="tab-status">Track Status</a></li>
+        <li><a class="nav-link" data-tab-target="tab-vault">Document Vault</a></li>
+        <li><a class="nav-link" data-tab-target="tab-faq">FAQ & Support</a></li>
+      </ul>
+
+      <!-- Action Buttons -->
+      <div class="nav-actions">
+        <a href="/admin" class="btn btn-secondary btn-sm" title="Admissions Staff Portal">
+          <svg style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+          </svg>
+          Staff Sign In
+        </a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+          <svg style="width: 24px; height: 24px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container with Tabs -->
   <main>
-    <section class="hero"><div><p class="tag">Admissions 2026</p><h1>Take your next step with confidence.</h1><p>Submit your application for undergraduate programs. You will receive an application reference immediately.</p></div><div class="card"><h2>Programs offered</h2><ul><li>BTech Computer Science</li><li>BBA Business Administration</li><li>BSc Data Science</li><li>BA Psychology</li></ul><small>Applications are reviewed after successful verification.</small></div></section>
-    <section class="card"><h2>Start your application</h2><form id="applicationForm"><label>Full name<input name="full_name" required minlength="2"></label><label>Email address<input name="email" type="email" required></label><label>Phone number<input name="phone" required minlength="7"></label><label>Program<select name="program" required><option value="">Select a program</option><option>BTech Computer Science</option><option>BBA Business Administration</option><option>BSc Data Science</option><option>BA Psychology</option></select></label><label>Date of birth<input name="date_of_birth" type="date" required></label><label>City<input name="city" required></label><label class="full">Why would you like to join Northstar College?<textarea name="statement" minlength="20" required></textarea></label><div class="full"><button>Submit application</button></div></form><div id="result" class="notice"></div></section>
-    <section class="card status"><h2>Check application status</h2><form id="statusForm"><label>Application reference<input name="reference_code" placeholder="CAP-20260916-ABC123" required></label><label>Email address<input name="email" type="email" required></label><div class="full"><button>Check status</button></div></form><div id="statusResult" class="notice"></div></section>
+
+    <!-- ====================================================================
+         TAB 1: OVERVIEW & PROGRAMS (Landing)
+         ==================================================================== -->
+    <div id="tab-overview" class="tab-pane active">
+      
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="hero-glow"></div>
+        <div class="container hero-content">
+          <div class="hero-badge">
+            <span class="badge-dot"></span> Fall 2026 Admissions Open
+          </div>
+          <h1 class="hero-title">
+            Where Ambition Meets <span>Academic Excellence</span>
+          </h1>
+          <p class="hero-desc">
+            Northstar University prepares future innovators, data scientists, and global leaders through accredited programs, world-class faculty, and industry-partnered research labs.
+          </p>
+
+          <div class="hero-buttons">
+            <button class="btn btn-primary btn-lg" data-tab-target="tab-apply">
+              Start Application →
+            </button>
+            <button class="btn btn-secondary btn-lg" data-tab-target="tab-status">
+              <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Track Application Status
+            </button>
+          </div>
+
+          <!-- Deadline Announcement Card -->
+          <div class="deadline-pill">
+            <div class="deadline-pill-icon">
+              <svg style="width: 20px; height: 20px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="deadline-pill-text">
+              <strong>Fall 2026 Regular Decision Deadline: October 15, 2026</strong>
+              <span>Priority Merit Scholarship Consideration closes September 30. Early applications receive expedited review.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Institutional Metrics Strip -->
+      <section class="metrics-strip">
+        <div class="container">
+          <div class="metrics-grid">
+            <div class="metric-item">
+              <div class="metric-number">98.4<span>%</span></div>
+              <div class="metric-label">Graduate Career Placement</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-number">45<span>+</span></div>
+              <div class="metric-label">Accredited Degree Programs</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-number">$42<span>M</span></div>
+              <div class="metric-label">Annual Research Grants</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-number">18<span>k+</span></div>
+              <div class="metric-label">Global Alumni in 70 Countries</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Programs Catalog Section -->
+      <section style="padding: 70px 0;">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-tag">Academic Offerings</div>
+            <h2 class="section-title">Degree Programs for 2026–2027</h2>
+            <p class="section-desc">
+              Choose from our top-ranked degree pathways designed to build cutting-edge technical expertise and leadership skills.
+            </p>
+          </div>
+
+          <div class="programs-grid">
+            <!-- Program 1 -->
+            <div class="program-card">
+              <span class="program-badge">School of Computing</span>
+              <h3 class="program-title">BTech Computer Science & AI</h3>
+              <p class="program-desc">
+                Rigorous curriculum in software systems, neural networks, distributed algorithms, and secure cloud infrastructure.
+              </p>
+              <div class="program-meta">
+                <span>⏱ 4 Years Full-Time</span>
+                <span>🎓 ABET Accredited</span>
+                <span>💼 99% Internship Rate</span>
+              </div>
+              <button class="btn btn-primary btn-sm btn-select-program" data-program="BTech Computer Science">
+                Apply for this Program →
+              </button>
+            </div>
+
+            <!-- Program 2 -->
+            <div class="program-card">
+              <span class="program-badge">Department of Mathematics</span>
+              <h3 class="program-title">BSc Data Science & Analytics</h3>
+              <p class="program-desc">
+                High-impact blend of statistical inference, big-data engineering, machine learning pipelines, and predictive modeling.
+              </p>
+              <div class="program-meta">
+                <span>⏱ 3-4 Years</span>
+                <span>🎓 STEM Certified</span>
+                <span>📊 Industry Capstone</span>
+              </div>
+              <button class="btn btn-primary btn-sm btn-select-program" data-program="BSc Data Science">
+                Apply for this Program →
+              </button>
+            </div>
+
+            <!-- Program 3 -->
+            <div class="program-card">
+              <span class="program-badge">School of Management</span>
+              <h3 class="program-title">BBA Business Administration</h3>
+              <p class="program-desc">
+                Strategic management, global venture creation, financial analysis, marketing intelligence, and corporate leadership.
+              </p>
+              <div class="program-meta">
+                <span>⏱ 3 Years</span>
+                <span>🎓 AACSB Candidate</span>
+                <span>🌐 Global Exchange</span>
+              </div>
+              <button class="btn btn-primary btn-sm btn-select-program" data-program="BBA Business Administration">
+                Apply for this Program →
+              </button>
+            </div>
+
+            <!-- Program 4 -->
+            <div class="program-card">
+              <span class="program-badge">Faculty of Social Sciences</span>
+              <h3 class="program-title">BA Cognitive Psychology</h3>
+              <p class="program-desc">
+                Exploration of human cognition, behavioral neuroscience, experimental psychology, and human-computer interaction.
+              </p>
+              <div class="program-meta">
+                <span>⏱ 3 Years</span>
+                <span>🎓 Research Labs</span>
+                <span>🧠 Practicum Placements</span>
+              </div>
+              <button class="btn btn-primary btn-sm btn-select-program" data-program="BA Psychology">
+                Apply for this Program →
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Visual Application Roadmap -->
+      <section class="container">
+        <div class="roadmap-strip">
+          <div class="section-header" style="margin-bottom: 20px;">
+            <div class="section-tag" style="color: #60A5FA;">Admissions Process</div>
+            <h2 class="section-title">Your Path to Northstar University</h2>
+            <p class="section-desc">A transparent, structured 6-step journey from submission to official enrollment.</p>
+          </div>
+
+          <div class="roadmap-steps">
+            <div class="roadmap-step">
+              <div class="roadmap-icon">1</div>
+              <div class="roadmap-step-title">Personal Profile</div>
+              <div class="roadmap-step-desc">Enter demographic and identity information.</div>
+            </div>
+            <div class="roadmap-step">
+              <div class="roadmap-icon">2</div>
+              <div class="roadmap-step-title">Academic Records</div>
+              <div class="roadmap-step-desc">Input GPA and prior secondary school credentials.</div>
+            </div>
+            <div class="roadmap-step">
+              <div class="roadmap-icon">3</div>
+              <div class="roadmap-step-title">Program Choice</div>
+              <div class="roadmap-step-desc">Select degree program and intake semester.</div>
+            </div>
+            <div class="roadmap-step">
+              <div class="roadmap-icon">4</div>
+              <div class="roadmap-step-title">Security Check</div>
+              <div class="roadmap-step-desc">Real-time automated DSADPS compliance screening.</div>
+            </div>
+            <div class="roadmap-step">
+              <div class="roadmap-icon">5</div>
+              <div class="roadmap-step-title">Document Audit</div>
+              <div class="roadmap-step-desc">Faculty verifies uploaded academic transcripts.</div>
+            </div>
+            <div class="roadmap-step">
+              <div class="roadmap-icon">6</div>
+              <div class="roadmap-step-title">Admissions Offer</div>
+              <div class="roadmap-step-desc">Formal decision and acceptance package issued.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ====================================================================
+         TAB 2: STUDENT DASHBOARD (Admission Hub)
+         ==================================================================== -->
+    <div id="tab-dashboard" class="tab-pane" style="display: none; padding: 50px 0;">
+      <div class="container">
+        
+        <!-- Dashboard Header -->
+        <div class="flex items-center justify-between" style="margin-bottom: 30px; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <span class="badge badge-info" style="margin-bottom: 8px;">Applicant Portal</span>
+            <h2 style="font-size: 2rem; color: var(--navy-900);">My Admission Dashboard</h2>
+            <p style="color: var(--text-secondary);">Monitor your application milestones, pending actions, and committee correspondence.</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button class="btn btn-secondary btn-sm" data-tab-target="tab-status">
+              <svg style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+              Refresh Status
+            </button>
+            <button class="btn btn-primary btn-sm" data-tab-target="tab-apply">
+              New Application
+            </button>
+          </div>
+        </div>
+
+        <!-- Visual Application Progress Tracker -->
+        <div class="card" style="margin-bottom: 30px; box-shadow: var(--shadow-md);">
+          <div class="flex items-center justify-between" style="margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h3 style="font-size: 1.15rem; color: var(--navy-900);">Application Progress Tracker</h3>
+              <p style="font-size: 0.825rem; color: var(--text-muted);">Current Active Stage: <strong>Verification & Credentials Audit</strong></p>
+            </div>
+            <span class="badge badge-success">
+              <span class="badge-dot"></span> On Schedule
+            </span>
+          </div>
+
+          <!-- Progress Stepper Tracker -->
+          <div style="background: var(--bg-card-subtle); height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 24px;">
+            <div id="dashProgressFill" style="width: 65%; height: 100%; background: linear-gradient(90deg, var(--brand-blue), var(--success)); transition: width 0.4s ease;"></div>
+          </div>
+
+          <div class="grid grid-cols-6" style="gap: 12px; text-align: center;">
+            <div>
+              <div style="width: 32px; height: 32px; background: var(--success); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; font-size: 0.8rem;">✓</div>
+              <strong style="font-size: 0.8rem; display: block; color: var(--navy-900);">1. Profile</strong>
+              <small style="color: var(--text-muted); font-size: 0.7rem;">Completed</small>
+            </div>
+            <div>
+              <div style="width: 32px; height: 32px; background: var(--success); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; font-size: 0.8rem;">✓</div>
+              <strong style="font-size: 0.8rem; display: block; color: var(--navy-900);">2. Documents</strong>
+              <small style="color: var(--text-muted); font-size: 0.7rem;">Uploaded</small>
+            </div>
+            <div>
+              <div style="width: 32px; height: 32px; background: var(--success); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; font-size: 0.8rem;">✓</div>
+              <strong style="font-size: 0.8rem; display: block; color: var(--navy-900);">3. Application</strong>
+              <small style="color: var(--text-muted); font-size: 0.7rem;">Submitted</small>
+            </div>
+            <div>
+              <div style="width: 32px; height: 32px; background: var(--brand-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; font-size: 0.8rem; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);">4</div>
+              <strong style="font-size: 0.8rem; display: block; color: var(--brand-blue);">4. Verification</strong>
+              <small style="color: var(--brand-blue); font-size: 0.7rem; font-weight: 600;">In Progress</small>
+            </div>
+            <div>
+              <div style="width: 32px; height: 32px; background: #ffffff; border: 2px solid var(--border-strong); color: var(--text-muted); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; font-size: 0.8rem;">5</div>
+              <strong style="font-size: 0.8rem; display: block; color: var(--text-muted);">5. Review</strong>
+              <small style="color: var(--text-muted); font-size: 0.7rem;">Upcoming</small>
+            </div>
+            <div>
+              <div style="width: 32px; height: 32px; background: #ffffff; border: 2px solid var(--border-strong); color: var(--text-muted); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; font-size: 0.8rem;">6</div>
+              <strong style="font-size: 0.8rem; display: block; color: var(--text-muted);">6. Decision</strong>
+              <small style="color: var(--text-muted); font-size: 0.7rem;">Pending</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Cards Grid -->
+        <div class="grid grid-cols-3" style="gap: 24px; margin-bottom: 30px;">
+          <!-- Card 1: Application Status -->
+          <div class="card card-hover">
+            <div class="card-header">
+              <span class="card-title" style="font-size: 1rem;">Current Application</span>
+              <span class="badge badge-success" id="dashAppStatus">Application received</span>
+            </div>
+            <div style="margin-bottom: 16px;">
+              <strong style="font-size: 1.25rem; color: var(--navy-900); display: block;" id="dashAppProgram">BTech Computer Science</strong>
+              <span style="font-size: 0.825rem; color: var(--text-muted);">Reference: <code id="dashAppRef" style="color: var(--brand-blue); font-weight: 700;">CAP-20260916-2E1D88</code></span>
+            </div>
+            <div style="font-size: 0.825rem; color: var(--text-secondary); border-top: 1px solid var(--border-light); padding-top: 12px;">
+              Submitted on: <strong id="dashAppDate">September 16, 2026</strong>
+            </div>
+          </div>
+
+          <!-- Card 2: Document Checklist -->
+          <div class="card card-hover">
+            <div class="card-header">
+              <span class="card-title" style="font-size: 1rem;">Document Vault Status</span>
+              <span class="badge badge-info">3 of 3 Verified</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.825rem;">
+              <div class="flex items-center justify-between">
+                <span>Senior Secondary Transcript</span>
+                <span style="color: var(--success); font-weight: 600;">✓ Verified</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>Government ID / Passport</span>
+                <span style="color: var(--success); font-weight: 600;">✓ Verified</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>Statement of Purpose</span>
+                <span style="color: var(--success); font-weight: 600;">✓ Verified</span>
+              </div>
+            </div>
+            <div style="margin-top: 16px; border-top: 1px solid var(--border-light); padding-top: 12px;">
+              <a href="#" data-tab-target="tab-vault" style="font-size: 0.825rem; font-weight: 600;">Open Document Vault →</a>
+            </div>
+          </div>
+
+          <!-- Card 3: Important Deadlines -->
+          <div class="card card-hover">
+            <div class="card-header">
+              <span class="card-title" style="font-size: 1rem;">Next Milestones</span>
+              <span class="badge badge-warning">Action Timeline</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.825rem;">
+              <div>
+                <strong style="color: var(--navy-900); display: block;">Department Review Window</strong>
+                <span style="color: var(--text-muted);">September 25 – October 5, 2026</span>
+              </div>
+              <div>
+                <strong style="color: var(--navy-900); display: block;">Final Decision Release</strong>
+                <span style="color: var(--text-muted);">October 20, 2026 via Student Email</span>
+              </div>
+            </div>
+            <div style="margin-top: 16px; border-top: 1px solid var(--border-light); padding-top: 12px;">
+              <a href="#" data-tab-target="tab-faq" style="font-size: 0.825rem; font-weight: 600;">View Academic Calendar →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Committee Announcements -->
+        <div class="card">
+          <h3 style="font-size: 1.15rem; color: var(--navy-900); margin-bottom: 16px;">Admissions Board Communications</h3>
+          <div style="background: var(--info-bg); border: 1px solid var(--info-border); border-radius: var(--radius-md); padding: 18px; margin-bottom: 14px;">
+            <div class="flex items-center justify-between" style="margin-bottom: 6px;">
+              <strong style="color: var(--info-text); font-size: 0.9rem;">Automated Security Gate Passed</strong>
+              <span style="font-size: 0.775rem; color: var(--text-muted);">September 16, 2026</span>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">
+              Your application credentials have successfully cleared the DSADPS Security Gate with zero velocity flags and valid email signature. Your file has been queued for faculty review.
+            </p>
+          </div>
+          <div style="background: var(--bg-card-subtle); border-radius: var(--radius-md); padding: 18px;">
+            <div class="flex items-center justify-between" style="margin-bottom: 6px;">
+              <strong style="color: var(--navy-900); font-size: 0.9rem;">Campus Virtual Open House</strong>
+              <span style="font-size: 0.775rem; color: var(--text-muted);">September 28, 2026 at 5:00 PM EST</span>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">
+              All prospective applicants are invited to meet program chairs, explore virtual lab simulations, and ask live questions to the admissions committee.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         TAB 3: MULTI-STEP APPLICATION WIZARD
+         ==================================================================== -->
+    <div id="tab-apply" class="tab-pane" style="display: none; padding: 40px 0;">
+      <div class="container" id="applySection">
+        
+        <div class="wizard-container">
+          <!-- Wizard Header -->
+          <div class="wizard-header">
+            <div class="flex items-center justify-between" style="flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h2 class="wizard-header-title">Northstar Undergraduate & Graduate Application</h2>
+                <p class="wizard-header-subtitle">Academic Session 2026–2027 · Submit your credentials in 6 guided steps.</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <span id="stepCountIndicator" style="font-size: 0.85rem; color: #93C5FD; font-weight: 600;">Step 1 of 6 (0%)</span>
+                <button type="button" id="saveDraftBtn" class="btn btn-secondary btn-sm" style="background: rgba(255,255,255,0.15); color: #fff; border-color: rgba(255,255,255,0.3);">
+                  <svg style="width: 15px; height: 15px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
+                  Save Draft
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stepper Progress Navigation -->
+          <nav class="stepper-nav" aria-label="Application Steps">
+            <div class="stepper-item active" id="step-nav-1" data-step="1">
+              <div class="stepper-circle">1</div>
+              <div class="stepper-title">Personal<br>Details</div>
+            </div>
+            <div class="stepper-item" id="step-nav-2" data-step="2">
+              <div class="stepper-circle">2</div>
+              <div class="stepper-title">Academic<br>Background</div>
+            </div>
+            <div class="stepper-item" id="step-nav-3" data-step="3">
+              <div class="stepper-circle">3</div>
+              <div class="stepper-title">Program<br>Selection</div>
+            </div>
+            <div class="stepper-item" id="step-nav-4" data-step="4">
+              <div class="stepper-circle">4</div>
+              <div class="stepper-title">Contact &<br>Address</div>
+            </div>
+            <div class="stepper-item" id="step-nav-5" data-step="5">
+              <div class="stepper-circle">5</div>
+              <div class="stepper-title">Statement &<br>Documents</div>
+            </div>
+            <div class="stepper-item" id="step-nav-6" data-step="6">
+              <div class="stepper-circle">6</div>
+              <div class="stepper-title">Review &<br>Submit</div>
+            </div>
+          </nav>
+
+          <!-- Stepper Progress Bar Line -->
+          <div style="background: var(--border-light); height: 4px; width: 100%;">
+            <div id="wizardProgressBar" style="width: 0%; height: 100%; background: var(--brand-blue); transition: width 0.3s ease;"></div>
+          </div>
+
+          <!-- Form Body -->
+          <form id="admissionForm" novalidate>
+            <div class="wizard-body">
+
+              <!-- STEP 1: Personal Information -->
+              <div class="wizard-step active" id="step-1">
+                <h3 style="font-size: 1.35rem; color: var(--navy-900); margin-bottom: 6px;">Step 1: Personal Information</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">Please provide legal candidate details as shown on official identity documentation.</p>
+
+                <div class="grid grid-cols-2" style="gap: 20px;">
+                  <div class="form-group">
+                    <label class="form-label">Full Legal Name *</label>
+                    <input type="text" name="full_name" class="form-control" placeholder="e.g. Eleanor Vance" required minlength="2">
+                    <span class="form-hint">Enter your first, middle, and last name.</span>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Email Address *</label>
+                    <input type="email" name="email" class="form-control" placeholder="eleanor.vance@example.com" required>
+                    <span class="form-hint">Official admission communications will be sent here.</span>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Phone Number *</label>
+                    <input type="tel" name="phone" class="form-control" placeholder="+1 (555) 234-5678" required minlength="7">
+                    <span class="form-hint">Include country and area code.</span>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Date of Birth *</label>
+                    <input type="date" name="date_of_birth" class="form-control" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Gender <span class="form-label-optional">(Optional)</span></label>
+                    <select name="gender" class="form-control">
+                      <option value="">Select Gender</option>
+                      <option value="Female">Female</option>
+                      <option value="Male">Male</option>
+                      <option value="Non-Binary">Non-Binary</option>
+                      <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Nationality <span class="form-label-optional">(Optional)</span></label>
+                    <input type="text" name="nationality" class="form-control" placeholder="e.g. United States, Canadian, Indian">
+                  </div>
+                </div>
+              </div>
+
+              <!-- STEP 2: Academic Information -->
+              <div class="wizard-step" id="step-2">
+                <h3 style="font-size: 1.35rem; color: var(--navy-900); margin-bottom: 6px;">Step 2: Academic Background</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">Tell us about your previous educational qualifications, grades, and completed coursework.</p>
+
+                <div class="grid grid-cols-2" style="gap: 20px;">
+                  <div class="form-group">
+                    <label class="form-label">Highest Qualification *</label>
+                    <select name="highest_qualification" class="form-control" required>
+                      <option value="Senior Secondary (12th Grade)">Senior Secondary (12th Grade / High School Diploma)</option>
+                      <option value="IB Diploma / Cambridge A-Levels">IB Diploma / Cambridge A-Levels</option>
+                      <option value="Associate Degree">Associate Degree</option>
+                      <option value="Undergraduate Transfer">Undergraduate University Transfer</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">High School / Previous Institution *</label>
+                    <input type="text" name="previous_institution" class="form-control" placeholder="e.g. St. Jude Academy / Westwood High" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Year of Completion *</label>
+                    <select name="passing_year" class="form-control" required>
+                      <option value="2026">2026 (Graduating this academic year)</option>
+                      <option value="2025">2025</option>
+                      <option value="2024">2024</option>
+                      <option value="2023">2023</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Academic Stream / Major Focus *</label>
+                    <input type="text" name="academic_stream" class="form-control" placeholder="e.g. Physics, Chemistry, Math or Commerce" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Overall GPA or Percentage *</label>
+                    <input type="text" name="gpa_score" class="form-control" placeholder="e.g. 3.9 / 4.0 or 92%" required>
+                    <span class="form-hint">Enter your latest cumulative GPA or board score.</span>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Honors / Standardized Tests <span class="form-label-optional">(Optional)</span></label>
+                    <input type="text" name="honors" class="form-control" placeholder="e.g. SAT 1480, AP Scholar, National Science Fair">
+                  </div>
+                </div>
+              </div>
+
+              <!-- STEP 3: Program Selection -->
+              <div class="wizard-step" id="step-3">
+                <h3 style="font-size: 1.35rem; color: var(--navy-900); margin-bottom: 6px;">Step 3: Program & Specialization</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">Select your intended degree pathway and admission term for the 2026 academic cycle.</p>
+
+                <div class="grid grid-cols-2" style="gap: 20px;">
+                  <div class="form-group" style="grid-column: 1 / -1;">
+                    <label class="form-label">Degree Program of Choice *</label>
+                    <select name="program" class="form-control" required style="font-size: 1rem; font-weight: 600;">
+                      <option value="">Select an accredited program</option>
+                      <option value="BTech Computer Science">BTech Computer Science & Artificial Intelligence (4 Years)</option>
+                      <option value="BSc Data Science">BSc Data Science & Analytics (3-4 Years)</option>
+                      <option value="BBA Business Administration">BBA Global Business Administration & Finance (3 Years)</option>
+                      <option value="BA Psychology">BA Cognitive Psychology & Behavioral Science (3 Years)</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Intake Term *</label>
+                    <select name="intake_term" class="form-control" required>
+                      <option value="Fall 2026">Fall 2026 (Begins September 2026)</option>
+                      <option value="Spring 2027">Spring 2027 (Begins January 2027)</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Study Mode *</label>
+                    <select name="study_mode" class="form-control" required>
+                      <option value="Full-time On-Campus">Full-time On-Campus</option>
+                      <option value="Hybrid (Campus + Research)">Hybrid (Campus + Research Lab)</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group" style="grid-column: 1 / -1;">
+                    <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+                      <input type="checkbox" name="scholarship_interest" value="yes" checked style="width: 18px; height: 18px; margin-top: 2px;">
+                      <span style="font-size: 0.9rem; color: var(--navy-900);">
+                        <strong>Consider my application for Northstar Academic Merit Scholarships</strong>
+                        <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">Eligible candidates receive up to 75% tuition fellowship based on academic excellence.</span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- STEP 4: Address & Contact -->
+              <div class="wizard-step" id="step-4">
+                <h3 style="font-size: 1.35rem; color: var(--navy-900); margin-bottom: 6px;">Step 4: Contact & Residential Address</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">Provide your current permanent residence and emergency guardian contact.</p>
+
+                <div class="grid grid-cols-2" style="gap: 20px;">
+                  <div class="form-group" style="grid-column: 1 / -1;">
+                    <label class="form-label">Street Address *</label>
+                    <input type="text" name="street_address" class="form-control" placeholder="124 University Avenue, Suite 4B" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">City *</label>
+                    <input type="text" name="city" class="form-control" placeholder="e.g. Pune, Boston, London" required minlength="2">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">State / Province *</label>
+                    <input type="text" name="state" class="form-control" placeholder="e.g. Maharashtra, Massachusetts" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Postal / ZIP Code *</label>
+                    <input type="text" name="postal_code" class="form-control" placeholder="411001 or 02138" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Country *</label>
+                    <input type="text" name="country" class="form-control" placeholder="e.g. India, United States" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Emergency Contact Person & Relationship *</label>
+                    <input type="text" name="emergency_contact" class="form-control" placeholder="e.g. Sarah Vance (Mother)" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Emergency Contact Phone *</label>
+                    <input type="tel" name="emergency_phone" class="form-control" placeholder="+1 (555) 987-6543" required>
+                  </div>
+                </div>
+              </div>
+
+              <!-- STEP 5: Statement & Documents -->
+              <div class="wizard-step" id="step-5">
+                <h3 style="font-size: 1.35rem; color: var(--navy-900); margin-bottom: 6px;">Step 5: Statement of Purpose & Documents</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">Share your academic motivation and upload credentials for committee review.</p>
+
+                <div class="form-group">
+                  <div class="flex items-center justify-between">
+                    <label class="form-label">Why would you like to join Northstar University? *</label>
+                    <span id="statementCharCount" style="font-size: 0.8rem; color: var(--text-muted);">0 / 2000 characters</span>
+                  </div>
+                  <textarea id="statementTextarea" name="statement" class="form-control" minlength="20" maxlength="2000" rows="5" placeholder="Share your academic goals, areas of intellectual curiosity, campus projects you wish to lead, and what draws you to our university community." required></textarea>
+                  <span class="form-hint">Minimum 20 characters. A thoughtful personal statement substantially strengthens your admissions case.</span>
+                </div>
+
+                <!-- Document Upload Section -->
+                <div style="margin-top: 24px;">
+                  <label class="form-label" style="margin-bottom: 8px;">Upload Academic Documents (Transcripts, Government ID, Recommendations)</label>
+                  
+                  <div class="dropzone" id="docDropzone">
+                    <svg class="dropzone-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    <strong style="display: block; font-size: 0.95rem; color: var(--navy-900);">Click or drag files here to upload</strong>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 4px;">Accepted formats: PDF, JPG, PNG (Max 10MB per file)</span>
+                  </div>
+                  <input type="file" id="fileUploadInput" style="display: none;" accept=".pdf,.jpg,.jpeg,.png">
+
+                  <!-- Uploaded Files List -->
+                  <div id="uploadedDocsList" style="margin-top: 16px;">
+                    <div class="doc-item-card">
+                      <div class="flex items-center gap-3">
+                        <div style="width: 40px; height: 40px; background: #EFF6FF; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--brand-blue);">
+                          <svg style="width: 22px; height: 22px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        </div>
+                        <div>
+                          <strong style="font-size: 0.9rem; color: var(--navy-900); display: block;">Official_Transcripts_Senior_Secondary.pdf</strong>
+                          <span style="font-size: 0.775rem; color: var(--text-muted);">2.4 MB · Ready for verification</span>
+                        </div>
+                      </div>
+                      <span class="badge badge-success"><span class="badge-dot"></span> Ready</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- STEP 6: Review & Final Submission -->
+              <div class="wizard-step" id="step-6">
+                <h3 style="font-size: 1.35rem; color: var(--navy-900); margin-bottom: 6px;">Step 6: Review & Confirm Submission</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">Please review your application summary carefully before submitting to the security gateway.</p>
+
+                <!-- Dynamic Review Summary Container -->
+                <div id="reviewSummaryContent" style="margin-bottom: 24px;"></div>
+
+                <!-- Honor Code Declaration -->
+                <div class="card" style="background: #FFFBEB; border-color: #FDE68A; padding: 20px;">
+                  <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
+                    <input type="checkbox" id="declarationCheck" required style="width: 20px; height: 20px; margin-top: 2px;">
+                    <span style="font-size: 0.875rem; color: #92400E; line-height: 1.5;">
+                      <strong>Applicant Declaration & Honor Pledge:</strong> I certify that all information submitted in this application is complete, authentic, and truthfully represented by myself. I understand that any false statements or duplicate automated submissions will be flagged by the security screening system and will result in immediate disqualification.
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Wizard Footer Navigation Controls -->
+            <div class="wizard-footer">
+              <button type="button" class="btn btn-secondary" id="prevStepBtn" style="display: none;">
+                ← Previous Step
+              </button>
+              <div></div>
+              <div class="flex items-center gap-3">
+                <button type="button" class="btn btn-primary" id="nextStepBtn">
+                  Next Step →
+                </button>
+                <button type="submit" class="btn btn-success btn-lg" id="submitAppBtn" style="display: none;">
+                  Submit Application
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         TAB 4: APPLICATION STATUS TRACKER
+         ==================================================================== -->
+    <div id="tab-status" class="tab-pane" style="display: none; padding: 50px 0;">
+      <div class="container" style="max-width: 820px;">
+        
+        <div class="card" style="box-shadow: var(--shadow-lg);">
+          <div class="card-header">
+            <div>
+              <span class="badge badge-info" style="margin-bottom: 6px;">Admissions Registry</span>
+              <h2 style="font-size: 1.6rem; color: var(--navy-900);">Track Application Status</h2>
+              <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 4px;">
+                Enter your official Application Reference Code and email to track your admissions progress in real-time.
+              </p>
+            </div>
+          </div>
+
+          <form id="statusCheckForm" style="margin-top: 12px;">
+            <div class="grid grid-cols-2" style="gap: 16px;">
+              <div class="form-group">
+                <label class="form-label">Application Reference Code *</label>
+                <input type="text" name="reference_code" class="form-control" placeholder="CAP-20260916-2E1D88" required style="font-family: var(--font-mono); text-transform: uppercase;">
+                <span class="form-hint">Found on your submission acknowledgment slip.</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Registered Email Address *</label>
+                <input type="email" name="email" class="form-control" placeholder="eleanor.vance@example.com" required>
+                <span class="form-hint">Email address used during submission.</span>
+              </div>
+            </div>
+
+            <div style="margin-top: 12px;">
+              <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                Track Application
+              </button>
+            </div>
+          </form>
+
+          <!-- Dynamic Status Timeline Result Container -->
+          <div id="statusResultContainer"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         TAB 5: DOCUMENT VAULT
+         ==================================================================== -->
+    <div id="tab-vault" class="tab-pane" style="display: none; padding: 50px 0;">
+      <div class="container" style="max-width: 960px;">
+        
+        <div class="flex items-center justify-between" style="margin-bottom: 28px; flex-wrap: wrap; gap: 14px;">
+          <div>
+            <span class="badge badge-info" style="margin-bottom: 6px;">Secure Repository</span>
+            <h2 style="font-size: 1.8rem; color: var(--navy-900);">Document Vault & Verification</h2>
+            <p style="color: var(--text-secondary);">Manage official certificates, transcripts, and ID verification records.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="document.getElementById('fileUploadInput').click()">
+            <svg style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            Upload New Document
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2" style="gap: 20px;">
+          <!-- Doc 1 -->
+          <div class="card card-hover">
+            <div class="flex items-center justify-between" style="margin-bottom: 12px;">
+              <span class="badge badge-success"><span class="badge-dot"></span> Verified by Registrar</span>
+              <span style="font-size: 0.775rem; color: var(--text-muted);">PDF · 2.1 MB</span>
+            </div>
+            <strong style="font-size: 1.05rem; color: var(--navy-900); display: block; margin-bottom: 6px;">
+              Senior Secondary Marksheet & Transcript
+            </strong>
+            <p style="font-size: 0.825rem; color: var(--text-secondary); margin-bottom: 16px;">
+              Verified Grade 12 cumulative marks statement with STEM course equivalencies.
+            </p>
+            <div class="flex items-center justify-between" style="border-top: 1px solid var(--border-light); padding-top: 12px;">
+              <span style="font-size: 0.775rem; color: var(--text-muted);">Uploaded Sep 16, 2026</span>
+              <button class="btn btn-ghost btn-sm" onclick="Toast.show('Preview Document', 'Opening verified transcript view.', 'info')">Preview</button>
+            </div>
+          </div>
+
+          <!-- Doc 2 -->
+          <div class="card card-hover">
+            <div class="flex items-center justify-between" style="margin-bottom: 12px;">
+              <span class="badge badge-success"><span class="badge-dot"></span> Verified Identity</span>
+              <span style="font-size: 0.775rem; color: var(--text-muted);">JPG · 1.4 MB</span>
+            </div>
+            <strong style="font-size: 1.05rem; color: var(--navy-900); display: block; margin-bottom: 6px;">
+              Government Photo ID / Passport
+            </strong>
+            <p style="font-size: 0.825rem; color: var(--text-secondary); margin-bottom: 16px;">
+              Official government-issued identity proof with biographical and photo verification.
+            </p>
+            <div class="flex items-center justify-between" style="border-top: 1px solid var(--border-light); padding-top: 12px;">
+              <span style="font-size: 0.775rem; color: var(--text-muted);">Uploaded Sep 16, 2026</span>
+              <button class="btn btn-ghost btn-sm" onclick="Toast.show('Preview Document', 'Opening passport scan preview.', 'info')">Preview</button>
+            </div>
+          </div>
+
+          <!-- Doc 3 -->
+          <div class="card card-hover">
+            <div class="flex items-center justify-between" style="margin-bottom: 12px;">
+              <span class="badge badge-warning"><span class="badge-dot"></span> Under Review</span>
+              <span style="font-size: 0.775rem; color: var(--text-muted);">PDF · 820 KB</span>
+            </div>
+            <strong style="font-size: 1.05rem; color: var(--navy-900); display: block; margin-bottom: 6px;">
+              Personal Statement of Purpose
+            </strong>
+            <p style="font-size: 0.825rem; color: var(--text-secondary); margin-bottom: 16px;">
+              Applicant academic essay under review by the Computer Science department committee.
+            </p>
+            <div class="flex items-center justify-between" style="border-top: 1px solid var(--border-light); padding-top: 12px;">
+              <span style="font-size: 0.775rem; color: var(--text-muted);">Uploaded Sep 17, 2026</span>
+              <button class="btn btn-ghost btn-sm" onclick="Toast.show('Preview Document', 'Opening statement document.', 'info')">Preview</button>
+            </div>
+          </div>
+
+          <!-- Doc 4 -->
+          <div class="card card-hover">
+            <div class="flex items-center justify-between" style="margin-bottom: 12px;">
+              <span class="badge badge-neutral">Optional</span>
+              <span style="font-size: 0.775rem; color: var(--text-muted);">Action Available</span>
+            </div>
+            <strong style="font-size: 1.05rem; color: var(--navy-900); display: block; margin-bottom: 6px;">
+              Extracurricular & Portfolio Certificates
+            </strong>
+            <p style="font-size: 0.825rem; color: var(--text-secondary); margin-bottom: 16px;">
+              Add coding competition awards, olympiad certificates, or project GitHub portfolios.
+            </p>
+            <div class="flex items-center justify-between" style="border-top: 1px solid var(--border-light); padding-top: 12px;">
+              <span style="font-size: 0.775rem; color: var(--text-muted);">Not yet uploaded</span>
+              <button class="btn btn-secondary btn-sm" onclick="document.getElementById('fileUploadInput').click()">Upload</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         TAB 6: FAQ & SUPPORT
+         ==================================================================== -->
+    <div id="tab-faq" class="tab-pane" style="display: none; padding: 50px 0;">
+      <div class="container" style="max-width: 860px;">
+        
+        <div class="section-header">
+          <div class="section-tag">Admissions Knowledgebase</div>
+          <h2 class="section-title">Frequently Asked Questions</h2>
+          <p class="section-desc">Everything you need to know about criteria, deadlines, verification, and scholarship eligibility.</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px;">
+          <div class="card">
+            <h4 style="font-size: 1.05rem; color: var(--navy-900); margin-bottom: 8px;">What happens after I submit my application?</h4>
+            <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
+              Immediately upon submission, your application is processed through Northstar's automated DSADPS Security Gate to assign a unique reference code and clear duplicate/velocity screening. Next, admissions officers audit your academic transcripts, followed by faculty committee review.
+            </p>
+          </div>
+
+          <div class="card">
+            <h4 style="font-size: 1.05rem; color: var(--navy-900); margin-bottom: 8px;">How do merit scholarships work?</h4>
+            <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
+              All applicants who check the scholarship consideration box are automatically assessed for merit scholarships ranging from 25% to 75% tuition waivers based on Grade 12 scores and personal statement excellence.
+            </p>
+          </div>
+
+          <div class="card">
+            <h4 style="font-size: 1.05rem; color: var(--navy-900); margin-bottom: 8px;">What if my application status says "Verification required"?</h4>
+            <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
+              This indicates that secondary verification (e.g. proof of residency or additional transcript notarization) is required before final evaluation. Our admissions desk will email you instructions on any supplemental materials needed.
+            </p>
+          </div>
+        </div>
+
+        <!-- Contact Desk Card -->
+        <div class="card" style="background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 100%); color: #ffffff;">
+          <div class="flex items-center justify-between" style="flex-wrap: wrap; gap: 20px;">
+            <div>
+              <h3 style="color: #ffffff; margin-bottom: 6px;">Need Assistance With Your Application?</h3>
+              <p style="color: #94A3B8; font-size: 0.9rem;">Our dedicated Admissions Advising Office is available Monday through Friday, 9:00 AM – 6:00 PM EST.</p>
+              <div style="margin-top: 14px; font-size: 0.85rem; color: #BFDBFE;">
+                📞 +1 (800) 555-NORTHSTAR · ✉️ admissions@northstar.edu
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="Toast.show('Live Support', 'Admissions advisor chat connected.', 'info')">
+              Contact Admissions
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </main>
-  <script>
-    const show=(element,message)=>{element.style.display='block';element.innerHTML=message};
-    applicationForm.addEventListener('submit',async event=>{event.preventDefault();const button=applicationForm.querySelector('button');button.disabled=true;button.textContent='Submitting…';const response=await fetch('/v1/portal/applications',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(applicationForm))) });const body=await response.json();button.disabled=false;button.textContent='Submit application';if(!response.ok){show(result,'<b>We could not submit your application.</b> '+(body.detail||'Please check the form.'));return}const message=body.action==='allow'?'Your application was received.':body.action==='captcha'?'Your application needs verification before review.':'Your application is held for admissions review.';show(result,`<b>${message}</b><br>Your reference: <strong>${body.reference_code}</strong><br><small>Save this reference to check your application status.</small>`)});
-    statusForm.addEventListener('submit',async event=>{event.preventDefault();const response=await fetch('/v1/portal/application-status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(statusForm))) });const body=await response.json();show(statusResult,response.ok?`<b>${body.status}</b><br>Program: ${body.program}<br>Submitted: ${new Date(body.submitted_at+'Z').toLocaleString()}`:`<b>${body.detail||'Application not found.'}</b>`)});
-  </script>
-</body></html>
+
+  <!-- ====================================================================
+       OFFICIAL SUBMISSION RECEIPT MODAL
+       ==================================================================== -->
+  <div class="modal-backdrop" id="receiptModal">
+    <div class="modal-content" style="max-width: 620px;">
+      <div class="receipt-card">
+        
+        <div class="receipt-header">
+          <div>
+            <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--brand-blue); margin-bottom: 4px;">Official Admissions Acknowledgment</div>
+            <h3 style="font-size: 1.4rem; color: var(--navy-900);">Northstar University</h3>
+          </div>
+          <div id="receiptStatusBadge" class="badge badge-success">
+            <span class="badge-dot"></span> Cleared
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 24px;">
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">Official Application Reference Code</div>
+          <div class="receipt-ref" id="receiptRefCode">CAP-20260921-XXXXXX</div>
+          <div style="margin-top: 8px;">
+            <button class="btn btn-ghost btn-sm" id="copyRefBtn">
+              <svg style="width: 14px; height: 14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
+              Copy Code
+            </button>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; font-size: 0.875rem; background: var(--bg-main); padding: 18px; border-radius: var(--radius-md);">
+          <div>
+            <span style="color: var(--text-muted); font-size: 0.775rem;">Candidate Name:</span>
+            <strong style="display: block; color: var(--navy-900);" id="receiptStudentName">—</strong>
+          </div>
+          <div>
+            <span style="color: var(--text-muted); font-size: 0.775rem;">Selected Program:</span>
+            <strong style="display: block; color: var(--navy-900);" id="receiptProgram">—</strong>
+          </div>
+          <div>
+            <span style="color: var(--text-muted); font-size: 0.775rem;">Registered Email:</span>
+            <strong style="display: block; color: var(--navy-900);" id="receiptEmail">—</strong>
+          </div>
+          <div>
+            <span style="color: var(--text-muted); font-size: 0.775rem;">Timestamp:</span>
+            <strong style="display: block; color: var(--navy-900);" id="receiptDate">—</strong>
+          </div>
+        </div>
+
+        <div id="receiptActionNotice" style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: var(--radius-md); padding: 14px; font-size: 0.825rem; color: #1E40AF; margin-bottom: 24px;">
+          <!-- Dynamically populated notice -->
+        </div>
+
+        <div class="flex items-center justify-between" style="border-top: 1px solid var(--border-light); padding-top: 20px;">
+          <button class="btn btn-secondary" id="printReceiptBtn">
+            <svg style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+            Print Receipt
+          </button>
+          <button class="btn btn-primary" id="closeReceiptBtn">
+            View Dashboard →
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Institutional Footer -->
+  <footer class="portal-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h4>Northstar University</h4>
+          <p style="font-size: 0.875rem; line-height: 1.6; max-width: 320px;">
+            A premier institution chartered for academic distinction, high-impact scientific research, and ethical leadership in technology and society.
+          </p>
+          <div style="margin-top: 18px; font-size: 0.8rem; color: #64748B;">
+            Campus: 1000 University Parkway, Cambridge, MA 02138
+          </div>
+        </div>
+
+        <div>
+          <h5 style="color: #ffffff; font-size: 0.95rem; margin-bottom: 14px;">Admissions</h5>
+          <ul class="footer-links">
+            <li><a href="#" data-tab-target="tab-apply">Undergraduate Apply</a></li>
+            <li><a href="#" data-tab-target="tab-overview">Program Catalog</a></li>
+            <li><a href="#" data-tab-target="tab-status">Check Application Status</a></li>
+            <li><a href="#" data-tab-target="tab-vault">Document Requirements</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h5 style="color: #ffffff; font-size: 0.95rem; margin-bottom: 14px;">Campus Life</h5>
+          <ul class="footer-links">
+            <li><a href="#">Residential Colleges</a></li>
+            <li><a href="#">Student Innovation Hub</a></li>
+            <li><a href="#">Athletics & Recreation</a></li>
+            <li><a href="#">Global Exchange</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h5 style="color: #ffffff; font-size: 0.95rem; margin-bottom: 14px;">Portals</h5>
+          <ul class="footer-links">
+            <li><a href="/admin">Admissions Staff Portal</a></li>
+            <li><a href="/docs">API Documentation</a></li>
+            <li><a href="#" data-tab-target="tab-faq">Security Compliance (DSADPS)</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 Northstar University Admissions Directorate. All rights reserved.</div>
+        <div class="flex items-center gap-4">
+          <span>Protected by DSADPS Security Gate v1.0</span>
+          <span>•</span>
+          <a href="/admin" style="color: #93C5FD; font-weight: 600;">Staff Access</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Core Scripts -->
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/portal.js"></script>
+</body>
+</html>
