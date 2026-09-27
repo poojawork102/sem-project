@@ -2,6 +2,19 @@
  * Northstar University Admissions Platform - Core API & UI Helper Module
  */
 
+// Escape a value before inserting it into an HTML template string.
+// Applicant fields are attacker-controlled, so without this a name like
+// <img src=x onerror=...> would run as script in the admin's browser (stored XSS).
+function esc(value) {
+  if (value === null || value === undefined) return '';
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // Toast notification manager
 const Toast = {
   container: null,
@@ -29,14 +42,22 @@ const Toast = {
       info: `<svg class="toast-icon" fill="none" viewBox="0 0 24 24" stroke="#0284C7" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`
     };
 
+    // Only the static icon markup goes through innerHTML; title and message
+    // are set with textContent because they can contain server/user text.
     toast.innerHTML = `
       ${icons[type] || icons.info}
       <div class="toast-content">
-        <div class="toast-title">${title}</div>
-        ${message ? `<div class="toast-message">${message}</div>` : ''}
+        <div class="toast-title"></div>
       </div>
       <button class="toast-close" aria-label="Close">&times;</button>
     `;
+    toast.querySelector('.toast-title').textContent = title;
+    if (message) {
+      const messageEl = document.createElement('div');
+      messageEl.className = 'toast-message';
+      messageEl.textContent = message;
+      toast.querySelector('.toast-content').appendChild(messageEl);
+    }
 
     toast.querySelector('.toast-close').addEventListener('click', () => {
       this.dismiss(toast);
@@ -221,5 +242,6 @@ const Api = {
   }
 };
 
+window.esc = esc;
 window.Toast = Toast;
 window.Api = Api;

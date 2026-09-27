@@ -381,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return `
         <div style="margin-bottom: 12px;">
           <div class="flex items-center justify-between" style="font-size: 0.825rem; margin-bottom: 4px;">
-            <strong style="color: var(--navy-900);">${prog}</strong>
+            <strong style="color: var(--navy-900);">${esc(prog)}</strong>
             <span style="color: var(--text-muted);">${count} applicants (${pct}%)</span>
           </div>
           <div style="background: var(--bg-card-subtle); height: 7px; border-radius: 4px; overflow: hidden;">
@@ -414,20 +414,20 @@ document.addEventListener('DOMContentLoaded', () => {
         <tr>
           <td><span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">${timeStr}</span></td>
           <td>
-            <strong style="color: var(--navy-900); display: block;">${item.full_name || 'Anonymous'}</strong>
-            <span style="font-size: 0.775rem; color: var(--text-muted);">${item.email}</span>
+            <strong style="color: var(--navy-900); display: block;">${esc(item.full_name || 'Anonymous')}</strong>
+            <span style="font-size: 0.775rem; color: var(--text-muted);">${esc(item.email)}</span>
           </td>
-          <td><code style="font-size: 0.775rem; color: var(--navy-700);">${item.ip_address}</code></td>
+          <td><code style="font-size: 0.775rem; color: var(--navy-700);">${esc(item.ip_address)}</code></td>
           <td>
-            <span class="score-pill ${riskClass}">${item.risk_score.toFixed(1)}</span>
+            <span class="score-pill ${riskClass}">${esc(item.risk_score.toFixed(1))}</span>
           </td>
           <td>
             <span class="badge ${actionBadge}">
-              <span class="badge-dot"></span> ${item.final_action}
+              <span class="badge-dot"></span> ${esc(item.final_action)}
             </span>
           </td>
           <td>
-            <button class="btn btn-secondary btn-sm" onclick="openActivityDossier(${item.id})">
+            <button class="btn btn-secondary btn-sm" onclick="openActivityDossier(${Number(item.id)})">
               Review
             </button>
           </td>
@@ -524,9 +524,9 @@ document.addEventListener('DOMContentLoaded', () => {
       let aiTag = '<span class="badge badge-neutral" style="font-size:0.7rem;">IF: N/A</span>';
       if (item.ai_anomaly_score !== null && item.ai_anomaly_score !== undefined) {
         if (item.ai_status === 'anomaly') {
-          aiTag = `<span class="badge badge-danger" style="font-size:0.7rem;">IF: ${item.ai_anomaly_score.toFixed(0)}</span>`;
+          aiTag = `<span class="badge badge-danger" style="font-size:0.7rem;">IF: ${esc(item.ai_anomaly_score.toFixed(0))}</span>`;
         } else {
-          aiTag = `<span class="badge badge-success" style="font-size:0.7rem;">IF: ${item.ai_anomaly_score.toFixed(0)}</span>`;
+          aiTag = `<span class="badge badge-success" style="font-size:0.7rem;">IF: ${esc(item.ai_anomaly_score.toFixed(0))}</span>`;
         }
       }
 
@@ -535,7 +535,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (item.xgb_prediction) {
         const xgbBadge = item.xgb_prediction === 'allow' ? 'badge-success' : (item.xgb_prediction === 'captcha' ? 'badge-warning' : 'badge-danger');
         const conf = item.xgb_confidence !== null ? ` ${item.xgb_confidence.toFixed(0)}%` : '';
-        xgbTag = `<span class="badge ${xgbBadge}" style="font-size:0.7rem;">XGB: ${item.xgb_prediction}${conf}</span>`;
+        xgbTag = `<span class="badge ${xgbBadge}" style="font-size:0.7rem;">XGB: ${esc(item.xgb_prediction)}${esc(conf)}</span>`;
       }
 
       return `
@@ -543,44 +543,44 @@ document.addEventListener('DOMContentLoaded', () => {
           <td>
             <div class="flex items-center gap-3">
               <div style="width: 36px; height: 36px; border-radius: 50%; background: #EFF6FF; color: var(--brand-blue); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;">
-                ${initials}
+                ${esc(initials)}
               </div>
               <div>
                 <strong style="color: var(--navy-900); display: block; font-size: 0.9rem;">
-                  ${item.full_name || 'Anonymous'}
+                  ${esc(item.full_name || 'Anonymous')}
                   ${isSpam ? '<span class="badge badge-danger" style="margin-left: 6px; font-size: 0.65rem;">Spam</span>' : ''}
                 </strong>
-                <span style="font-size: 0.775rem; color: var(--text-muted);">${item.email}</span>
+                <span style="font-size: 0.775rem; color: var(--text-muted);">${esc(item.email)}</span>
               </div>
             </div>
           </td>
           <td>
             <span class="badge badge-outline" style="font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 2px;">
-              ${item.reference_code || '—'}
+              ${esc(item.reference_code || '—')}
             </span>
-            <div style="font-size: 0.775rem; color: var(--text-secondary);">${item.program || 'Undergrad'}</div>
+            <div style="font-size: 0.775rem; color: var(--text-secondary);">${esc(item.program || 'Undergrad')}</div>
           </td>
           <td>
-            <span style="font-size: 0.8rem; color: var(--text-secondary); display: block;">${submittedDate}</span>
-            <code style="font-size: 0.725rem; color: var(--text-muted);">${item.ip_address}</code>
+            <span style="font-size: 0.8rem; color: var(--text-secondary); display: block;">${esc(submittedDate)}</span>
+            <code style="font-size: 0.725rem; color: var(--text-muted);">${esc(item.ip_address)}</code>
           </td>
           <td>
-            <span class="score-pill ${riskClass}" title="${(item.reasons || []).join(', ')}">
+            <span class="score-pill ${riskClass}" title="${esc((item.reasons || []).join(', '))}">
               ${riskScore.toFixed(1)}
             </span>
           </td>
           <td><div style="display:flex; flex-direction:column; gap:3px;">${aiTag}${xgbTag}</div></td>
           <td>
             <span class="badge ${actionBadge}">
-              <span class="badge-dot"></span> ${item.status}
+              <span class="badge-dot"></span> ${esc(item.status)}
             </span>
           </td>
           <td>
             <div class="flex items-center gap-2">
-              <button class="btn btn-secondary btn-sm" onclick="openApplicationDossier(${item.id})">
+              <button class="btn btn-secondary btn-sm" onclick="openApplicationDossier(${Number(item.id)})">
                 Dossier
               </button>
-              <button class="btn btn-ghost btn-sm" title="Toggle Spam" onclick="toggleSpamRecord(${item.id}, ${!isSpam})">
+              <button class="btn btn-ghost btn-sm" title="Toggle Spam" onclick="toggleSpamRecord(${Number(item.id)}, ${!isSpam})">
                 <svg style="width: 15px; height: 15px; color: ${isSpam ? 'var(--success)' : 'var(--danger)'};" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
               </button>
             </div>
@@ -675,32 +675,32 @@ document.addEventListener('DOMContentLoaded', () => {
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px;">
         <div class="card" style="padding: 16px;">
           <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Academic Program</span>
-          <strong style="display: block; font-size: 1rem; color: var(--navy-900); margin-top: 4px;">${app.program || 'BTech Computer Science'}</strong>
-          <span style="font-size: 0.8rem; color: var(--text-secondary);">${payload.intake_term || 'Fall 2026 Intake'}</span>
+          <strong style="display: block; font-size: 1rem; color: var(--navy-900); margin-top: 4px;">${esc(app.program || 'BTech Computer Science')}</strong>
+          <span style="font-size: 0.8rem; color: var(--text-secondary);">${esc(payload.intake_term || 'Fall 2026 Intake')}</span>
         </div>
         <div class="card" style="padding: 16px;">
           <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Client Telemetry</span>
-          <strong style="display: block; font-size: 0.95rem; color: var(--navy-900); font-family: var(--font-mono); margin-top: 4px;">${app.ip_address}</strong>
-          <span style="font-size: 0.8rem; color: var(--text-secondary);">${payload.city || 'Verified Location'}</span>
+          <strong style="display: block; font-size: 0.95rem; color: var(--navy-900); font-family: var(--font-mono); margin-top: 4px;">${esc(app.ip_address)}</strong>
+          <span style="font-size: 0.8rem; color: var(--text-secondary);">${esc(payload.city || 'Verified Location')}</span>
         </div>
       </div>
 
       <div class="card" style="padding: 20px; margin-bottom: 20px;">
         <h4 style="font-size: 0.95rem; color: var(--navy-900); margin-bottom: 12px;">Candidate Profile & Contact</h4>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.875rem;">
-          <div><span style="color: var(--text-muted);">Phone:</span> <strong>${app.phone || payload.phone || '—'}</strong></div>
-          <div><span style="color: var(--text-muted);">DOB:</span> <strong>${payload.date_of_birth || '—'}</strong></div>
-          <div><span style="color: var(--text-muted);">City:</span> <strong>${payload.city || '—'}</strong></div>
-          <div><span style="color: var(--text-muted);">Street:</span> <strong>${payload.street_address || '—'}</strong></div>
-          <div><span style="color: var(--text-muted);">Qualification:</span> <strong>${payload.highest_qualification || 'Senior Secondary'}</strong></div>
-          <div><span style="color: var(--text-muted);">GPA / Score:</span> <strong>${payload.gpa_score || '3.9 / 4.0'}</strong></div>
+          <div><span style="color: var(--text-muted);">Phone:</span> <strong>${esc(app.phone || payload.phone || '—')}</strong></div>
+          <div><span style="color: var(--text-muted);">DOB:</span> <strong>${esc(payload.date_of_birth || '—')}</strong></div>
+          <div><span style="color: var(--text-muted);">City:</span> <strong>${esc(payload.city || '—')}</strong></div>
+          <div><span style="color: var(--text-muted);">Street:</span> <strong>${esc(payload.street_address || '—')}</strong></div>
+          <div><span style="color: var(--text-muted);">Qualification:</span> <strong>${esc(payload.highest_qualification || 'Senior Secondary')}</strong></div>
+          <div><span style="color: var(--text-muted);">GPA / Score:</span> <strong>${esc(payload.gpa_score || '3.9 / 4.0')}</strong></div>
         </div>
       </div>
 
       <div class="card" style="padding: 20px; margin-bottom: 20px;">
         <h4 style="font-size: 0.95rem; color: var(--navy-900); margin-bottom: 8px;">Applicant Statement of Purpose</h4>
         <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; font-style: italic; background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md);">
-          "${payload.statement || 'No statement provided.'}"
+          "${esc(payload.statement || 'No statement provided.')}"
         </p>
       </div>
 
@@ -709,18 +709,18 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="flex items-center justify-between" style="margin-bottom: 12px;">
           <h4 style="font-size: 0.95rem; color: var(--navy-900);">DSADPS Security Engine Audit</h4>
           <span class="score-pill ${app.risk_score > 80 ? 'score-high' : (app.risk_score >= 40 ? 'score-med' : 'score-low')}">
-            Risk: ${(app.risk_score || 0).toFixed(1)} / 100
+            Risk: ${esc((app.risk_score || 0).toFixed(1))} / 100
           </span>
         </div>
         <div style="font-size: 0.825rem; color: var(--text-secondary); margin-bottom: 10px;">
           <strong>Explainable Signals:</strong>
           <div style="margin-top: 6px;">
-            ${(app.reasons && app.reasons.length) ? app.reasons.map(r => `<span class="reason-chip">⚠️ ${r}</span>`).join('') : '<span class="reason-chip" style="background:#ECFDF5; color:#065F46;">✓ All security thresholds clear</span>'}
+            ${(app.reasons && app.reasons.length) ? app.reasons.map(r => `<span class="reason-chip">⚠️ ${esc(r)}</span>`).join('') : '<span class="reason-chip" style="background:#ECFDF5; color:#065F46;">✓ All security thresholds clear</span>'}
           </div>
         </div>
         <div style="font-size: 0.825rem; color: var(--text-muted); border-top: 1px solid var(--border-light); padding-top: 10px; display: flex; flex-direction: column; gap: 4px;">
-          <div>Isolation Forest Score: <strong>${app.ai_anomaly_score !== null && app.ai_anomaly_score !== undefined ? app.ai_anomaly_score.toFixed(1) : 'Not trained'}</strong> (${app.ai_status || 'offline'})</div>
-          <div>XGBoost Prediction: <strong>${app.xgb_prediction || 'Not trained'}</strong>${app.xgb_confidence ? ` (${app.xgb_confidence.toFixed(1)}% confidence)` : ''}</div>
+          <div>Isolation Forest Score: <strong>${esc(app.ai_anomaly_score !== null && app.ai_anomaly_score !== undefined ? app.ai_anomaly_score.toFixed(1) : 'Not trained')}</strong> (${esc(app.ai_status || 'offline')})</div>
+          <div>XGBoost Prediction: <strong>${esc(app.xgb_prediction || 'Not trained')}</strong>${app.xgb_confidence ? ` (${esc(app.xgb_confidence.toFixed(1))}% confidence)` : ''}</div>
         </div>
       </div>
 
@@ -822,10 +822,10 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="badge ${item.status === 'allow' ? 'badge-success' : 'badge-warning'}">
             ${item.status === 'allow' ? '✓ Transcripts Verified' : '⏳ Awaiting Review'}
           </span>
-          <span style="font-size: 0.775rem; color: var(--text-muted); font-family: var(--font-mono);">${item.reference_code || 'CAP'}</span>
+          <span style="font-size: 0.775rem; color: var(--text-muted); font-family: var(--font-mono);">${esc(item.reference_code || 'CAP')}</span>
         </div>
-        <strong style="font-size: 1rem; color: var(--navy-900); display: block; margin-bottom: 4px;">${item.full_name}</strong>
-        <span style="font-size: 0.825rem; color: var(--text-secondary); display: block; margin-bottom: 14px;">${item.program || 'BTech Computer Science'}</span>
+        <strong style="font-size: 1rem; color: var(--navy-900); display: block; margin-bottom: 4px;">${esc(item.full_name)}</strong>
+        <span style="font-size: 0.825rem; color: var(--text-secondary); display: block; margin-bottom: 14px;">${esc(item.program || 'BTech Computer Science')}</span>
         
         <div style="background: var(--bg-card-subtle); padding: 12px; border-radius: var(--radius-md); font-size: 0.8rem; margin-bottom: 14px;">
           <div class="flex items-center justify-between" style="margin-bottom: 6px;">

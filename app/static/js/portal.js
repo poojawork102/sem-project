@@ -242,32 +242,32 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="card" style="padding: 18px; border-left: 4px solid var(--brand-blue);">
           <h4 style="margin-bottom: 10px; font-size: 0.95rem; color: var(--navy-900);">1. Personal Information</h4>
           <p style="font-size: 0.875rem; line-height: 1.6; color: var(--text-secondary);">
-            <strong>Full Name:</strong> ${data.full_name || '—'}<br>
-            <strong>Email:</strong> ${data.email || '—'}<br>
-            <strong>Phone:</strong> ${data.phone || '—'}<br>
-            <strong>Date of Birth:</strong> ${data.date_of_birth || '—'}<br>
-            <strong>Gender:</strong> ${data.gender || 'Not specified'}<br>
-            <strong>Nationality:</strong> ${data.nationality || 'Not specified'}
+            <strong>Full Name:</strong> ${esc(data.full_name || '—')}<br>
+            <strong>Email:</strong> ${esc(data.email || '—')}<br>
+            <strong>Phone:</strong> ${esc(data.phone || '—')}<br>
+            <strong>Date of Birth:</strong> ${esc(data.date_of_birth || '—')}<br>
+            <strong>Gender:</strong> ${esc(data.gender || 'Not specified')}<br>
+            <strong>Nationality:</strong> ${esc(data.nationality || 'Not specified')}
           </p>
         </div>
 
         <div class="card" style="padding: 18px; border-left: 4px solid var(--brand-indigo);">
           <h4 style="margin-bottom: 10px; font-size: 0.95rem; color: var(--navy-900);">2. Academic History</h4>
           <p style="font-size: 0.875rem; line-height: 1.6; color: var(--text-secondary);">
-            <strong>Qualification:</strong> ${data.highest_qualification || 'Senior Secondary (12th)'}<br>
-            <strong>Institution:</strong> ${data.previous_institution || '—'}<br>
-            <strong>Completion Year:</strong> ${data.passing_year || '2026'}<br>
-            <strong>Major / Stream:</strong> ${data.academic_stream || 'Science / Math'}<br>
-            <strong>Overall GPA / Score:</strong> ${data.gpa_score || '—'}
+            <strong>Qualification:</strong> ${esc(data.highest_qualification || 'Senior Secondary (12th)')}<br>
+            <strong>Institution:</strong> ${esc(data.previous_institution || '—')}<br>
+            <strong>Completion Year:</strong> ${esc(data.passing_year || '2026')}<br>
+            <strong>Major / Stream:</strong> ${esc(data.academic_stream || 'Science / Math')}<br>
+            <strong>Overall GPA / Score:</strong> ${esc(data.gpa_score || '—')}
           </p>
         </div>
 
         <div class="card" style="padding: 18px; border-left: 4px solid var(--success);">
           <h4 style="margin-bottom: 10px; font-size: 0.95rem; color: var(--navy-900);">3. Program Choice</h4>
           <p style="font-size: 0.875rem; line-height: 1.6; color: var(--text-secondary);">
-            <strong>Degree Program:</strong> <span class="badge badge-info">${data.program || '—'}</span><br>
-            <strong>Intake Term:</strong> ${data.intake_term || 'Fall 2026'}<br>
-            <strong>Study Mode:</strong> ${data.study_mode || 'Full-time On-Campus'}<br>
+            <strong>Degree Program:</strong> <span class="badge badge-info">${esc(data.program || '—')}</span><br>
+            <strong>Intake Term:</strong> ${esc(data.intake_term || 'Fall 2026')}<br>
+            <strong>Study Mode:</strong> ${esc(data.study_mode || 'Full-time On-Campus')}<br>
             <strong>Scholarship Request:</strong> ${data.scholarship_interest ? 'Yes' : 'No'}
           </p>
         </div>
@@ -275,11 +275,11 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="card" style="padding: 18px; border-left: 4px solid var(--warning);">
           <h4 style="margin-bottom: 10px; font-size: 0.95rem; color: var(--navy-900);">4. Contact Address</h4>
           <p style="font-size: 0.875rem; line-height: 1.6; color: var(--text-secondary);">
-            <strong>Street Address:</strong> ${data.street_address || '—'}<br>
-            <strong>City:</strong> ${data.city || '—'}<br>
-            <strong>State / Province:</strong> ${data.state || '—'}<br>
-            <strong>Country:</strong> ${data.country || '—'}<br>
-            <strong>Emergency Contact:</strong> ${data.emergency_contact || '—'}
+            <strong>Street Address:</strong> ${esc(data.street_address || '—')}<br>
+            <strong>City:</strong> ${esc(data.city || '—')}<br>
+            <strong>State / Province:</strong> ${esc(data.state || '—')}<br>
+            <strong>Country:</strong> ${esc(data.country || '—')}<br>
+            <strong>Emergency Contact:</strong> ${esc(data.emergency_contact || '—')}
           </p>
         </div>
       </div>
@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="card" style="margin-top: 18px; padding: 18px; background: var(--bg-card-subtle);">
         <h4 style="margin-bottom: 8px; font-size: 0.95rem; color: var(--navy-900);">Personal Statement</h4>
         <p style="font-size: 0.875rem; color: var(--text-secondary); font-style: italic; white-space: pre-wrap;">
-          "${data.statement || 'No statement provided.'}"
+          "${esc(data.statement || 'No statement provided.')}"
         </p>
       </div>
     `;
@@ -440,7 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="card" style="border-left: 4px solid var(--danger); padding: 20px; text-align: center;">
             <svg style="width: 44px; height: 44px; color: var(--danger); margin: 0 auto 10px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
             <h4 style="color: var(--navy-900); margin-bottom: 6px;">Application Not Found</h4>
-            <p style="font-size: 0.9rem; color: var(--text-secondary);">${err.message || 'Please check your Reference Code and Email address.'}</p>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">${esc(err.message || 'Please check your Reference Code and Email address.')}</p>
           </div>
         `;
         Toast.show('Not Found', err.message || 'No application matches that reference and email.', 'error');
@@ -466,11 +466,11 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="card-header" style="flex-wrap: wrap; gap: 12px;">
           <div>
             <span class="badge ${badgeClass}" style="margin-bottom: 8px;">
-              <span class="badge-dot"></span> ${appData.status}
+              <span class="badge-dot"></span> ${esc(appData.status)}
             </span>
-            <h3 style="font-size: 1.35rem; color: var(--navy-900);">${appData.program || 'Undergraduate Admission'}</h3>
+            <h3 style="font-size: 1.35rem; color: var(--navy-900);">${esc(appData.program || 'Undergraduate Admission')}</h3>
             <p style="font-size: 0.85rem; color: var(--text-muted);">
-              Candidate: <strong>${appData.full_name || 'Applicant'}</strong> · Reference: <strong style="font-family: var(--font-mono); color: var(--brand-blue);">${appData.reference_code}</strong>
+              Candidate: <strong>${esc(appData.full_name || 'Applicant')}</strong> · Reference: <strong style="font-family: var(--font-mono); color: var(--brand-blue);">${esc(appData.reference_code)}</strong>
             </p>
           </div>
           <div>
@@ -630,7 +630,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <svg style="width: 22px; height: 22px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
         </div>
         <div>
-          <strong style="font-size: 0.9rem; color: var(--navy-900); display: block;">${file.name}</strong>
+          <strong style="font-size: 0.9rem; color: var(--navy-900); display: block;">${esc(file.name)}</strong>
           <span style="font-size: 0.775rem; color: var(--text-muted);">${(file.size / 1024).toFixed(1)} KB · Just now</span>
         </div>
       </div>
