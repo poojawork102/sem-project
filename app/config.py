@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     captcha_threshold: int = 40
     # Google Gemini API key for the admin AI chatbot.
     gemini_api_key: str = ""
+    # Shared secret partner backends must send as X-API-Key to /v1/submissions.
+    # Empty means the endpoint is disabled (fails closed, never open).
+    submissions_api_key: str = ""
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=False)
 
 

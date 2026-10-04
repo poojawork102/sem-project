@@ -16,7 +16,7 @@ from .ml_agent import assess as assess_ai, status as ai_status, train as train_a
 from .xgboost_agent import predict as xgb_predict, status as xgb_status, train as xgb_train
 from .chatbot import chat_with_gemini
 from .schemas import ApplicationStatusIn, ChatMessageIn, DecisionOut, LoginIn, OverrideIn, PortalApplicationIn, PortalDecisionOut, SubmissionIn
-from .security import create_access_token, require_admin
+from .security import create_access_token, require_admin, require_submissions_api_key
 
 app = FastAPI(title="DSADPS Agent API", version="1.0.0")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
@@ -77,8 +77,10 @@ def process_submission(data: SubmissionIn, db: Session) -> DecisionOut:
 
 
 @app.post("/v1/submissions", response_model=DecisionOut)
-def assess_submission(data: SubmissionIn, db: Session = Depends(get_db)):
-    """Integration endpoint for an existing admission portal over TLS in production."""
+def assess_submission(data: SubmissionIn, _key: str = Depends(require_submissions_api_key), db: Session = Depends(get_db)):
+    """Integration endpoint for a partner's existing admission portal over TLS in
+    production. Requires an X-API-Key header because, unlike /v1/portal/applications,
+    the caller (not this server) is trusted to report the real applicant IP."""
     return process_submission(data, db)
 
 
