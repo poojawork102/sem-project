@@ -392,6 +392,22 @@ body.admin-body {
   margin-top: 20px;
 }
 
+/* Step A (Phase 7): component classes replacing inline styles that were
+   specific to one admin feature (login screen, decision/program bars,
+   spam row highlight). */
+.login-bg-gradient {
+  background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-900) 100%);
+}
+
+.bar-fill {
+  height: 100%;
+  width: var(--fill, 0%);
+}
+
+.row-spam {
+  background-color: var(--danger-bg);
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 1100px) {
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }

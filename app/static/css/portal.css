@@ -661,6 +661,32 @@
   font-size: 0.825rem;
 }
 
+/* Step A (Phase 7): component classes replacing inline styles that were
+   specific to one portal feature (dashboard/wizard progress fills, the
+   wizard header's save-draft button, the FAQ contact banner). */
+.dash-progress-fill {
+  width: 65%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--brand-blue), var(--success));
+  transition: width 0.4s ease;
+}
+
+.wizard-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--brand-blue);
+  transition: width 0.3s ease;
+}
+
+.btn-on-gradient {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.contact-banner-bg {
+  background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 100%);
+}
+
 /* Responsive adjustments */
 @media (max-width: 900px) {
   .hero-buttons { flex-direction: column; align-items: stretch; }

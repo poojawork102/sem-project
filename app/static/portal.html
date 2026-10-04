@@ -17,14 +17,14 @@
     <div class="container portal-nav">
       <a href="#" class="brand-logo" data-tab-target="tab-overview">
         <div class="brand-crest">
-          <svg style="width: 24px; height: 24px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-24px h-24px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
           </svg>
         </div>
         <div>
           <span>Northstar</span> University
-          <span style="font-size: 0.65rem; display: block; font-weight: 500; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase;">Admissions Portal 2026</span>
+          <span class="fs-0_65 d-block fw-500 text-muted ls-em-0_08 tt-uppercase">Admissions Portal 2026</span>
         </div>
       </a>
 
@@ -41,13 +41,13 @@
       <!-- Action Buttons -->
       <div class="nav-actions">
         <a href="/admin" class="btn btn-secondary btn-sm" title="Admissions Staff Portal">
-          <svg style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-16px h-16px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
           </svg>
           Staff Sign In
         </a>
         <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
-          <svg style="width: 24px; height: 24px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-24px h-24px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
@@ -82,7 +82,7 @@
               Start Application →
             </button>
             <button class="btn btn-secondary btn-lg" data-tab-target="tab-status">
-              <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg class="w-18px h-18px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               Track Application Status
@@ -92,7 +92,7 @@
           <!-- Deadline Announcement Card -->
           <div class="deadline-pill">
             <div class="deadline-pill-icon">
-              <svg style="width: 20px; height: 20px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg class="w-20px h-20px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
@@ -129,7 +129,7 @@
       </section>
 
       <!-- Programs Catalog Section -->
-      <section style="padding: 70px 0;">
+      <section class="p-70-0">
         <div class="container">
           <div class="section-header">
             <div class="section-tag">Academic Offerings</div>
@@ -214,8 +214,8 @@
       <!-- Visual Application Roadmap -->
       <section class="container">
         <div class="roadmap-strip">
-          <div class="section-header" style="margin-bottom: 20px;">
-            <div class="section-tag" style="color: #60A5FA;">Admissions Process</div>
+          <div class="section-header mb-20">
+            <div class="section-tag text-link-on-dark">Admissions Process</div>
             <h2 class="section-title">Your Path to Northstar University</h2>
             <p class="section-desc">A transparent, structured 6-step journey from submission to official enrollment.</p>
           </div>
@@ -260,19 +260,19 @@
     <!-- ====================================================================
          TAB 2: STUDENT DASHBOARD (Admission Hub)
          ==================================================================== -->
-    <div id="tab-dashboard" class="tab-pane" style="display: none; padding: 50px 0;">
+    <div id="tab-dashboard" class="tab-pane hidden p-50-0">
       <div class="container">
         
         <!-- Dashboard Header -->
-        <div class="flex items-center justify-between" style="margin-bottom: 30px; flex-wrap: wrap; gap: 16px;">
+        <div class="flex items-center justify-between mb-30 wrap-wrap gap-px-16">
           <div>
-            <span class="badge badge-info" style="margin-bottom: 8px;">Applicant Portal</span>
-            <h2 style="font-size: 2rem; color: var(--navy-900);">My Admission Dashboard</h2>
-            <p style="color: var(--text-secondary);">Monitor your application milestones, pending actions, and committee correspondence.</p>
+            <span class="badge badge-info mb-8">Applicant Portal</span>
+            <h2 class="fs-2 text-navy-900">My Admission Dashboard</h2>
+            <p class="text-secondary">Monitor your application milestones, pending actions, and committee correspondence.</p>
           </div>
           <div class="flex items-center gap-3">
             <button class="btn btn-secondary btn-sm" data-tab-target="tab-status">
-              <svg style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+              <svg class="w-16px h-16px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
               Refresh Status
             </button>
             <button class="btn btn-primary btn-sm" data-tab-target="tab-apply">
@@ -282,11 +282,11 @@
         </div>
 
         <!-- Visual Application Progress Tracker -->
-        <div class="card" style="margin-bottom: 30px; box-shadow: var(--shadow-md);">
-          <div class="flex items-center justify-between" style="margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <div class="card mb-30 shadow-md">
+          <div class="flex items-center justify-between mb-20 wrap-wrap gap-px-12">
             <div>
-              <h3 style="font-size: 1.15rem; color: var(--navy-900);">Application Progress Tracker</h3>
-              <p style="font-size: 0.825rem; color: var(--text-muted);">Current Active Stage: <strong>Verification & Credentials Audit</strong></p>
+              <h3 class="fs-1_15 text-navy-900">Application Progress Tracker</h3>
+              <p class="fs-0_825 text-muted">Current Active Stage: <strong>Verification & Credentials Audit</strong></p>
             </div>
             <span class="badge badge-success">
               <span class="badge-dot"></span> On Schedule
@@ -294,57 +294,57 @@
           </div>
 
           <!-- Progress Stepper Tracker -->
-          <div style="background: var(--bg-card-subtle); height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 24px;">
-            <div id="dashProgressFill" style="width: 65%; height: 100%; background: linear-gradient(90deg, var(--brand-blue), var(--success)); transition: width 0.4s ease;"></div>
+          <div class="bg-card-subtle h-8px radius-4 overflow-hidden mb-24">
+            <div id="dashProgressFill" class="dash-progress-fill"></div>
           </div>
 
-          <div class="grid grid-cols-6" style="gap: 12px; text-align: center;">
+          <div class="grid grid-cols-6 gap-px-12 text-center">
             <div>
-              <div style="width: 32px; height: 32px; background: var(--success); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; font-size: 0.8rem;">✓</div>
-              <strong style="font-size: 0.8rem; display: block; color: var(--navy-900);">1. Profile</strong>
-              <small style="color: var(--text-muted); font-size: 0.7rem;">Completed</small>
+              <div class="w-32px h-32px bg-success text-white radius-circle d-flex items-center justify-center center-mb-8 fw-700 fs-0_8">✓</div>
+              <strong class="fs-0_8 d-block text-navy-900">1. Profile</strong>
+              <small class="text-muted fs-0_7">Completed</small>
             </div>
             <div>
-              <div style="width: 32px; height: 32px; background: var(--success); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; font-size: 0.8rem;">✓</div>
-              <strong style="font-size: 0.8rem; display: block; color: var(--navy-900);">2. Documents</strong>
-              <small style="color: var(--text-muted); font-size: 0.7rem;">Uploaded</small>
+              <div class="w-32px h-32px bg-success text-white radius-circle d-flex items-center justify-center center-mb-8 fw-700 fs-0_8">✓</div>
+              <strong class="fs-0_8 d-block text-navy-900">2. Documents</strong>
+              <small class="text-muted fs-0_7">Uploaded</small>
             </div>
             <div>
-              <div style="width: 32px; height: 32px; background: var(--success); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; font-size: 0.8rem;">✓</div>
-              <strong style="font-size: 0.8rem; display: block; color: var(--navy-900);">3. Application</strong>
-              <small style="color: var(--text-muted); font-size: 0.7rem;">Submitted</small>
+              <div class="w-32px h-32px bg-success text-white radius-circle d-flex items-center justify-center center-mb-8 fw-700 fs-0_8">✓</div>
+              <strong class="fs-0_8 d-block text-navy-900">3. Application</strong>
+              <small class="text-muted fs-0_7">Submitted</small>
             </div>
             <div>
-              <div style="width: 32px; height: 32px; background: var(--brand-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; font-size: 0.8rem; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);">4</div>
-              <strong style="font-size: 0.8rem; display: block; color: var(--brand-blue);">4. Verification</strong>
-              <small style="color: var(--brand-blue); font-size: 0.7rem; font-weight: 600;">In Progress</small>
+              <div class="w-32px h-32px bg-brand-blue text-white radius-circle d-flex items-center justify-center center-mb-8 fw-700 fs-0_8 ring-brand">4</div>
+              <strong class="fs-0_8 d-block text-brand-blue">4. Verification</strong>
+              <small class="text-brand-blue fs-0_7 fw-600">In Progress</small>
             </div>
             <div>
-              <div style="width: 32px; height: 32px; background: #ffffff; border: 2px solid var(--border-strong); color: var(--text-muted); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; font-size: 0.8rem;">5</div>
-              <strong style="font-size: 0.8rem; display: block; color: var(--text-muted);">5. Review</strong>
-              <small style="color: var(--text-muted); font-size: 0.7rem;">Upcoming</small>
+              <div class="w-32px h-32px bg-white bd-2-solid-border-strong text-muted radius-circle d-flex items-center justify-center center-mb-8 fw-700 fs-0_8">5</div>
+              <strong class="fs-0_8 d-block text-muted">5. Review</strong>
+              <small class="text-muted fs-0_7">Upcoming</small>
             </div>
             <div>
-              <div style="width: 32px; height: 32px; background: #ffffff; border: 2px solid var(--border-strong); color: var(--text-muted); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; font-size: 0.8rem;">6</div>
-              <strong style="font-size: 0.8rem; display: block; color: var(--text-muted);">6. Decision</strong>
-              <small style="color: var(--text-muted); font-size: 0.7rem;">Pending</small>
+              <div class="w-32px h-32px bg-white bd-2-solid-border-strong text-muted radius-circle d-flex items-center justify-center center-mb-8 fw-700 fs-0_8">6</div>
+              <strong class="fs-0_8 d-block text-muted">6. Decision</strong>
+              <small class="text-muted fs-0_7">Pending</small>
             </div>
           </div>
         </div>
 
         <!-- Dashboard Cards Grid -->
-        <div class="grid grid-cols-3" style="gap: 24px; margin-bottom: 30px;">
+        <div class="grid grid-cols-3 gap-px-24 mb-30">
           <!-- Card 1: Application Status -->
           <div class="card card-hover">
             <div class="card-header">
-              <span class="card-title" style="font-size: 1rem;">Current Application</span>
+              <span class="card-title fs-1">Current Application</span>
               <span class="badge badge-success" id="dashAppStatus">Application received</span>
             </div>
-            <div style="margin-bottom: 16px;">
-              <strong style="font-size: 1.25rem; color: var(--navy-900); display: block;" id="dashAppProgram">BTech Computer Science</strong>
-              <span style="font-size: 0.825rem; color: var(--text-muted);">Reference: <code id="dashAppRef" style="color: var(--brand-blue); font-weight: 700;">CAP-20260916-2E1D88</code></span>
+            <div class="mb-16">
+              <strong class="fs-1_25 text-navy-900 d-block" id="dashAppProgram">BTech Computer Science</strong>
+              <span class="fs-0_825 text-muted">Reference: <code id="dashAppRef" class="text-brand-blue fw-700">CAP-20260916-2E1D88</code></span>
             </div>
-            <div style="font-size: 0.825rem; color: var(--text-secondary); border-top: 1px solid var(--border-light); padding-top: 12px;">
+            <div class="fs-0_825 text-secondary bt-1-solid-border-light pt-12">
               Submitted on: <strong id="dashAppDate">September 16, 2026</strong>
             </div>
           </div>
@@ -352,68 +352,68 @@
           <!-- Card 2: Document Checklist -->
           <div class="card card-hover">
             <div class="card-header">
-              <span class="card-title" style="font-size: 1rem;">Document Vault Status</span>
+              <span class="card-title fs-1">Document Vault Status</span>
               <span class="badge badge-info">3 of 3 Verified</span>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.825rem;">
+            <div class="d-flex flexdir-column gap-px-8 fs-0_825">
               <div class="flex items-center justify-between">
                 <span>Senior Secondary Transcript</span>
-                <span style="color: var(--success); font-weight: 600;">✓ Verified</span>
+                <span class="text-success fw-600">✓ Verified</span>
               </div>
               <div class="flex items-center justify-between">
                 <span>Government ID / Passport</span>
-                <span style="color: var(--success); font-weight: 600;">✓ Verified</span>
+                <span class="text-success fw-600">✓ Verified</span>
               </div>
               <div class="flex items-center justify-between">
                 <span>Statement of Purpose</span>
-                <span style="color: var(--success); font-weight: 600;">✓ Verified</span>
+                <span class="text-success fw-600">✓ Verified</span>
               </div>
             </div>
-            <div style="margin-top: 16px; border-top: 1px solid var(--border-light); padding-top: 12px;">
-              <a href="#" data-tab-target="tab-vault" style="font-size: 0.825rem; font-weight: 600;">Open Document Vault →</a>
+            <div class="mt-16 bt-1-solid-border-light pt-12">
+              <a href="#" data-tab-target="tab-vault" class="fs-0_825 fw-600">Open Document Vault →</a>
             </div>
           </div>
 
           <!-- Card 3: Important Deadlines -->
           <div class="card card-hover">
             <div class="card-header">
-              <span class="card-title" style="font-size: 1rem;">Next Milestones</span>
+              <span class="card-title fs-1">Next Milestones</span>
               <span class="badge badge-warning">Action Timeline</span>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.825rem;">
+            <div class="d-flex flexdir-column gap-px-10 fs-0_825">
               <div>
-                <strong style="color: var(--navy-900); display: block;">Department Review Window</strong>
-                <span style="color: var(--text-muted);">September 25 – October 5, 2026</span>
+                <strong class="text-navy-900 d-block">Department Review Window</strong>
+                <span class="text-muted">September 25 – October 5, 2026</span>
               </div>
               <div>
-                <strong style="color: var(--navy-900); display: block;">Final Decision Release</strong>
-                <span style="color: var(--text-muted);">October 20, 2026 via Student Email</span>
+                <strong class="text-navy-900 d-block">Final Decision Release</strong>
+                <span class="text-muted">October 20, 2026 via Student Email</span>
               </div>
             </div>
-            <div style="margin-top: 16px; border-top: 1px solid var(--border-light); padding-top: 12px;">
-              <a href="#" data-tab-target="tab-faq" style="font-size: 0.825rem; font-weight: 600;">View Academic Calendar →</a>
+            <div class="mt-16 bt-1-solid-border-light pt-12">
+              <a href="#" data-tab-target="tab-faq" class="fs-0_825 fw-600">View Academic Calendar →</a>
             </div>
           </div>
         </div>
 
         <!-- Recent Committee Announcements -->
         <div class="card">
-          <h3 style="font-size: 1.15rem; color: var(--navy-900); margin-bottom: 16px;">Admissions Board Communications</h3>
-          <div style="background: var(--info-bg); border: 1px solid var(--info-border); border-radius: var(--radius-md); padding: 18px; margin-bottom: 14px;">
-            <div class="flex items-center justify-between" style="margin-bottom: 6px;">
-              <strong style="color: var(--info-text); font-size: 0.9rem;">Automated Security Gate Passed</strong>
-              <span style="font-size: 0.775rem; color: var(--text-muted);">September 16, 2026</span>
+          <h3 class="fs-1_15 text-navy-900 mb-16">Admissions Board Communications</h3>
+          <div class="bg-info-bg bd-1-solid-info-border radius-md p-18 mb-14">
+            <div class="flex items-center justify-between mb-6">
+              <strong class="text-info-text fs-0_9">Automated Security Gate Passed</strong>
+              <span class="fs-0_775 text-muted">September 16, 2026</span>
             </div>
-            <p style="font-size: 0.85rem; color: var(--text-secondary);">
+            <p class="fs-0_85 text-secondary">
               Your application credentials have successfully cleared the DSADPS Security Gate with zero velocity flags and valid email signature. Your file has been queued for faculty review.
             </p>
           </div>
-          <div style="background: var(--bg-card-subtle); border-radius: var(--radius-md); padding: 18px;">
-            <div class="flex items-center justify-between" style="margin-bottom: 6px;">
-              <strong style="color: var(--navy-900); font-size: 0.9rem;">Campus Virtual Open House</strong>
-              <span style="font-size: 0.775rem; color: var(--text-muted);">September 28, 2026 at 5:00 PM EST</span>
+          <div class="bg-card-subtle radius-md p-18">
+            <div class="flex items-center justify-between mb-6">
+              <strong class="text-navy-900 fs-0_9">Campus Virtual Open House</strong>
+              <span class="fs-0_775 text-muted">September 28, 2026 at 5:00 PM EST</span>
             </div>
-            <p style="font-size: 0.85rem; color: var(--text-secondary);">
+            <p class="fs-0_85 text-secondary">
               All prospective applicants are invited to meet program chairs, explore virtual lab simulations, and ask live questions to the admissions committee.
             </p>
           </div>
@@ -425,21 +425,21 @@
     <!-- ====================================================================
          TAB 3: MULTI-STEP APPLICATION WIZARD
          ==================================================================== -->
-    <div id="tab-apply" class="tab-pane" style="display: none; padding: 40px 0;">
+    <div id="tab-apply" class="tab-pane hidden p-40-0">
       <div class="container" id="applySection">
         
         <div class="wizard-container">
           <!-- Wizard Header -->
           <div class="wizard-header">
-            <div class="flex items-center justify-between" style="flex-wrap: wrap; gap: 12px;">
+            <div class="flex items-center justify-between wrap-wrap gap-px-12">
               <div>
                 <h2 class="wizard-header-title">Northstar Undergraduate & Graduate Application</h2>
                 <p class="wizard-header-subtitle">Academic Session 2026–2027 · Submit your credentials in 6 guided steps.</p>
               </div>
               <div class="flex items-center gap-3">
-                <span id="stepCountIndicator" style="font-size: 0.85rem; color: #93C5FD; font-weight: 600;">Step 1 of 6 (0%)</span>
-                <button type="button" id="saveDraftBtn" class="btn btn-secondary btn-sm" style="background: rgba(255,255,255,0.15); color: #fff; border-color: rgba(255,255,255,0.3);">
-                  <svg style="width: 15px; height: 15px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
+                <span id="stepCountIndicator" class="fs-0_85 text-link-on-dark-hover fw-600">Step 1 of 6 (0%)</span>
+                <button type="button" id="saveDraftBtn" class="btn btn-secondary btn-sm btn-on-gradient text-white">
+                  <svg class="w-15px h-15px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
                   Save Draft
                 </button>
               </div>
@@ -475,8 +475,8 @@
           </nav>
 
           <!-- Stepper Progress Bar Line -->
-          <div style="background: var(--border-light); height: 4px; width: 100%;">
-            <div id="wizardProgressBar" style="width: 0%; height: 100%; background: var(--brand-blue); transition: width 0.3s ease;"></div>
+          <div class="bg-border-light h-4px w-100pct">
+            <div id="wizardProgressBar" class="wizard-progress-fill"></div>
           </div>
 
           <!-- Form Body -->
@@ -485,10 +485,10 @@
 
               <!-- STEP 1: Personal Information -->
               <div class="wizard-step active" id="step-1">
-                <h3 style="font-size: 1.35rem; color: var(--navy-900); margin-bottom: 6px;">Step 1: Personal Information</h3>
-                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">Please provide legal candidate details as shown on official identity documentation.</p>
+                <h3 class="fs-1_35 text-navy-900 mb-6">Step 1: Personal Information</h3>
+                <p class="text-muted fs-0_875 mb-24">Please provide legal candidate details as shown on official identity documentation.</p>
 
-                <div class="grid grid-cols-2" style="gap: 20px;">
+                <div class="grid grid-cols-2 gap-px-20">
                   <div class="form-group">
                     <label class="form-label">Full Legal Name *</label>
                     <input type="text" name="full_name" class="form-control" placeholder="e.g. Eleanor Vance" required minlength="2">
@@ -532,10 +532,10 @@
 
               <!-- STEP 2: Academic Information -->
               <div class="wizard-step" id="step-2">
-                <h3 style="font-size: 1.35rem; color: var(--navy-900); margin-bottom: 6px;">Step 2: Academic Background</h3>
-                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">Tell us about your previous educational qualifications, grades, and completed coursework.</p>
+                <h3 class="fs-1_35 text-navy-900 mb-6">Step 2: Academic Background</h3>
+                <p class="text-muted fs-0_875 mb-24">Tell us about your previous educational qualifications, grades, and completed coursework.</p>
 
-                <div class="grid grid-cols-2" style="gap: 20px;">
+                <div class="grid grid-cols-2 gap-px-20">
                   <div class="form-group">
                     <label class="form-label">Highest Qualification *</label>
                     <select name="highest_qualification" class="form-control" required>
@@ -581,13 +581,13 @@
 
               <!-- STEP 3: Program Selection -->
               <div class="wizard-step" id="step-3">
-                <h3 style="font-size: 1.35rem; color: var(--navy-900); margin-bottom: 6px;">Step 3: Program & Specialization</h3>
-                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">Select your intended degree pathway and admission term for the 2026 academic cycle.</p>
+                <h3 class="fs-1_35 text-navy-900 mb-6">Step 3: Program & Specialization</h3>
+                <p class="text-muted fs-0_875 mb-24">Select your intended degree pathway and admission term for the 2026 academic cycle.</p>
 
-                <div class="grid grid-cols-2" style="gap: 20px;">
-                  <div class="form-group" style="grid-column: 1 / -1;">
+                <div class="grid grid-cols-2 gap-px-20">
+                  <div class="form-group col-span-full">
                     <label class="form-label">Degree Program of Choice *</label>
-                    <select name="program" class="form-control" required style="font-size: 1rem; font-weight: 600;">
+                    <select name="program"  required class="form-control fs-1 fw-600">
                       <option value="">Select an accredited program</option>
                       <option value="BTech Computer Science">BTech Computer Science & Artificial Intelligence (4 Years)</option>
                       <option value="BSc Data Science">BSc Data Science & Analytics (3-4 Years)</option>
@@ -612,12 +612,12 @@
                     </select>
                   </div>
 
-                  <div class="form-group" style="grid-column: 1 / -1;">
-                    <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
-                      <input type="checkbox" name="scholarship_interest" value="yes" checked style="width: 18px; height: 18px; margin-top: 2px;">
-                      <span style="font-size: 0.9rem; color: var(--navy-900);">
+                  <div class="form-group col-span-full">
+                    <label class="d-flex items-start gap-px-10 cursor-pointer">
+                      <input type="checkbox" name="scholarship_interest" value="yes" checked class="w-18px h-18px mt-2">
+                      <span class="fs-0_9 text-navy-900">
                         <strong>Consider my application for Northstar Academic Merit Scholarships</strong>
-                        <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">Eligible candidates receive up to 75% tuition fellowship based on academic excellence.</span>
+                        <span class="d-block fs-0_8 text-muted">Eligible candidates receive up to 75% tuition fellowship based on academic excellence.</span>
                       </span>
                     </label>
                   </div>
@@ -626,11 +626,11 @@
 
               <!-- STEP 4: Address & Contact -->
               <div class="wizard-step" id="step-4">
-                <h3 style="font-size: 1.35rem; color: var(--navy-900); margin-bottom: 6px;">Step 4: Contact & Residential Address</h3>
-                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">Provide your current permanent residence and emergency guardian contact.</p>
+                <h3 class="fs-1_35 text-navy-900 mb-6">Step 4: Contact & Residential Address</h3>
+                <p class="text-muted fs-0_875 mb-24">Provide your current permanent residence and emergency guardian contact.</p>
 
-                <div class="grid grid-cols-2" style="gap: 20px;">
-                  <div class="form-group" style="grid-column: 1 / -1;">
+                <div class="grid grid-cols-2 gap-px-20">
+                  <div class="form-group col-span-full">
                     <label class="form-label">Street Address *</label>
                     <input type="text" name="street_address" class="form-control" placeholder="124 University Avenue, Suite 4B" required>
                   </div>
@@ -669,41 +669,41 @@
 
               <!-- STEP 5: Statement & Documents -->
               <div class="wizard-step" id="step-5">
-                <h3 style="font-size: 1.35rem; color: var(--navy-900); margin-bottom: 6px;">Step 5: Statement of Purpose & Documents</h3>
-                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">Share your academic motivation and upload credentials for committee review.</p>
+                <h3 class="fs-1_35 text-navy-900 mb-6">Step 5: Statement of Purpose & Documents</h3>
+                <p class="text-muted fs-0_875 mb-24">Share your academic motivation and upload credentials for committee review.</p>
 
                 <div class="form-group">
                   <div class="flex items-center justify-between">
                     <label class="form-label">Why would you like to join Northstar University? *</label>
-                    <span id="statementCharCount" style="font-size: 0.8rem; color: var(--text-muted);">0 / 2000 characters</span>
+                    <span id="statementCharCount" class="fs-0_8 text-muted">0 / 2000 characters</span>
                   </div>
                   <textarea id="statementTextarea" name="statement" class="form-control" minlength="20" maxlength="2000" rows="5" placeholder="Share your academic goals, areas of intellectual curiosity, campus projects you wish to lead, and what draws you to our university community." required></textarea>
                   <span class="form-hint">Minimum 20 characters. A thoughtful personal statement substantially strengthens your admissions case.</span>
                 </div>
 
                 <!-- Document Upload Section -->
-                <div style="margin-top: 24px;">
-                  <label class="form-label" style="margin-bottom: 8px;">Upload Academic Documents (Transcripts, Government ID, Recommendations)</label>
+                <div class="mt-24">
+                  <label class="form-label mb-8">Upload Academic Documents (Transcripts, Government ID, Recommendations)</label>
                   
                   <div class="dropzone" id="docDropzone">
                     <svg class="dropzone-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                     </svg>
-                    <strong style="display: block; font-size: 0.95rem; color: var(--navy-900);">Click or drag files here to upload</strong>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 4px;">Accepted formats: PDF, JPG, PNG (Max 10MB per file)</span>
+                    <strong class="d-block fs-0_95 text-navy-900">Click or drag files here to upload</strong>
+                    <span class="fs-0_8 text-muted d-block mt-4">Accepted formats: PDF, JPG, PNG (Max 10MB per file)</span>
                   </div>
-                  <input type="file" id="fileUploadInput" style="display: none;" accept=".pdf,.jpg,.jpeg,.png">
+                  <input type="file" id="fileUploadInput" class="hidden" accept=".pdf,.jpg,.jpeg,.png">
 
                   <!-- Uploaded Files List -->
-                  <div id="uploadedDocsList" style="margin-top: 16px;">
+                  <div id="uploadedDocsList" class="mt-16">
                     <div class="doc-item-card">
                       <div class="flex items-center gap-3">
-                        <div style="width: 40px; height: 40px; background: #EFF6FF; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--brand-blue);">
-                          <svg style="width: 22px; height: 22px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        <div class="w-40px h-40px bg-brand-blue-tint-bg radius-8 d-flex items-center justify-center text-brand-blue">
+                          <svg class="w-22px h-22px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                         </div>
                         <div>
-                          <strong style="font-size: 0.9rem; color: var(--navy-900); display: block;">Official_Transcripts_Senior_Secondary.pdf</strong>
-                          <span style="font-size: 0.775rem; color: var(--text-muted);">2.4 MB · Ready for verification</span>
+                          <strong class="fs-0_9 text-navy-900 d-block">Official_Transcripts_Senior_Secondary.pdf</strong>
+                          <span class="fs-0_775 text-muted">2.4 MB · Ready for verification</span>
                         </div>
                       </div>
                       <span class="badge badge-success"><span class="badge-dot"></span> Ready</span>
@@ -714,17 +714,17 @@
 
               <!-- STEP 6: Review & Final Submission -->
               <div class="wizard-step" id="step-6">
-                <h3 style="font-size: 1.35rem; color: var(--navy-900); margin-bottom: 6px;">Step 6: Review & Confirm Submission</h3>
-                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">Please review your application summary carefully before submitting to the security gateway.</p>
+                <h3 class="fs-1_35 text-navy-900 mb-6">Step 6: Review & Confirm Submission</h3>
+                <p class="text-muted fs-0_875 mb-24">Please review your application summary carefully before submitting to the security gateway.</p>
 
                 <!-- Dynamic Review Summary Container -->
-                <div id="reviewSummaryContent" style="margin-bottom: 24px;"></div>
+                <div id="reviewSummaryContent" class="mb-24"></div>
 
                 <!-- Honor Code Declaration -->
-                <div class="card" style="background: #FFFBEB; border-color: #FDE68A; padding: 20px;">
-                  <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
-                    <input type="checkbox" id="declarationCheck" required style="width: 20px; height: 20px; margin-top: 2px;">
-                    <span style="font-size: 0.875rem; color: #92400E; line-height: 1.5;">
+                <div class="card bg-warning-bg bcolor-warning-border p-20">
+                  <label class="d-flex items-start gap-px-12 cursor-pointer">
+                    <input type="checkbox" id="declarationCheck" required class="w-20px h-20px mt-2">
+                    <span class="fs-0_875 text-warning-text lh-1_5">
                       <strong>Applicant Declaration & Honor Pledge:</strong> I certify that all information submitted in this application is complete, authentic, and truthfully represented by myself. I understand that any false statements or duplicate automated submissions will be flagged by the security screening system and will result in immediate disqualification.
                     </span>
                   </label>
@@ -735,7 +735,7 @@
 
             <!-- Wizard Footer Navigation Controls -->
             <div class="wizard-footer">
-              <button type="button" class="btn btn-secondary" id="prevStepBtn" style="display: none;">
+              <button type="button"  id="prevStepBtn" class="btn btn-secondary hidden">
                 ← Previous Step
               </button>
               <div></div>
@@ -743,7 +743,7 @@
                 <button type="button" class="btn btn-primary" id="nextStepBtn">
                   Next Step →
                 </button>
-                <button type="submit" class="btn btn-success btn-lg" id="submitAppBtn" style="display: none;">
+                <button type="submit"  id="submitAppBtn" class="btn btn-success btn-lg hidden">
                   Submit Application
                 </button>
               </div>
@@ -757,25 +757,25 @@
     <!-- ====================================================================
          TAB 4: APPLICATION STATUS TRACKER
          ==================================================================== -->
-    <div id="tab-status" class="tab-pane" style="display: none; padding: 50px 0;">
-      <div class="container" style="max-width: 820px;">
+    <div id="tab-status" class="tab-pane hidden p-50-0">
+      <div class="container maxw-820">
         
-        <div class="card" style="box-shadow: var(--shadow-lg);">
+        <div class="card shadow-lg">
           <div class="card-header">
             <div>
-              <span class="badge badge-info" style="margin-bottom: 6px;">Admissions Registry</span>
-              <h2 style="font-size: 1.6rem; color: var(--navy-900);">Track Application Status</h2>
-              <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 4px;">
+              <span class="badge badge-info mb-6">Admissions Registry</span>
+              <h2 class="fs-1_6 text-navy-900">Track Application Status</h2>
+              <p class="fs-0_875 text-muted mt-4">
                 Enter your official Application Reference Code and email to track your admissions progress in real-time.
               </p>
             </div>
           </div>
 
-          <form id="statusCheckForm" style="margin-top: 12px;">
-            <div class="grid grid-cols-2" style="gap: 16px;">
+          <form id="statusCheckForm" class="mt-12">
+            <div class="grid grid-cols-2 gap-px-16">
               <div class="form-group">
                 <label class="form-label">Application Reference Code *</label>
-                <input type="text" name="reference_code" class="form-control" placeholder="CAP-20260916-2E1D88" required style="font-family: var(--font-mono); text-transform: uppercase;">
+                <input type="text" name="reference_code"  placeholder="CAP-20260916-2E1D88" required class="form-control font-mono tt-uppercase">
                 <span class="form-hint">Found on your submission acknowledgment slip.</span>
               </div>
               <div class="form-group">
@@ -785,9 +785,9 @@
               </div>
             </div>
 
-            <div style="margin-top: 12px;">
-              <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
-                <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            <div class="mt-12">
+              <button type="submit" class="btn btn-primary btn-lg w-100pct">
+                <svg class="w-18px h-18px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                 Track Application
               </button>
             </div>
@@ -803,90 +803,90 @@
     <!-- ====================================================================
          TAB 5: DOCUMENT VAULT
          ==================================================================== -->
-    <div id="tab-vault" class="tab-pane" style="display: none; padding: 50px 0;">
-      <div class="container" style="max-width: 960px;">
+    <div id="tab-vault" class="tab-pane hidden p-50-0">
+      <div class="container maxw-960">
         
-        <div class="flex items-center justify-between" style="margin-bottom: 28px; flex-wrap: wrap; gap: 14px;">
+        <div class="flex items-center justify-between mb-28 wrap-wrap gap-px-14">
           <div>
-            <span class="badge badge-info" style="margin-bottom: 6px;">Secure Repository</span>
-            <h2 style="font-size: 1.8rem; color: var(--navy-900);">Document Vault & Verification</h2>
-            <p style="color: var(--text-secondary);">Manage official certificates, transcripts, and ID verification records.</p>
+            <span class="badge badge-info mb-6">Secure Repository</span>
+            <h2 class="fs-1_8 text-navy-900">Document Vault & Verification</h2>
+            <p class="text-secondary">Manage official certificates, transcripts, and ID verification records.</p>
           </div>
           <button class="btn btn-primary btn-sm" onclick="document.getElementById('fileUploadInput').click()">
-            <svg style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            <svg class="w-16px h-16px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
             Upload New Document
           </button>
         </div>
 
-        <div class="grid grid-cols-2" style="gap: 20px;">
+        <div class="grid grid-cols-2 gap-px-20">
           <!-- Doc 1 -->
           <div class="card card-hover">
-            <div class="flex items-center justify-between" style="margin-bottom: 12px;">
+            <div class="flex items-center justify-between mb-12">
               <span class="badge badge-success"><span class="badge-dot"></span> Verified by Registrar</span>
-              <span style="font-size: 0.775rem; color: var(--text-muted);">PDF · 2.1 MB</span>
+              <span class="fs-0_775 text-muted">PDF · 2.1 MB</span>
             </div>
-            <strong style="font-size: 1.05rem; color: var(--navy-900); display: block; margin-bottom: 6px;">
+            <strong class="fs-1_05 text-navy-900 d-block mb-6">
               Senior Secondary Marksheet & Transcript
             </strong>
-            <p style="font-size: 0.825rem; color: var(--text-secondary); margin-bottom: 16px;">
+            <p class="fs-0_825 text-secondary mb-16">
               Verified Grade 12 cumulative marks statement with STEM course equivalencies.
             </p>
-            <div class="flex items-center justify-between" style="border-top: 1px solid var(--border-light); padding-top: 12px;">
-              <span style="font-size: 0.775rem; color: var(--text-muted);">Uploaded Sep 16, 2026</span>
+            <div class="flex items-center justify-between bt-1-solid-border-light pt-12">
+              <span class="fs-0_775 text-muted">Uploaded Sep 16, 2026</span>
               <button class="btn btn-ghost btn-sm" onclick="Toast.show('Preview Document', 'Opening verified transcript view.', 'info')">Preview</button>
             </div>
           </div>
 
           <!-- Doc 2 -->
           <div class="card card-hover">
-            <div class="flex items-center justify-between" style="margin-bottom: 12px;">
+            <div class="flex items-center justify-between mb-12">
               <span class="badge badge-success"><span class="badge-dot"></span> Verified Identity</span>
-              <span style="font-size: 0.775rem; color: var(--text-muted);">JPG · 1.4 MB</span>
+              <span class="fs-0_775 text-muted">JPG · 1.4 MB</span>
             </div>
-            <strong style="font-size: 1.05rem; color: var(--navy-900); display: block; margin-bottom: 6px;">
+            <strong class="fs-1_05 text-navy-900 d-block mb-6">
               Government Photo ID / Passport
             </strong>
-            <p style="font-size: 0.825rem; color: var(--text-secondary); margin-bottom: 16px;">
+            <p class="fs-0_825 text-secondary mb-16">
               Official government-issued identity proof with biographical and photo verification.
             </p>
-            <div class="flex items-center justify-between" style="border-top: 1px solid var(--border-light); padding-top: 12px;">
-              <span style="font-size: 0.775rem; color: var(--text-muted);">Uploaded Sep 16, 2026</span>
+            <div class="flex items-center justify-between bt-1-solid-border-light pt-12">
+              <span class="fs-0_775 text-muted">Uploaded Sep 16, 2026</span>
               <button class="btn btn-ghost btn-sm" onclick="Toast.show('Preview Document', 'Opening passport scan preview.', 'info')">Preview</button>
             </div>
           </div>
 
           <!-- Doc 3 -->
           <div class="card card-hover">
-            <div class="flex items-center justify-between" style="margin-bottom: 12px;">
+            <div class="flex items-center justify-between mb-12">
               <span class="badge badge-warning"><span class="badge-dot"></span> Under Review</span>
-              <span style="font-size: 0.775rem; color: var(--text-muted);">PDF · 820 KB</span>
+              <span class="fs-0_775 text-muted">PDF · 820 KB</span>
             </div>
-            <strong style="font-size: 1.05rem; color: var(--navy-900); display: block; margin-bottom: 6px;">
+            <strong class="fs-1_05 text-navy-900 d-block mb-6">
               Personal Statement of Purpose
             </strong>
-            <p style="font-size: 0.825rem; color: var(--text-secondary); margin-bottom: 16px;">
+            <p class="fs-0_825 text-secondary mb-16">
               Applicant academic essay under review by the Computer Science department committee.
             </p>
-            <div class="flex items-center justify-between" style="border-top: 1px solid var(--border-light); padding-top: 12px;">
-              <span style="font-size: 0.775rem; color: var(--text-muted);">Uploaded Sep 17, 2026</span>
+            <div class="flex items-center justify-between bt-1-solid-border-light pt-12">
+              <span class="fs-0_775 text-muted">Uploaded Sep 17, 2026</span>
               <button class="btn btn-ghost btn-sm" onclick="Toast.show('Preview Document', 'Opening statement document.', 'info')">Preview</button>
             </div>
           </div>
 
           <!-- Doc 4 -->
           <div class="card card-hover">
-            <div class="flex items-center justify-between" style="margin-bottom: 12px;">
+            <div class="flex items-center justify-between mb-12">
               <span class="badge badge-neutral">Optional</span>
-              <span style="font-size: 0.775rem; color: var(--text-muted);">Action Available</span>
+              <span class="fs-0_775 text-muted">Action Available</span>
             </div>
-            <strong style="font-size: 1.05rem; color: var(--navy-900); display: block; margin-bottom: 6px;">
+            <strong class="fs-1_05 text-navy-900 d-block mb-6">
               Extracurricular & Portfolio Certificates
             </strong>
-            <p style="font-size: 0.825rem; color: var(--text-secondary); margin-bottom: 16px;">
+            <p class="fs-0_825 text-secondary mb-16">
               Add coding competition awards, olympiad certificates, or project GitHub portfolios.
             </p>
-            <div class="flex items-center justify-between" style="border-top: 1px solid var(--border-light); padding-top: 12px;">
-              <span style="font-size: 0.775rem; color: var(--text-muted);">Not yet uploaded</span>
+            <div class="flex items-center justify-between bt-1-solid-border-light pt-12">
+              <span class="fs-0_775 text-muted">Not yet uploaded</span>
               <button class="btn btn-secondary btn-sm" onclick="document.getElementById('fileUploadInput').click()">Upload</button>
             </div>
           </div>
@@ -898,8 +898,8 @@
     <!-- ====================================================================
          TAB 6: FAQ & SUPPORT
          ==================================================================== -->
-    <div id="tab-faq" class="tab-pane" style="display: none; padding: 50px 0;">
-      <div class="container" style="max-width: 860px;">
+    <div id="tab-faq" class="tab-pane hidden p-50-0">
+      <div class="container maxw-860">
         
         <div class="section-header">
           <div class="section-tag">Admissions Knowledgebase</div>
@@ -907,36 +907,36 @@
           <p class="section-desc">Everything you need to know about criteria, deadlines, verification, and scholarship eligibility.</p>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px;">
+        <div class="d-flex flexdir-column gap-px-16 mb-40">
           <div class="card">
-            <h4 style="font-size: 1.05rem; color: var(--navy-900); margin-bottom: 8px;">What happens after I submit my application?</h4>
-            <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
+            <h4 class="fs-1_05 text-navy-900 mb-8">What happens after I submit my application?</h4>
+            <p class="fs-0_875 text-secondary lh-1_6">
               Immediately upon submission, your application is processed through Northstar's automated DSADPS Security Gate to assign a unique reference code and clear duplicate/velocity screening. Next, admissions officers audit your academic transcripts, followed by faculty committee review.
             </p>
           </div>
 
           <div class="card">
-            <h4 style="font-size: 1.05rem; color: var(--navy-900); margin-bottom: 8px;">How do merit scholarships work?</h4>
-            <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
+            <h4 class="fs-1_05 text-navy-900 mb-8">How do merit scholarships work?</h4>
+            <p class="fs-0_875 text-secondary lh-1_6">
               All applicants who check the scholarship consideration box are automatically assessed for merit scholarships ranging from 25% to 75% tuition waivers based on Grade 12 scores and personal statement excellence.
             </p>
           </div>
 
           <div class="card">
-            <h4 style="font-size: 1.05rem; color: var(--navy-900); margin-bottom: 8px;">What if my application status says "Verification required"?</h4>
-            <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
+            <h4 class="fs-1_05 text-navy-900 mb-8">What if my application status says "Verification required"?</h4>
+            <p class="fs-0_875 text-secondary lh-1_6">
               This indicates that secondary verification (e.g. proof of residency or additional transcript notarization) is required before final evaluation. Our admissions desk will email you instructions on any supplemental materials needed.
             </p>
           </div>
         </div>
 
         <!-- Contact Desk Card -->
-        <div class="card" style="background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 100%); color: #ffffff;">
-          <div class="flex items-center justify-between" style="flex-wrap: wrap; gap: 20px;">
+        <div class="card contact-banner-bg text-white">
+          <div class="flex items-center justify-between wrap-wrap gap-px-20">
             <div>
-              <h3 style="color: #ffffff; margin-bottom: 6px;">Need Assistance With Your Application?</h3>
-              <p style="color: #94A3B8; font-size: 0.9rem;">Our dedicated Admissions Advising Office is available Monday through Friday, 9:00 AM – 6:00 PM EST.</p>
-              <div style="margin-top: 14px; font-size: 0.85rem; color: #BFDBFE;">
+              <h3 class="text-white mb-6">Need Assistance With Your Application?</h3>
+              <p class="text-light fs-0_9">Our dedicated Admissions Advising Office is available Monday through Friday, 9:00 AM – 6:00 PM EST.</p>
+              <div class="mt-14 fs-0_85 text-brand-blue-tint-border">
                 📞 +1 (800) 555-NORTHSTAR · ✉️ admissions@northstar.edu
               </div>
             </div>
@@ -955,56 +955,56 @@
        OFFICIAL SUBMISSION RECEIPT MODAL
        ==================================================================== -->
   <div class="modal-backdrop" id="receiptModal">
-    <div class="modal-content" style="max-width: 620px;">
+    <div class="modal-content maxw-620">
       <div class="receipt-card">
         
         <div class="receipt-header">
           <div>
-            <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--brand-blue); margin-bottom: 4px;">Official Admissions Acknowledgment</div>
-            <h3 style="font-size: 1.4rem; color: var(--navy-900);">Northstar University</h3>
+            <div class="fs-0_75 tt-uppercase ls-em-0_08 fw-700 text-brand-blue mb-4">Official Admissions Acknowledgment</div>
+            <h3 class="fs-1_4 text-navy-900">Northstar University</h3>
           </div>
           <div id="receiptStatusBadge" class="badge badge-success">
             <span class="badge-dot"></span> Cleared
           </div>
         </div>
 
-        <div style="text-align: center; margin-bottom: 24px;">
-          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">Official Application Reference Code</div>
+        <div class="text-center mb-24">
+          <div class="fs-0_8 text-muted mb-6">Official Application Reference Code</div>
           <div class="receipt-ref" id="receiptRefCode">CAP-20260921-XXXXXX</div>
-          <div style="margin-top: 8px;">
+          <div class="mt-8">
             <button class="btn btn-ghost btn-sm" id="copyRefBtn">
-              <svg style="width: 14px; height: 14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
+              <svg class="w-14px h-14px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
               Copy Code
             </button>
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; font-size: 0.875rem; background: var(--bg-main); padding: 18px; border-radius: var(--radius-md);">
+        <div class="d-grid grid-2-even gap-px-16 mb-24 fs-0_875 bg-main p-18 radius-md">
           <div>
-            <span style="color: var(--text-muted); font-size: 0.775rem;">Candidate Name:</span>
-            <strong style="display: block; color: var(--navy-900);" id="receiptStudentName">—</strong>
+            <span class="text-muted fs-0_775">Candidate Name:</span>
+            <strong class="d-block text-navy-900" id="receiptStudentName">—</strong>
           </div>
           <div>
-            <span style="color: var(--text-muted); font-size: 0.775rem;">Selected Program:</span>
-            <strong style="display: block; color: var(--navy-900);" id="receiptProgram">—</strong>
+            <span class="text-muted fs-0_775">Selected Program:</span>
+            <strong class="d-block text-navy-900" id="receiptProgram">—</strong>
           </div>
           <div>
-            <span style="color: var(--text-muted); font-size: 0.775rem;">Registered Email:</span>
-            <strong style="display: block; color: var(--navy-900);" id="receiptEmail">—</strong>
+            <span class="text-muted fs-0_775">Registered Email:</span>
+            <strong class="d-block text-navy-900" id="receiptEmail">—</strong>
           </div>
           <div>
-            <span style="color: var(--text-muted); font-size: 0.775rem;">Timestamp:</span>
-            <strong style="display: block; color: var(--navy-900);" id="receiptDate">—</strong>
+            <span class="text-muted fs-0_775">Timestamp:</span>
+            <strong class="d-block text-navy-900" id="receiptDate">—</strong>
           </div>
         </div>
 
-        <div id="receiptActionNotice" style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: var(--radius-md); padding: 14px; font-size: 0.825rem; color: #1E40AF; margin-bottom: 24px;">
+        <div id="receiptActionNotice" class="bg-brand-blue-tint-bg bd-1-solid-brand-blue-tint-border radius-md p-14 fs-0_825 text-brand-blue-tint-text mb-24">
           <!-- Dynamically populated notice -->
         </div>
 
-        <div class="flex items-center justify-between" style="border-top: 1px solid var(--border-light); padding-top: 20px;">
+        <div class="flex items-center justify-between bt-1-solid-border-light pt-20">
           <button class="btn btn-secondary" id="printReceiptBtn">
-            <svg style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+            <svg class="w-16px h-16px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
             Print Receipt
           </button>
           <button class="btn btn-primary" id="closeReceiptBtn">
@@ -1022,16 +1022,16 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <h4>Northstar University</h4>
-          <p style="font-size: 0.875rem; line-height: 1.6; max-width: 320px;">
+          <p class="fs-0_875 lh-1_6 maxw-320">
             A premier institution chartered for academic distinction, high-impact scientific research, and ethical leadership in technology and society.
           </p>
-          <div style="margin-top: 18px; font-size: 0.8rem; color: #64748B;">
+          <div class="mt-18 fs-0_8 text-faint-on-dark">
             Campus: 1000 University Parkway, Cambridge, MA 02138
           </div>
         </div>
 
         <div>
-          <h5 style="color: #ffffff; font-size: 0.95rem; margin-bottom: 14px;">Admissions</h5>
+          <h5 class="text-white fs-0_95 mb-14">Admissions</h5>
           <ul class="footer-links">
             <li><a href="#" data-tab-target="tab-apply">Undergraduate Apply</a></li>
             <li><a href="#" data-tab-target="tab-overview">Program Catalog</a></li>
@@ -1041,7 +1041,7 @@
         </div>
 
         <div>
-          <h5 style="color: #ffffff; font-size: 0.95rem; margin-bottom: 14px;">Campus Life</h5>
+          <h5 class="text-white fs-0_95 mb-14">Campus Life</h5>
           <ul class="footer-links">
             <li><a href="#">Residential Colleges</a></li>
             <li><a href="#">Student Innovation Hub</a></li>
@@ -1051,7 +1051,7 @@
         </div>
 
         <div>
-          <h5 style="color: #ffffff; font-size: 0.95rem; margin-bottom: 14px;">Portals</h5>
+          <h5 class="text-white fs-0_95 mb-14">Portals</h5>
           <ul class="footer-links">
             <li><a href="/admin">Admissions Staff Portal</a></li>
             <li><a href="/docs">API Documentation</a></li>
@@ -1066,7 +1066,7 @@
         <div class="flex items-center gap-4">
           <span>Protected by DSADPS Security Gate v1.0</span>
           <span>•</span>
-          <a href="/admin" style="color: #93C5FD; font-weight: 600;">Staff Access</a>
+          <a href="/admin" class="text-link-on-dark-hover fw-600">Staff Access</a>
         </div>
       </div>
     </div>

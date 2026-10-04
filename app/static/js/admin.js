@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const areaD = `${pathD} L ${points[points.length - 1].x} ${height - padding} L ${points[0].x} ${height - padding} Z`;
 
     container.innerHTML = `
-      <svg viewBox="0 0 ${width} ${height}" style="width: 100%; height: 100%; overflow: visible;">
+      <svg viewBox="0 0 ${width} ${height}" class="w-100pct h-100pct overflow-visible">
         <defs>
           <linearGradient id="chartGlow" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stop-color="#2563EB" stop-opacity="0.3"/>
@@ -328,34 +328,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const blockedPct = Math.round((blocked / total) * 100);
 
     container.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="d-flex flexdir-column gap-px-14">
         <div>
-          <div class="flex items-center justify-between" style="font-size: 0.85rem; margin-bottom: 4px;">
-            <span style="font-weight: 600; color: var(--navy-900);">Allowed (Cleared)</span>
-            <span style="font-weight: 700; color: var(--success);">${allowed} (${allowedPct}%)</span>
+          <div class="flex items-center justify-between fs-0_85 mb-4">
+            <span class="fw-600 text-navy-900">Allowed (Cleared)</span>
+            <span class="fw-700 text-success">${allowed} (${allowedPct}%)</span>
           </div>
-          <div style="background: var(--bg-card-subtle); height: 8px; border-radius: 4px; overflow: hidden;">
-            <div style="width: ${allowedPct}%; height: 100%; background: var(--success);"></div>
+          <div class="bg-card-subtle h-8px radius-4 overflow-hidden">
+            <div class="bar-fill bg-success" style="--fill: ${allowedPct}%"></div>
           </div>
         </div>
 
         <div>
-          <div class="flex items-center justify-between" style="font-size: 0.85rem; margin-bottom: 4px;">
-            <span style="font-weight: 600; color: var(--navy-900);">Secondary Verification (Captcha)</span>
-            <span style="font-weight: 700; color: var(--warning);">${captcha} (${captchaPct}%)</span>
+          <div class="flex items-center justify-between fs-0_85 mb-4">
+            <span class="fw-600 text-navy-900">Secondary Verification (Captcha)</span>
+            <span class="fw-700 text-warning">${captcha} (${captchaPct}%)</span>
           </div>
-          <div style="background: var(--bg-card-subtle); height: 8px; border-radius: 4px; overflow: hidden;">
-            <div style="width: ${captchaPct}%; height: 100%; background: var(--warning);"></div>
+          <div class="bg-card-subtle h-8px radius-4 overflow-hidden">
+            <div class="bar-fill bg-warning" style="--fill: ${captchaPct}%"></div>
           </div>
         </div>
 
         <div>
-          <div class="flex items-center justify-between" style="font-size: 0.85rem; margin-bottom: 4px;">
-            <span style="font-weight: 600; color: var(--navy-900);">Held / Blocked (Security Flag)</span>
-            <span style="font-weight: 700; color: var(--danger);">${blocked} (${blockedPct}%)</span>
+          <div class="flex items-center justify-between fs-0_85 mb-4">
+            <span class="fw-600 text-navy-900">Held / Blocked (Security Flag)</span>
+            <span class="fw-700 text-danger">${blocked} (${blockedPct}%)</span>
           </div>
-          <div style="background: var(--bg-card-subtle); height: 8px; border-radius: 4px; overflow: hidden;">
-            <div style="width: ${blockedPct}%; height: 100%; background: var(--danger);"></div>
+          <div class="bg-card-subtle h-8px radius-4 overflow-hidden">
+            <div class="bar-fill bg-danger" style="--fill: ${blockedPct}%"></div>
           </div>
         </div>
       </div>
@@ -379,17 +379,17 @@ document.addEventListener('DOMContentLoaded', () => {
     container.innerHTML = entries.map(([prog, count]) => {
       const pct = Math.round((count / total) * 100);
       return `
-        <div style="margin-bottom: 12px;">
-          <div class="flex items-center justify-between" style="font-size: 0.825rem; margin-bottom: 4px;">
-            <strong style="color: var(--navy-900);">${esc(prog)}</strong>
-            <span style="color: var(--text-muted);">${count} applicants (${pct}%)</span>
+        <div class="mb-12">
+          <div class="flex items-center justify-between fs-0_825 mb-4">
+            <strong class="text-navy-900">${esc(prog)}</strong>
+            <span class="text-muted">${count} applicants (${pct}%)</span>
           </div>
-          <div style="background: var(--bg-card-subtle); height: 7px; border-radius: 4px; overflow: hidden;">
-            <div style="width: ${pct}%; height: 100%; background: var(--brand-blue);"></div>
+          <div class="bg-card-subtle h-7px radius-4 overflow-hidden">
+            <div class="bar-fill bg-brand-blue" style="--fill: ${pct}%"></div>
           </div>
         </div>
       `;
-    }).join('') || '<div style="color: var(--text-muted); font-size: 0.85rem;">No application data available yet.</div>';
+    }).join('') || '<div class="text-muted fs-0_85">No application data available yet.</div>';
   }
 
   // -------------------------------------------------------------
@@ -401,7 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const topItems = state.activityList.slice(0, 6);
     if (!topItems.length) {
-      container.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 24px; color: var(--text-muted);">No activity recorded yet. Run the attack simulator or submit a portal form.</td></tr>`;
+      container.innerHTML = `<tr><td colspan="6" class="text-center p-24 text-muted">No activity recorded yet. Run the attack simulator or submit a portal form.</td></tr>`;
       return;
     }
 
@@ -412,12 +412,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       return `
         <tr>
-          <td><span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">${timeStr}</span></td>
+          <td><span class="fs-0_8 text-muted fw-500">${timeStr}</span></td>
           <td>
-            <strong style="color: var(--navy-900); display: block;">${esc(item.full_name || 'Anonymous')}</strong>
-            <span style="font-size: 0.775rem; color: var(--text-muted);">${esc(item.email)}</span>
+            <strong class="text-navy-900 d-block">${esc(item.full_name || 'Anonymous')}</strong>
+            <span class="fs-0_775 text-muted">${esc(item.email)}</span>
           </td>
-          <td><code style="font-size: 0.775rem; color: var(--navy-700);">${esc(item.ip_address)}</code></td>
+          <td><code class="fs-0_775 text-navy-700">${esc(item.ip_address)}</code></td>
           <td>
             <span class="score-pill ${riskClass}">${esc(item.risk_score.toFixed(1))}</span>
           </td>
@@ -502,10 +502,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!list.length) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">
-            <svg style="width: 44px; height: 44px; margin: 0 auto 10px; color: var(--text-light);" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-            <strong style="display: block; font-size: 1rem; color: var(--navy-900);">No applications match current filters</strong>
-            <span style="font-size: 0.85rem;">Try clearing your search query or selecting "All Statuses".</span>
+          <td colspan="8" class="text-center p-40 text-muted">
+            <svg class="w-44px h-44px center-mb-10 text-light" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+            <strong class="d-block fs-1 text-navy-900">No applications match current filters</strong>
+            <span class="fs-0_85">Try clearing your search query or selecting "All Statuses".</span>
           </td>
         </tr>
       `;
@@ -521,55 +521,55 @@ document.addEventListener('DOMContentLoaded', () => {
       const isSpam = item.confirmed_spam;
 
       // AI Anomaly display (Isolation Forest)
-      let aiTag = '<span class="badge badge-neutral" style="font-size:0.7rem;">IF: N/A</span>';
+      let aiTag = '<span class="badge badge-neutral fs-0_7">IF: N/A</span>';
       if (item.ai_anomaly_score !== null && item.ai_anomaly_score !== undefined) {
         if (item.ai_status === 'anomaly') {
-          aiTag = `<span class="badge badge-danger" style="font-size:0.7rem;">IF: ${esc(item.ai_anomaly_score.toFixed(0))}</span>`;
+          aiTag = `<span class="badge badge-danger fs-0_7">IF: ${esc(item.ai_anomaly_score.toFixed(0))}</span>`;
         } else {
-          aiTag = `<span class="badge badge-success" style="font-size:0.7rem;">IF: ${esc(item.ai_anomaly_score.toFixed(0))}</span>`;
+          aiTag = `<span class="badge badge-success fs-0_7">IF: ${esc(item.ai_anomaly_score.toFixed(0))}</span>`;
         }
       }
 
       // XGBoost display
-      let xgbTag = '<span class="badge badge-neutral" style="font-size:0.7rem;">XGB: N/A</span>';
+      let xgbTag = '<span class="badge badge-neutral fs-0_7">XGB: N/A</span>';
       if (item.xgb_prediction) {
         const xgbBadge = item.xgb_prediction === 'allow' ? 'badge-success' : (item.xgb_prediction === 'captcha' ? 'badge-warning' : 'badge-danger');
         const conf = item.xgb_confidence !== null ? ` ${item.xgb_confidence.toFixed(0)}%` : '';
-        xgbTag = `<span class="badge ${xgbBadge}" style="font-size:0.7rem;">XGB: ${esc(item.xgb_prediction)}${esc(conf)}</span>`;
+        xgbTag = `<span class="badge ${xgbBadge} fs-0_7">XGB: ${esc(item.xgb_prediction)}${esc(conf)}</span>`;
       }
 
       return `
-        <tr style="${isSpam ? 'background-color: #FEF2F2;' : ''}">
+        <tr class="${isSpam ? 'row-spam' : ''}">
           <td>
             <div class="flex items-center gap-3">
-              <div style="width: 36px; height: 36px; border-radius: 50%; background: #EFF6FF; color: var(--brand-blue); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;">
+              <div class="w-36px h-36px radius-circle bg-brand-blue-tint-bg text-brand-blue d-flex items-center justify-center fw-700 fs-0_8">
                 ${esc(initials)}
               </div>
               <div>
-                <strong style="color: var(--navy-900); display: block; font-size: 0.9rem;">
+                <strong class="text-navy-900 d-block fs-0_9">
                   ${esc(item.full_name || 'Anonymous')}
-                  ${isSpam ? '<span class="badge badge-danger" style="margin-left: 6px; font-size: 0.65rem;">Spam</span>' : ''}
+                  ${isSpam ? '<span class="badge badge-danger ml-6 fs-0_65">Spam</span>' : ''}
                 </strong>
-                <span style="font-size: 0.775rem; color: var(--text-muted);">${esc(item.email)}</span>
+                <span class="fs-0_775 text-muted">${esc(item.email)}</span>
               </div>
             </div>
           </td>
           <td>
-            <span class="badge badge-outline" style="font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 2px;">
+            <span class="badge badge-outline font-mono fs-0_75 mb-2">
               ${esc(item.reference_code || '—')}
             </span>
-            <div style="font-size: 0.775rem; color: var(--text-secondary);">${esc(item.program || 'Undergrad')}</div>
+            <div class="fs-0_775 text-secondary">${esc(item.program || 'Undergrad')}</div>
           </td>
           <td>
-            <span style="font-size: 0.8rem; color: var(--text-secondary); display: block;">${esc(submittedDate)}</span>
-            <code style="font-size: 0.725rem; color: var(--text-muted);">${esc(item.ip_address)}</code>
+            <span class="fs-0_8 text-secondary d-block">${esc(submittedDate)}</span>
+            <code class="fs-0_725 text-muted">${esc(item.ip_address)}</code>
           </td>
           <td>
             <span class="score-pill ${riskClass}" title="${esc((item.reasons || []).join(', '))}">
               ${riskScore.toFixed(1)}
             </span>
           </td>
-          <td><div style="display:flex; flex-direction:column; gap:3px;">${aiTag}${xgbTag}</div></td>
+          <td><div class="d-flex flexdir-column gap-px-3">${aiTag}${xgbTag}</div></td>
           <td>
             <span class="badge ${actionBadge}">
               <span class="badge-dot"></span> ${esc(item.status)}
@@ -581,7 +581,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 Dossier
               </button>
               <button class="btn btn-ghost btn-sm" title="Toggle Spam" onclick="toggleSpamRecord(${Number(item.id)}, ${!isSpam})">
-                <svg style="width: 15px; height: 15px; color: ${isSpam ? 'var(--success)' : 'var(--danger)'};" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                <svg class="w-15px h-15px ${isSpam ? 'text-success' : 'text-danger'}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
               </button>
             </div>
           </td>
@@ -672,53 +672,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Dossier Tabs Content: Overview, Statement, Security, Documents
     document.getElementById('dossierTabOverview').innerHTML = `
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px;">
-        <div class="card" style="padding: 16px;">
-          <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Academic Program</span>
-          <strong style="display: block; font-size: 1rem; color: var(--navy-900); margin-top: 4px;">${esc(app.program || 'BTech Computer Science')}</strong>
-          <span style="font-size: 0.8rem; color: var(--text-secondary);">${esc(payload.intake_term || 'Fall 2026 Intake')}</span>
+      <div class="d-grid grid-2-even gap-px-18 mb-20">
+        <div class="card p-16">
+          <span class="fs-0_75 tt-uppercase text-muted fw-700">Academic Program</span>
+          <strong class="d-block fs-1 text-navy-900 mt-4">${esc(app.program || 'BTech Computer Science')}</strong>
+          <span class="fs-0_8 text-secondary">${esc(payload.intake_term || 'Fall 2026 Intake')}</span>
         </div>
-        <div class="card" style="padding: 16px;">
-          <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Client Telemetry</span>
-          <strong style="display: block; font-size: 0.95rem; color: var(--navy-900); font-family: var(--font-mono); margin-top: 4px;">${esc(app.ip_address)}</strong>
-          <span style="font-size: 0.8rem; color: var(--text-secondary);">${esc(payload.city || 'Verified Location')}</span>
-        </div>
-      </div>
-
-      <div class="card" style="padding: 20px; margin-bottom: 20px;">
-        <h4 style="font-size: 0.95rem; color: var(--navy-900); margin-bottom: 12px;">Candidate Profile & Contact</h4>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.875rem;">
-          <div><span style="color: var(--text-muted);">Phone:</span> <strong>${esc(app.phone || payload.phone || '—')}</strong></div>
-          <div><span style="color: var(--text-muted);">DOB:</span> <strong>${esc(payload.date_of_birth || '—')}</strong></div>
-          <div><span style="color: var(--text-muted);">City:</span> <strong>${esc(payload.city || '—')}</strong></div>
-          <div><span style="color: var(--text-muted);">Street:</span> <strong>${esc(payload.street_address || '—')}</strong></div>
-          <div><span style="color: var(--text-muted);">Qualification:</span> <strong>${esc(payload.highest_qualification || 'Senior Secondary')}</strong></div>
-          <div><span style="color: var(--text-muted);">GPA / Score:</span> <strong>${esc(payload.gpa_score || '3.9 / 4.0')}</strong></div>
+        <div class="card p-16">
+          <span class="fs-0_75 tt-uppercase text-muted fw-700">Client Telemetry</span>
+          <strong class="d-block fs-0_95 text-navy-900 font-mono mt-4">${esc(app.ip_address)}</strong>
+          <span class="fs-0_8 text-secondary">${esc(payload.city || 'Verified Location')}</span>
         </div>
       </div>
 
-      <div class="card" style="padding: 20px; margin-bottom: 20px;">
-        <h4 style="font-size: 0.95rem; color: var(--navy-900); margin-bottom: 8px;">Applicant Statement of Purpose</h4>
-        <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; font-style: italic; background: var(--bg-card-subtle); padding: 14px; border-radius: var(--radius-md);">
+      <div class="card p-20 mb-20">
+        <h4 class="fs-0_95 text-navy-900 mb-12">Candidate Profile & Contact</h4>
+        <div class="d-grid grid-2-even gap-px-12 fs-0_875">
+          <div><span class="text-muted">Phone:</span> <strong>${esc(app.phone || payload.phone || '—')}</strong></div>
+          <div><span class="text-muted">DOB:</span> <strong>${esc(payload.date_of_birth || '—')}</strong></div>
+          <div><span class="text-muted">City:</span> <strong>${esc(payload.city || '—')}</strong></div>
+          <div><span class="text-muted">Street:</span> <strong>${esc(payload.street_address || '—')}</strong></div>
+          <div><span class="text-muted">Qualification:</span> <strong>${esc(payload.highest_qualification || 'Senior Secondary')}</strong></div>
+          <div><span class="text-muted">GPA / Score:</span> <strong>${esc(payload.gpa_score || '3.9 / 4.0')}</strong></div>
+        </div>
+      </div>
+
+      <div class="card p-20 mb-20">
+        <h4 class="fs-0_95 text-navy-900 mb-8">Applicant Statement of Purpose</h4>
+        <p class="fs-0_875 text-secondary lh-1_6 font-italic bg-card-subtle p-14 radius-md">
           "${esc(payload.statement || 'No statement provided.')}"
         </p>
       </div>
 
       <!-- Security Breakdown -->
-      <div class="card" style="padding: 20px; border-left: 4px solid ${app.risk_score > 80 ? 'var(--danger)' : (app.risk_score >= 40 ? 'var(--warning)' : 'var(--success)')};">
-        <div class="flex items-center justify-between" style="margin-bottom: 12px;">
-          <h4 style="font-size: 0.95rem; color: var(--navy-900);">DSADPS Security Engine Audit</h4>
+      <div class="card p-20 ${app.risk_score > 80 ? 'bl-4-solid-danger' : (app.risk_score >= 40 ? 'bl-4-solid-warning' : 'bl-4-solid-success')}">
+        <div class="flex items-center justify-between mb-12">
+          <h4 class="fs-0_95 text-navy-900">DSADPS Security Engine Audit</h4>
           <span class="score-pill ${app.risk_score > 80 ? 'score-high' : (app.risk_score >= 40 ? 'score-med' : 'score-low')}">
             Risk: ${esc((app.risk_score || 0).toFixed(1))} / 100
           </span>
         </div>
-        <div style="font-size: 0.825rem; color: var(--text-secondary); margin-bottom: 10px;">
+        <div class="fs-0_825 text-secondary mb-10">
           <strong>Explainable Signals:</strong>
-          <div style="margin-top: 6px;">
-            ${(app.reasons && app.reasons.length) ? app.reasons.map(r => `<span class="reason-chip">⚠️ ${esc(r)}</span>`).join('') : '<span class="reason-chip" style="background:#ECFDF5; color:#065F46;">✓ All security thresholds clear</span>'}
+          <div class="mt-6">
+            ${(app.reasons && app.reasons.length) ? app.reasons.map(r => `<span class="reason-chip">⚠️ ${esc(r)}</span>`).join('') : '<span class="reason-chip bg-success-bg text-success-text">✓ All security thresholds clear</span>'}
           </div>
         </div>
-        <div style="font-size: 0.825rem; color: var(--text-muted); border-top: 1px solid var(--border-light); padding-top: 10px; display: flex; flex-direction: column; gap: 4px;">
+        <div class="fs-0_825 text-muted bt-1-solid-border-light pt-10 d-flex flexdir-column gap-px-4">
           <div>Isolation Forest Score: <strong>${esc(app.ai_anomaly_score !== null && app.ai_anomaly_score !== undefined ? app.ai_anomaly_score.toFixed(1) : 'Not trained')}</strong> (${esc(app.ai_status || 'offline')})</div>
           <div>XGBoost Prediction: <strong>${esc(app.xgb_prediction || 'Not trained')}</strong>${app.xgb_confidence ? ` (${esc(app.xgb_confidence.toFixed(1))}% confidence)` : ''}</div>
         </div>
@@ -726,7 +726,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       <!-- Action Area -->
       <div class="action-box">
-        <h4 style="font-size: 0.95rem; color: var(--navy-900); margin-bottom: 12px;">Admissions Decision & Override</h4>
+        <h4 class="fs-0_95 text-navy-900 mb-12">Admissions Decision & Override</h4>
         <div class="form-group">
           <label class="form-label">Update Decision Status</label>
           <select id="dossierActionSelect" class="form-control">
@@ -739,9 +739,9 @@ document.addEventListener('DOMContentLoaded', () => {
           <label class="form-label">Mandatory Admin Justification Note *</label>
           <textarea id="dossierNoteInput" class="form-control" placeholder="Provide justification for institutional audit log (e.g. Transcripts verified by Dean)." rows="2"></textarea>
         </div>
-        <div class="flex items-center justify-between" style="margin-top: 16px;">
-          <label style="display: flex; items-center gap: 8px; font-size: 0.85rem; color: var(--danger); font-weight: 600; cursor: pointer;">
-            <input type="checkbox" id="dossierSpamCheck" ${app.confirmed_spam ? 'checked' : ''} style="width: 16px; height: 16px;">
+        <div class="flex items-center justify-between mt-16">
+          <label class="d-flex fs-0_85 text-danger fw-600 cursor-pointer">
+            <input type="checkbox" id="dossierSpamCheck" ${app.confirmed_spam ? 'checked' : ''} class="w-16px h-16px">
             Mark as Confirmed Spam (REQ-12)
           </label>
           <button type="button" class="btn btn-primary" onclick="saveDossierOverride()">
@@ -812,34 +812,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const list = state.applicationsList.slice(0, 8);
     if (!list.length) {
-      container.innerHTML = '<div style="color: var(--text-muted); padding: 30px;">No documents in queue.</div>';
+      container.innerHTML = '<div class="text-muted p-30">No documents in queue.</div>';
       return;
     }
 
     container.innerHTML = list.map(item => `
       <div class="card card-hover">
-        <div class="flex items-center justify-between" style="margin-bottom: 12px;">
+        <div class="flex items-center justify-between mb-12">
           <span class="badge ${item.status === 'allow' ? 'badge-success' : 'badge-warning'}">
             ${item.status === 'allow' ? '✓ Transcripts Verified' : '⏳ Awaiting Review'}
           </span>
-          <span style="font-size: 0.775rem; color: var(--text-muted); font-family: var(--font-mono);">${esc(item.reference_code || 'CAP')}</span>
+          <span class="fs-0_775 text-muted font-mono">${esc(item.reference_code || 'CAP')}</span>
         </div>
-        <strong style="font-size: 1rem; color: var(--navy-900); display: block; margin-bottom: 4px;">${esc(item.full_name)}</strong>
-        <span style="font-size: 0.825rem; color: var(--text-secondary); display: block; margin-bottom: 14px;">${esc(item.program || 'BTech Computer Science')}</span>
+        <strong class="fs-1 text-navy-900 d-block mb-4">${esc(item.full_name)}</strong>
+        <span class="fs-0_825 text-secondary d-block mb-14">${esc(item.program || 'BTech Computer Science')}</span>
         
-        <div style="background: var(--bg-card-subtle); padding: 12px; border-radius: var(--radius-md); font-size: 0.8rem; margin-bottom: 14px;">
-          <div class="flex items-center justify-between" style="margin-bottom: 6px;">
+        <div class="bg-card-subtle p-12 radius-md fs-0_8 mb-14">
+          <div class="flex items-center justify-between mb-6">
             <span>High School Transcript:</span>
-            <strong style="color: var(--navy-900);">Available (PDF)</strong>
+            <strong class="text-navy-900">Available (PDF)</strong>
           </div>
           <div class="flex items-center justify-between">
             <span>Identity Document:</span>
-            <strong style="color: var(--navy-900);">Government ID</strong>
+            <strong class="text-navy-900">Government ID</strong>
           </div>
         </div>
 
         <div class="flex items-center gap-2">
-          <button class="btn btn-success btn-sm" style="flex: 1;" onclick="Toast.show('Verified', 'Applicant credentials approved.', 'success')">
+          <button class="btn btn-success btn-sm flex-1" onclick="Toast.show('Verified', 'Applicant credentials approved.', 'success')">
             Approve ✓
           </button>
           <button class="btn btn-danger btn-sm" onclick="Toast.show('Attention Needed', 'Document flagged for re-upload.', 'warning')">

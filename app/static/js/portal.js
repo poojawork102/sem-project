@@ -238,10 +238,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const data = Object.fromEntries(new FormData(form).entries());
 
     summaryCard.innerHTML = `
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-        <div class="card" style="padding: 18px; border-left: 4px solid var(--brand-blue);">
-          <h4 style="margin-bottom: 10px; font-size: 0.95rem; color: var(--navy-900);">1. Personal Information</h4>
-          <p style="font-size: 0.875rem; line-height: 1.6; color: var(--text-secondary);">
+      <div class="d-grid grid-autofit-280 gap-px-20">
+        <div class="card p-18 bl-4-solid-brand-blue">
+          <h4 class="mb-10 fs-0_95 text-navy-900">1. Personal Information</h4>
+          <p class="fs-0_875 lh-1_6 text-secondary">
             <strong>Full Name:</strong> ${esc(data.full_name || '—')}<br>
             <strong>Email:</strong> ${esc(data.email || '—')}<br>
             <strong>Phone:</strong> ${esc(data.phone || '—')}<br>
@@ -251,9 +251,9 @@ document.addEventListener('DOMContentLoaded', () => {
           </p>
         </div>
 
-        <div class="card" style="padding: 18px; border-left: 4px solid var(--brand-indigo);">
-          <h4 style="margin-bottom: 10px; font-size: 0.95rem; color: var(--navy-900);">2. Academic History</h4>
-          <p style="font-size: 0.875rem; line-height: 1.6; color: var(--text-secondary);">
+        <div class="card p-18 bl-4-solid-brand-indigo">
+          <h4 class="mb-10 fs-0_95 text-navy-900">2. Academic History</h4>
+          <p class="fs-0_875 lh-1_6 text-secondary">
             <strong>Qualification:</strong> ${esc(data.highest_qualification || 'Senior Secondary (12th)')}<br>
             <strong>Institution:</strong> ${esc(data.previous_institution || '—')}<br>
             <strong>Completion Year:</strong> ${esc(data.passing_year || '2026')}<br>
@@ -262,9 +262,9 @@ document.addEventListener('DOMContentLoaded', () => {
           </p>
         </div>
 
-        <div class="card" style="padding: 18px; border-left: 4px solid var(--success);">
-          <h4 style="margin-bottom: 10px; font-size: 0.95rem; color: var(--navy-900);">3. Program Choice</h4>
-          <p style="font-size: 0.875rem; line-height: 1.6; color: var(--text-secondary);">
+        <div class="card p-18 bl-4-solid-success">
+          <h4 class="mb-10 fs-0_95 text-navy-900">3. Program Choice</h4>
+          <p class="fs-0_875 lh-1_6 text-secondary">
             <strong>Degree Program:</strong> <span class="badge badge-info">${esc(data.program || '—')}</span><br>
             <strong>Intake Term:</strong> ${esc(data.intake_term || 'Fall 2026')}<br>
             <strong>Study Mode:</strong> ${esc(data.study_mode || 'Full-time On-Campus')}<br>
@@ -272,9 +272,9 @@ document.addEventListener('DOMContentLoaded', () => {
           </p>
         </div>
 
-        <div class="card" style="padding: 18px; border-left: 4px solid var(--warning);">
-          <h4 style="margin-bottom: 10px; font-size: 0.95rem; color: var(--navy-900);">4. Contact Address</h4>
-          <p style="font-size: 0.875rem; line-height: 1.6; color: var(--text-secondary);">
+        <div class="card p-18 bl-4-solid-warning">
+          <h4 class="mb-10 fs-0_95 text-navy-900">4. Contact Address</h4>
+          <p class="fs-0_875 lh-1_6 text-secondary">
             <strong>Street Address:</strong> ${esc(data.street_address || '—')}<br>
             <strong>City:</strong> ${esc(data.city || '—')}<br>
             <strong>State / Province:</strong> ${esc(data.state || '—')}<br>
@@ -284,9 +284,9 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
 
-      <div class="card" style="margin-top: 18px; padding: 18px; background: var(--bg-card-subtle);">
-        <h4 style="margin-bottom: 8px; font-size: 0.95rem; color: var(--navy-900);">Personal Statement</h4>
-        <p style="font-size: 0.875rem; color: var(--text-secondary); font-style: italic; white-space: pre-wrap;">
+      <div class="card mt-18 p-18 bg-card-subtle">
+        <h4 class="mb-8 fs-0_95 text-navy-900">Personal Statement</h4>
+        <p class="fs-0_875 text-secondary font-italic ws-pre-wrap">
           "${esc(data.statement || 'No statement provided.')}"
         </p>
       </div>
@@ -307,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       submitBtn.disabled = true;
       submitBtn.innerHTML = `
-        <svg class="animate-pulse" style="width: 18px; height: 18px; margin-right: 8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="animate-pulse w-18px h-18px mr-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10" stroke-opacity="0.3"></circle>
           <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
         </svg>
@@ -437,10 +437,10 @@ document.addEventListener('DOMContentLoaded', () => {
         Toast.show('Application Found', `Status: ${data.status}`, 'success');
       } catch (err) {
         statusResultContainer.innerHTML = `
-          <div class="card" style="border-left: 4px solid var(--danger); padding: 20px; text-align: center;">
-            <svg style="width: 44px; height: 44px; color: var(--danger); margin: 0 auto 10px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-            <h4 style="color: var(--navy-900); margin-bottom: 6px;">Application Not Found</h4>
-            <p style="font-size: 0.9rem; color: var(--text-secondary);">${esc(err.message || 'Please check your Reference Code and Email address.')}</p>
+          <div class="card bl-4-solid-danger p-20 text-center">
+            <svg class="w-44px h-44px text-danger center-mb-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            <h4 class="text-navy-900 mb-6">Application Not Found</h4>
+            <p class="fs-0_9 text-secondary">${esc(err.message || 'Please check your Reference Code and Email address.')}</p>
           </div>
         `;
         Toast.show('Not Found', err.message || 'No application matches that reference and email.', 'error');
@@ -462,20 +462,20 @@ document.addEventListener('DOMContentLoaded', () => {
     let badgeClass = isAllowed ? 'badge-success' : (isCaptcha ? 'badge-warning' : 'badge-danger');
 
     statusResultContainer.innerHTML = `
-      <div class="card" style="box-shadow: var(--shadow-md); margin-top: 24px;">
-        <div class="card-header" style="flex-wrap: wrap; gap: 12px;">
+      <div class="card shadow-md mt-24">
+        <div class="card-header wrap-wrap gap-px-12">
           <div>
-            <span class="badge ${badgeClass}" style="margin-bottom: 8px;">
+            <span class="badge ${badgeClass} mb-8">
               <span class="badge-dot"></span> ${esc(appData.status)}
             </span>
-            <h3 style="font-size: 1.35rem; color: var(--navy-900);">${esc(appData.program || 'Undergraduate Admission')}</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">
-              Candidate: <strong>${esc(appData.full_name || 'Applicant')}</strong> · Reference: <strong style="font-family: var(--font-mono); color: var(--brand-blue);">${esc(appData.reference_code)}</strong>
+            <h3 class="fs-1_35 text-navy-900">${esc(appData.program || 'Undergraduate Admission')}</h3>
+            <p class="fs-0_85 text-muted">
+              Candidate: <strong>${esc(appData.full_name || 'Applicant')}</strong> · Reference: <strong class="font-mono text-brand-blue">${esc(appData.reference_code)}</strong>
             </p>
           </div>
           <div>
             <button class="btn btn-secondary btn-sm" onclick="window.print()">
-              <svg style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+              <svg class="w-16px h-16px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
               Print Slip
             </button>
           </div>
@@ -487,10 +487,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="timeline-dot">✓</div>
             <div class="timeline-step-content">
               <div class="flex items-center justify-between">
-                <strong style="color: var(--navy-900);">Application Submitted</strong>
-                <span style="font-size: 0.775rem; color: var(--text-muted);">${submittedDate}</span>
+                <strong class="text-navy-900">Application Submitted</strong>
+                <span class="fs-0_775 text-muted">${submittedDate}</span>
               </div>
-              <p style="font-size: 0.825rem; color: var(--text-secondary); margin-top: 4px;">
+              <p class="fs-0_825 text-secondary mt-4">
                 Online registration completed and application reference code generated.
               </p>
             </div>
@@ -501,10 +501,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="timeline-dot">${isAllowed ? '✓' : '●'}</div>
             <div class="timeline-step-content">
               <div class="flex items-center justify-between">
-                <strong style="color: var(--navy-900);">Security & Duplicate Clearance</strong>
+                <strong class="text-navy-900">Security & Duplicate Clearance</strong>
                 <span class="badge ${isAllowed ? 'badge-success' : 'badge-warning'}">${isAllowed ? 'Passed' : 'Under Review'}</span>
               </div>
-              <p style="font-size: 0.825rem; color: var(--text-secondary); margin-top: 4px;">
+              <p class="fs-0_825 text-secondary mt-4">
                 Automated DSADPS security gate verification for duplicate registrations and velocity rate-limiting.
               </p>
             </div>
@@ -515,10 +515,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="timeline-dot">3</div>
             <div class="timeline-step-content">
               <div class="flex items-center justify-between">
-                <strong style="color: var(--navy-900);">Academic Credentials & Document Verification</strong>
+                <strong class="text-navy-900">Academic Credentials & Document Verification</strong>
                 <span class="badge badge-neutral">In Queue</span>
               </div>
-              <p style="font-size: 0.825rem; color: var(--text-secondary); margin-top: 4px;">
+              <p class="fs-0_825 text-secondary mt-4">
                 Admissions officers are verifying official high school transcripts and identity proof.
               </p>
             </div>
@@ -529,10 +529,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="timeline-dot">4</div>
             <div class="timeline-step-content">
               <div class="flex items-center justify-between">
-                <strong style="color: var(--navy-900);">Faculty Departmental Review</strong>
+                <strong class="text-navy-900">Faculty Departmental Review</strong>
                 <span class="badge badge-neutral">Upcoming</span>
               </div>
-              <p style="font-size: 0.825rem; color: var(--text-secondary); margin-top: 4px;">
+              <p class="fs-0_825 text-secondary mt-4">
                 Department Admissions Committee evaluates statement of purpose and academic stream qualifications.
               </p>
             </div>
@@ -543,10 +543,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="timeline-dot">5</div>
             <div class="timeline-step-content">
               <div class="flex items-center justify-between">
-                <strong style="color: var(--navy-900);">Final Admission Decision & Offer Letter</strong>
+                <strong class="text-navy-900">Final Admission Decision & Offer Letter</strong>
                 <span class="badge badge-neutral">Pending</span>
               </div>
-              <p style="font-size: 0.825rem; color: var(--text-secondary); margin-top: 4px;">
+              <p class="fs-0_825 text-secondary mt-4">
                 Formal offer of admission and registration packet dispatched to candidate email.
               </p>
             </div>
@@ -626,18 +626,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     docItem.innerHTML = `
       <div class="flex items-center gap-3">
-        <div style="width: 40px; height: 40px; background: #EFF6FF; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--brand-blue);">
-          <svg style="width: 22px; height: 22px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+        <div class="w-40px h-40px bg-brand-blue-tint-bg radius-8 d-flex items-center justify-center text-brand-blue">
+          <svg class="w-22px h-22px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
         </div>
         <div>
-          <strong style="font-size: 0.9rem; color: var(--navy-900); display: block;">${esc(file.name)}</strong>
-          <span style="font-size: 0.775rem; color: var(--text-muted);">${(file.size / 1024).toFixed(1)} KB · Just now</span>
+          <strong class="fs-0_9 text-navy-900 d-block">${esc(file.name)}</strong>
+          <span class="fs-0_775 text-muted">${(file.size / 1024).toFixed(1)} KB · Just now</span>
         </div>
       </div>
       <div class="flex items-center gap-2">
         <span class="badge badge-success"><span class="badge-dot"></span> Uploaded</span>
         <button class="btn btn-ghost btn-sm" onclick="document.getElementById('${docId}').remove(); Toast.show('File Removed', 'Document deleted.', 'info');">
-          <svg style="width: 16px; height: 16px; color: var(--danger);" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+          <svg class="w-16px h-16px text-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
         </button>
       </div>
     `;
