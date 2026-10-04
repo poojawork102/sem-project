@@ -58,7 +58,45 @@ This is a university PBL project that must be explained in a viva — prefer cle
 - Chatbot sends applicant PII to Gemini + prompt-injection via applicant names — mask fields, document limitation.
 
 ### Phase 6 — Presentation (branch: docs/readme)
-- Rename project (candidate: AdmitShield), update FastAPI title, HTML titles, chart title.
+- Rename GitHub repo to admitshield (UI rename itself is in Phase 7).
 - Rewrite README (fix `cd dsadps-agent`, remove boilerplate GitHub section, add architecture, screenshots, known limitations, XGBoost + chatbot).
 - docs/ with SRS + DFDs; LICENSE (MIT); repo description + topics.
 - Frontend cleanup: split admin.js, move 91 inline styles to CSS.
+
+### Phase 7 — Rename + UI palette (branch: feat/ui-refresh, created from fix/security)
+Name: **AdmitShield** (tagline "Admissions security"). The user-facing UI must never show "DSADPS".
+- Admin brand: "AdmitShield" + small "Admissions security" under it. Badge: "Protection active".
+- Portal copy: say "automatic security check", not DSADPS. Backend names, file names, env vars, and the SRS title may keep DSADPS.
+- Also update: FastAPI title, HTML <title>s, reports.py chart title, README heading.
+- Remove the hardcoded "Demo Credentials" box on the admin login (Phase 1 item 3 is done here, not in fix/security).
+- Remove fake marketing stats (98.4%, 45+, $42M, 18k+); use real content or [PLACEHOLDER].
+
+Step A (no visual change): move every inline style="" in admin.js, portal.js, index.html, portal.html into CSS classes, and replace hardcoded hex colours with design-system.css tokens. Before/after must look identical.
+
+Step B (apply palette). Portal + shared tokens in design-system.css :root:
+```
+--bg-main:#FFFBEF; --bg-card:#FFFFFF; --bg-card-subtle:#FFF4D1; --bg-raised:#FFFDF7;
+--butter-100:#FFF6D6; --butter-200:#FFEDB0; --butter-300:#FDE38A;
+--lavender-50:#F6F2FF; --lavender-100:#ECE5FF; --lavender-200:#DACFFF; --lavender-400:#9C87F5;
+--brand-purple:#6D4FE0; --brand-purple-hover:#5A3DC8; --brand-purple-deep:#432C9A; --brand-glow:rgba(109,79,224,.22);
+--text-primary:#241A3D; --text-secondary:#5B5270; --text-muted:#8A8299; --border-light:rgba(36,26,61,.09);
+--success:#2F9E6E; --success-bg:#E6F6EE; --success-text:#1D6B4A;
+--warning:#E0782A; --warning-bg:#FFEDDC; --warning-text:#9A4A12;
+--danger:#D9445A; --danger-bg:#FDE8EC; --danger-text:#9B2337;
+--info:#6D4FE0; --info-bg:#F6F2FF; --info-text:#432C9A;
+--shadow-sm:0 1px 0 rgba(255,255,255,.9) inset,0 1px 2px rgba(36,26,61,.06),0 2px 6px -2px rgba(67,44,154,.10);
+--shadow-md:0 1px 0 rgba(255,255,255,.9) inset,0 2px 4px rgba(36,26,61,.05),0 10px 24px -8px rgba(67,44,154,.18);
+--shadow-lg:0 1px 0 rgba(255,255,255,.9) inset,0 4px 8px rgba(36,26,61,.05),0 24px 48px -12px rgba(67,44,154,.24);
+```
+Admin dashboard (index.html) gets class `admin-theme` on <body> (dark aubergine, option B):
+```
+--bg-main:#14101F; --bg-sidebar:#100C1A; --bg-card:#1C1630; --bg-card-subtle:#251D3D; --bg-raised:#2F2550;
+--border-light:rgba(255,255,255,.07); --text-primary:#F1ECFF; --text-secondary:#B3A9CC; --text-muted:#8A80A6;
+--brand-purple:#B09BFF; --on-brand:#1A1230; --butter-accent:#FFE08A;
+--success:#5EE0A8; --success-bg:rgba(94,224,168,.14);
+--warning:#FFA45C; --warning-bg:rgba(255,164,92,.14);
+--danger:#FF7A8A; --danger-bg:rgba(255,122,138,.14);
+--shadow-md:0 1px 0 rgba(255,255,255,.04) inset,0 8px 24px -6px rgba(0,0,0,.55);
+```
+Rules: butter is never text colour and never a status colour. Warning is orange, not yellow. One filled purple button per view; others outlined. Active nav item gets a 3px butter inset bar. Cards: 18-20px radius + inset top highlight. Portal nav labels short and white-space:nowrap (Programs, Dashboard, Apply, Status, Documents, FAQ). Font: Plus Jakarta Sans for everything (drop Inter), JetBrains Mono for IPs/scores/refs.
+Reference preview: https://claude.ai/artifact/UFcXpEYmCxkz14VaZ28atD
