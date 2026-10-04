@@ -45,7 +45,7 @@
           </svg>
         </div>
         <div class="chat-header-info">
-          <span class="chat-header-title">DSADPS AI Assistant</span>
+          <span class="chat-header-title">AdmitShield AI Assistant</span>
           <span class="chat-header-subtitle">Powered by Gemini &bull; Ask about your data</span>
         </div>
         <button class="chat-close-btn" id="chatCloseBtn" title="Close chat">

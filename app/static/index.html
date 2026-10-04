@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Northstar Admissions Console | DSADPS Admin SaaS Dashboard</title>
+  <title>Northstar Admissions Console | AdmitShield Admin Dashboard</title>
   <meta name="description" content="Production-ready admissions management and security threat monitoring dashboard for university administrators.">
 
   <!-- Shared Design System & Admin Stylesheets -->
@@ -11,13 +11,13 @@
   <link rel="stylesheet" href="/static/css/admin.css?v=2">
   <link rel="stylesheet" href="/static/css/chatbot.css?v=2">
 </head>
-<body class="admin-body">
+<body class="admin-body admin-theme">
 
   <!-- ====================================================================
        AUTHENTICATION VIEW (Sign In)
        ==================================================================== -->
   <div id="loginView" class="d-flex items-center justify-center min-h-screen w-100pct p-24 pos-fixed top-0 left-0 z-999 login-bg-gradient">
-    <div class="card maxw-440 w-100pct shadow-xl bd-1-solid-navy-700 bg-white p-36">
+    <div class="card maxw-440 w-100pct shadow-xl bd-1-solid-navy-700 p-36">
       
       <div class="d-flex items-center gap-px-12 mb-24">
         <div class="brand-crest w-44px h-44px">
@@ -33,7 +33,7 @@
       </div>
 
       <p class="fs-0_875 text-secondary mb-24">
-        Sign in to review applicant dossiers, inspect DSADPS security telemetry, and manage admission decisions.
+        Sign in to review applicant dossiers, inspect AdmitShield security telemetry, and manage admission decisions.
       </p>
 
       <form id="loginForm">
@@ -49,11 +49,7 @@
 
         <div id="loginError" class="hidden p-10-14 bg-danger-bg bd-1-solid-danger-border radius-sm text-danger fs-0_825 fw-600 mb-18"></div>
 
-        <div class="bg-card-subtle p-10-14 radius-sm fs-0_775 text-muted mb-20">
-          💡 <strong>Demo Credentials:</strong> Username: <code>admin</code> / Password: <code>123</code> (configured in <code>.env</code>)
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-lg w-100pct">
+        <button type="submit" class="btn btn-primary btn-lg w-100pct mt-20">
           Sign In to Console →
         </button>
       </form>
@@ -81,7 +77,8 @@
           </svg>
         </div>
         <div>
-          <span>Northstar</span> Admin
+          <span class="sidebar-brand-name">AdmitShield</span>
+          <span class="sidebar-brand-tagline">Admissions security</span>
         </div>
       </div>
 
@@ -118,7 +115,7 @@
             <svg class="sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
-            DSADPS Security & AI
+            Threats & AI
           </a>
         </li>
         <li class="sidebar-item">
@@ -178,7 +175,7 @@
           <!-- Engine Live Status -->
           <div class="engine-status-pill">
             <span class="badge-dot bg-success ring-success"></span>
-            <span>DSADPS Protection Active</span>
+            <span>Protection active</span>
           </div>
 
           <!-- Polling Controls -->
@@ -304,7 +301,7 @@
             <div class="card-header">
               <div>
                 <h3 class="card-title">Live Admission Activity & Screening Log</h3>
-                <span class="card-subtitle">Real-time incoming submissions evaluated by DSADPS engine</span>
+                <span class="card-subtitle">Real-time incoming submissions evaluated by AdmitShield</span>
               </div>
               <button class="btn btn-secondary btn-sm" onclick="switchAdminTab('admin-tab-applications')">
                 View All Applications →
@@ -421,14 +418,14 @@
         </div>
 
         <!-- ================================================================
-             TAB 4: SECURITY & DSADPS INTELLIGENCE
+             TAB 4: SECURITY & AI INTELLIGENCE
              ================================================================ -->
         <div id="admin-tab-security" class="admin-tab-pane hidden">
-          
+
           <div class="flex items-center justify-between mb-24">
             <div>
-              <h2 class="fs-1_6 text-navy-900">DSADPS Threat Intelligence Console</h2>
-              <p class="fs-0_875 text-muted">Data Shuffling Attack Detection & Prevention System Controls</p>
+              <h2 class="fs-1_6 text-navy-900">AdmitShield Threat Intelligence Console</h2>
+              <p class="fs-0_875 text-muted">Rule-based and ML-based admission screening controls</p>
             </div>
           </div>
 
@@ -476,7 +473,7 @@
                   <strong id="secXgbAccuracy">—</strong>
                 </div>
               </div>
-              <button class="btn btn-primary btn-sm w-100pct" id="trainXgbBtn">
+              <button class="btn btn-secondary btn-sm w-100pct" id="trainXgbBtn">
                 Train XGBoost Model
               </button>
             </div>
@@ -572,7 +569,7 @@
                 </div>
                 <div>
                   <div class="flex items-center justify-between fs-0_85 mb-4">
-                    <strong>Security Screening Cleared (DSADPS)</strong>
+                    <strong>Security Screening Cleared (AdmitShield)</strong>
                     <span>88%</span>
                   </div>
                   <div class="bg-card-subtle h-8px radius-4 overflow-hidden">

@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
       statusBadge.className = 'badge badge-success';
       statusBadge.innerHTML = '<span class="badge-dot"></span> Official Submission Cleared';
       document.getElementById('receiptActionNotice').innerHTML = `
-        <strong>Security Clearance Verified:</strong> Your application successfully passed automated verification (DSADPS Security Engine). Our admissions faculty will now review your academic dossier.
+        <strong>Security Clearance Verified:</strong> Your application successfully passed automatic security verification. Our admissions faculty will now review your academic dossier.
       `;
     } else if (result.action === 'captcha') {
       statusBadge.className = 'badge badge-warning';
@@ -505,7 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="badge ${isAllowed ? 'badge-success' : 'badge-warning'}">${isAllowed ? 'Passed' : 'Under Review'}</span>
               </div>
               <p class="fs-0_825 text-secondary mt-4">
-                Automated DSADPS security gate verification for duplicate registrations and velocity rate-limiting.
+                Automatic security check for duplicate registrations and velocity rate-limiting.
               </p>
             </div>
           </div>

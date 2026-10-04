@@ -42,7 +42,7 @@ def weekly_trend_png(db: Session) -> Path:
     path = REPORT_DIR / f"weekly-trend-{today}.png"
     fig, axis = plt.subplots(figsize=(8, 4))
     axis.plot([str(day) for day in days], counts, marker="o", color="#1d4ed8")
-    axis.set(title="DSADPS weekly flagged activity", xlabel="Date", ylabel="Submissions")
+    axis.set(title="AdmitShield weekly flagged activity", xlabel="Date", ylabel="Submissions")
     axis.tick_params(axis="x", rotation=30)
     fig.tight_layout()
     fig.savefig(path, dpi=160)

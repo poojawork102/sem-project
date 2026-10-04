@@ -289,26 +289,26 @@ document.addEventListener('DOMContentLoaded', () => {
       <svg viewBox="0 0 ${width} ${height}" class="w-100pct h-100pct overflow-visible">
         <defs>
           <linearGradient id="chartGlow" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#2563EB" stop-opacity="0.3"/>
-            <stop offset="100%" stop-color="#2563EB" stop-opacity="0.0"/>
+            <stop offset="0%" stop-color="var(--brand-purple)" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="var(--brand-purple)" stop-opacity="0.0"/>
           </linearGradient>
         </defs>
 
         <!-- Grid Lines -->
-        <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="#E2E8F0" stroke-width="1"/>
-        <line x1="${padding}" y1="${height / 2}" x2="${width - padding}" y2="${height / 2}" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="var(--border-strong)" stroke-width="1"/>
+        <line x1="${padding}" y1="${height / 2}" x2="${width - padding}" y2="${height / 2}" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3,3"/>
 
         <!-- Area -->
         <path d="${areaD}" fill="url(#chartGlow)" />
 
         <!-- Line -->
-        <path d="${pathD}" fill="none" stroke="#2563EB" stroke-width="3" stroke-linecap="round" />
+        <path d="${pathD}" fill="none" stroke="var(--brand-purple)" stroke-width="3" stroke-linecap="round" />
 
         <!-- Points & Labels -->
         ${points.map(p => `
-          <circle cx="${p.x}" cy="${p.y}" r="5" fill="#ffffff" stroke="#2563EB" stroke-width="2.5" />
-          <text x="${p.x}" y="${p.y - 10}" font-size="11" font-weight="700" fill="#0F172A" text-anchor="middle">${p.val}</text>
-          <text x="${p.x}" y="${height - 12}" font-size="10" font-weight="600" fill="#64748B" text-anchor="middle">${p.label}</text>
+          <circle cx="${p.x}" cy="${p.y}" r="5" fill="var(--bg-card)" stroke="var(--brand-purple)" stroke-width="2.5" />
+          <text x="${p.x}" y="${p.y - 10}" font-size="11" font-weight="700" fill="var(--text-primary)" text-anchor="middle">${p.val}</text>
+          <text x="${p.x}" y="${height - 12}" font-size="10" font-weight="600" fill="var(--text-muted)" text-anchor="middle">${p.label}</text>
         `).join('')}
       </svg>
     `;
@@ -707,7 +707,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <!-- Security Breakdown -->
       <div class="card p-20 ${app.risk_score > 80 ? 'bl-4-solid-danger' : (app.risk_score >= 40 ? 'bl-4-solid-warning' : 'bl-4-solid-success')}">
         <div class="flex items-center justify-between mb-12">
-          <h4 class="fs-0_95 text-navy-900">DSADPS Security Engine Audit</h4>
+          <h4 class="fs-0_95 text-navy-900">AdmitShield Security Engine Audit</h4>
           <span class="score-pill ${app.risk_score > 80 ? 'score-high' : (app.risk_score >= 40 ? 'score-med' : 'score-low')}">
             Risk: ${esc((app.risk_score || 0).toFixed(1))} / 100
           </span>

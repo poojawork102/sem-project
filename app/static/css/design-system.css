@@ -3,74 +3,90 @@
    Sleek, High-Contrast, Institutional Aesthetic inspired by Linear & Stripe
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  /* Color Palette - Primary & Surfaces */
-  --navy-950: #070D18;
-  --navy-900: #0B132B;
-  --navy-850: #101B38;
-  --navy-800: #1C2541;
-  --navy-700: #2C3859;
-  --navy-600: #3E4C75;
-  
+  /* Color Palette - Surfaces (Phase 7 Step B palette) */
+  --bg-main: #FFFBEF;
+  --bg-card: #FFFFFF;
+  --bg-card-subtle: #FFF4D1;
+  --bg-raised: #FFFDF7;
+  --bg-sidebar: var(--bg-card);
+
+  /* Butter & Lavender accents (never used as text colour or status colour) */
+  --butter-100: #FFF6D6;
+  --butter-200: #FFEDB0;
+  --butter-300: #FDE38A;
+  --butter-accent: var(--butter-300);
+  --lavender-50: #F6F2FF;
+  --lavender-100: #ECE5FF;
+  --lavender-200: #DACFFF;
+  --lavender-400: #9C87F5;
+
   /* Brand Accents */
-  --brand-blue: #2563EB;
-  --brand-blue-hover: #1D4ED8;
-  --brand-indigo: #4F46E5;
-  --brand-indigo-light: #6366F1;
-  --brand-violet: #7C3AED;
-  --brand-glow: rgba(37, 99, 235, 0.25);
+  --brand-purple: #6D4FE0;
+  --brand-purple-hover: #5A3DC8;
+  --brand-purple-deep: #432C9A;
+  --brand-glow: rgba(109, 79, 224, .22);
+  --on-brand: #FFFFFF;
+  --btn-shadow: 0 1px 0 rgba(255,255,255,.25) inset, 0 10px 22px -8px rgba(109,79,224,.55);
+  --nav-active-bg: var(--lavender-50);
+  --nav-active-text: var(--brand-purple-deep);
+
+  /* Legacy brand-system aliases: admin.css / portal.css / chatbot.css still
+     reference these names in many rules. Pointing them at the new purple
+     keeps every one of those rules on-palette without touching each call
+     site separately. */
+  --brand-blue: var(--brand-purple);
+  --brand-blue-hover: var(--brand-purple-hover);
 
   /* Status Colors */
-  --success: #10B981;
-  --success-bg: #ECFDF5;
-  --success-border: #A7F3D0;
-  --success-text: #065F46;
+  --success: #2F9E6E;
+  --success-bg: #E6F6EE;
+  --success-border: #BEE6D2;
+  --success-text: #1D6B4A;
 
-  --warning: #F59E0B;
-  --warning-bg: #FFFBEB;
-  --warning-border: #FDE68A;
-  --warning-text: #92400E;
+  --warning: #E0782A;
+  --warning-bg: #FFEDDC;
+  --warning-border: #F5C294;
+  --warning-text: #9A4A12;
 
-  --danger: #EF4444;
-  --danger-bg: #FEF2F2;
-  --danger-border: #FECACA;
-  --danger-text: #991B1B;
+  --danger: #D9445A;
+  --danger-bg: #FDE8EC;
+  --danger-border: #F2AEB9;
+  --danger-text: #9B2337;
 
-  --info: #0284C7;
-  --info-bg: #F0F9FF;
-  --info-border: #BAE6FD;
-  --info-text: #0369A1;
+  /* info is now a pure alias of the single brand hue, not a separate cyan */
+  --info: var(--brand-purple);
+  --info-bg: var(--lavender-50);
+  --info-border: var(--lavender-200);
+  --info-text: var(--brand-purple-deep);
 
-  /* Neutrals & Grays */
-  --bg-main: #F8FAFC;
-  --bg-card: #FFFFFF;
-  --bg-card-subtle: #F1F5F9;
-  --text-primary: #0F172A;
-  --text-secondary: #475569;
-  --text-muted: #64748B;
-  --text-light: #94A3B8;
-  --border-light: #E2E8F0;
-  --border-strong: #CBD5E1;
+  /* Text & Borders */
+  --text-primary: #241A3D;
+  --text-secondary: #5B5270;
+  --text-muted: #8A8299;
+  --text-light: #B0A8BE;
+  --border-light: rgba(36, 26, 61, .09);
+  --border-strong: rgba(36, 26, 61, .18);
 
-  /* Typography */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Typography (Plus Jakarta Sans everywhere; JetBrains Mono for IPs/scores/refs) */
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Plus Jakarta Sans', var(--font-sans);
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Shadows */
-  --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
-  --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.08), 0 1px 2px -1px rgba(15, 23, 42, 0.08);
-  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
-  --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  /* Shadows - each has a 1px inset top highlight baked in */
+  --shadow-xs: 0 1px 2px 0 rgba(36, 26, 61, 0.05);
+  --shadow-sm: 0 1px 0 rgba(255,255,255,.9) inset, 0 1px 2px rgba(36,26,61,.06), 0 2px 6px -2px rgba(67,44,154,.10);
+  --shadow-md: 0 1px 0 rgba(255,255,255,.9) inset, 0 2px 4px rgba(36,26,61,.05), 0 10px 24px -8px rgba(67,44,154,.18);
+  --shadow-lg: 0 1px 0 rgba(255,255,255,.9) inset, 0 4px 8px rgba(36,26,61,.05), 0 24px 48px -12px rgba(67,44,154,.24);
+  --shadow-xl: 0 1px 0 rgba(255,255,255,.9) inset, 0 8px 16px rgba(36,26,61,.06), 0 32px 64px -16px rgba(67,44,154,.28);
   --shadow-glow: 0 0 25px -2px var(--brand-glow);
 
-  /* Border Radius */
+  /* Border Radius (cards: 18-20px) */
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-lg: 18px;
   --radius-xl: 22px;
   --radius-full: 9999px;
 
@@ -79,16 +95,78 @@
   --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-smooth: 350ms cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Step A (Phase 7): tokens for values that previously existed only as
-     hardcoded hex inside inline style="" attributes. Values are copied
-     verbatim from those inline styles, so nothing renders differently. */
+  /* Step A (Phase 7) tokens, repointed to the Step B palette: these back
+     the "light tint chip" and "on dark surface" utility classes, so they
+     now read as purple/lavender instead of the old blue. */
   --white: #ffffff;
-  --brand-blue-tint-bg: #EFF6FF;
-  --brand-blue-tint-border: #BFDBFE;
-  --brand-blue-tint-text: #1E40AF;
-  --link-on-dark: #60A5FA;
-  --link-on-dark-hover: #93C5FD;
-  --text-faint-on-dark: #64748B;
+  --brand-blue-tint-bg: var(--lavender-50);
+  --brand-blue-tint-border: var(--lavender-200);
+  --brand-blue-tint-text: var(--brand-purple-deep);
+  --link-on-dark: #C9BBFF;
+  --link-on-dark-hover: var(--lavender-200);
+  --text-faint-on-dark: #8A80A6;
+}
+
+/* ==========================================================================
+   Phase 7 Step B: admin dark theme
+   Applied via class="admin-theme" on <body> (always-on for the admin
+   dashboard; there is no light/dark toggle). Custom properties cascade
+   from body to every descendant, so admin.css / chatbot.css rules that
+   reference these same token names re-theme automatically.
+   ========================================================================== */
+body.admin-theme {
+  --bg-main: #14101F;
+  --bg-sidebar: #100C1A;
+  --bg-card: #1C1630;
+  --bg-card-subtle: #251D3D;
+  --bg-raised: #2F2550;
+  --border-light: rgba(255, 255, 255, .07);
+  --border-strong: rgba(255, 255, 255, .14);
+  --text-primary: #F1ECFF;
+  --text-secondary: #B3A9CC;
+  --text-muted: #8A80A6;
+  --text-light: #8A80A6;
+  --brand-purple: #B09BFF;
+  --brand-purple-hover: #C9BBFF;
+  --brand-purple-deep: #B09BFF;
+  --on-brand: #1A1230;
+  --butter-accent: #FFE08A;
+  --btn-shadow: 0 8px 20px -8px rgba(176,155,255,.6);
+  --nav-active-bg: var(--bg-card-subtle);
+  --nav-active-text: var(--text-primary);
+
+  --success: #5EE0A8;
+  --success-bg: rgba(94, 224, 168, .14);
+  --success-border: rgba(94, 224, 168, .3);
+  --success-text: var(--success);
+
+  --warning: #FFA45C;
+  --warning-bg: rgba(255, 164, 92, .14);
+  --warning-border: rgba(255, 164, 92, .3);
+  --warning-text: var(--warning);
+
+  --danger: #FF7A8A;
+  --danger-bg: rgba(255, 122, 138, .14);
+  --danger-border: rgba(255, 122, 138, .3);
+  --danger-text: var(--danger);
+
+  --info: var(--brand-purple);
+  --info-bg: rgba(176, 155, 255, .14);
+  --info-border: rgba(176, 155, 255, .3);
+  --info-text: #C9BBFF;
+
+  --lavender-400: #B09BFF;
+  --brand-blue-tint-bg: rgba(176, 155, 255, .14);
+  --brand-blue-tint-border: rgba(176, 155, 255, .35);
+  --brand-blue-tint-text: #C9BBFF;
+  --link-on-dark: #C9BBFF;
+  --link-on-dark-hover: #DACFFF;
+  --text-faint-on-dark: #8A80A6;
+
+  --shadow-sm: 0 1px 0 rgba(255,255,255,.04) inset, 0 4px 10px -3px rgba(0,0,0,.5);
+  --shadow-md: 0 1px 0 rgba(255,255,255,.04) inset, 0 8px 24px -6px rgba(0,0,0,.55);
+  --shadow-lg: 0 1px 0 rgba(255,255,255,.04) inset, 0 16px 40px -10px rgba(0,0,0,.6);
+  --shadow-xl: 0 1px 0 rgba(255,255,255,.04) inset, 0 24px 56px -14px rgba(0,0,0,.65);
 }
 
 /* ==========================================================================
@@ -120,7 +198,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 700;
-  color: var(--navy-900);
+  color: var(--text-primary);
   line-height: 1.25;
   letter-spacing: -0.02em;
 }
@@ -204,14 +282,14 @@ code, kbd, samp, pre {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--brand-blue) 0%, #1d4ed8 100%);
-  color: #ffffff;
-  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25), 0 1px 2px rgba(0, 0, 0, 0.05);
+  background: var(--brand-purple);
+  color: var(--on-brand);
+  box-shadow: var(--btn-shadow);
 }
 .btn-primary:hover {
-  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+  background: var(--brand-purple-hover);
+  color: var(--on-brand);
+  box-shadow: var(--btn-shadow);
   transform: translateY(-1px);
 }
 .btn-primary:active {
@@ -219,25 +297,25 @@ code, kbd, samp, pre {
 }
 
 .btn-secondary {
-  background-color: #ffffff;
-  color: var(--navy-800);
+  background-color: var(--bg-card);
+  color: var(--text-primary);
   border-color: var(--border-strong);
   box-shadow: var(--shadow-xs);
 }
 .btn-secondary:hover {
   background-color: var(--bg-main);
-  border-color: var(--navy-700);
-  color: var(--navy-900);
+  border-color: var(--brand-purple);
+  color: var(--text-primary);
 }
 
 .btn-dark {
-  background: var(--navy-900);
+  background: var(--text-primary);
   color: #ffffff;
 }
 .btn-dark:hover {
-  background: var(--navy-950);
+  background: var(--brand-purple-deep);
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(11, 19, 43, 0.3);
+  box-shadow: 0 4px 12px rgba(36, 26, 61, 0.3);
   transform: translateY(-1px);
 }
 
@@ -246,26 +324,26 @@ code, kbd, samp, pre {
   color: var(--text-secondary);
 }
 .btn-ghost:hover {
-  background-color: rgba(15, 23, 42, 0.05);
-  color: var(--navy-900);
+  background-color: rgba(36, 26, 61, 0.05);
+  color: var(--text-primary);
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+  background: var(--danger);
   color: #ffffff;
 }
 .btn-danger:hover {
-  background: #dc2626;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  background: var(--danger-text);
+  box-shadow: 0 4px 12px rgba(217, 68, 90, 0.3);
 }
 
 .btn-success {
-  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+  background: var(--success);
   color: #ffffff;
 }
 .btn-success:hover {
-  background: #059669;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  background: var(--success-text);
+  box-shadow: 0 4px 12px rgba(47, 158, 110, 0.3);
 }
 
 .btn-sm {
@@ -315,7 +393,7 @@ code, kbd, samp, pre {
 }
 .badge-success .badge-dot {
   background-color: var(--success);
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 0 2px rgba(47, 158, 110, 0.2);
 }
 
 .badge-warning {
@@ -325,7 +403,7 @@ code, kbd, samp, pre {
 }
 .badge-warning .badge-dot {
   background-color: var(--warning);
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+  box-shadow: 0 0 0 2px rgba(224, 120, 42, 0.2);
 }
 
 .badge-danger {
@@ -335,7 +413,7 @@ code, kbd, samp, pre {
 }
 .badge-danger .badge-dot {
   background-color: var(--danger);
-  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+  box-shadow: 0 0 0 2px rgba(217, 68, 90, 0.2);
 }
 
 .badge-info {
@@ -345,7 +423,7 @@ code, kbd, samp, pre {
 }
 .badge-info .badge-dot {
   background-color: var(--info);
-  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+  box-shadow: 0 0 0 2px rgba(109, 79, 224, 0.2);
 }
 
 .badge-neutral {
@@ -388,7 +466,7 @@ code, kbd, samp, pre {
 .card-title {
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--navy-900);
+  color: var(--text-primary);
 }
 
 .card-subtitle {
@@ -410,7 +488,7 @@ code, kbd, samp, pre {
 .form-label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--navy-800);
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -428,7 +506,7 @@ code, kbd, samp, pre {
   font-family: var(--font-sans);
   font-size: 0.95rem;
   color: var(--text-primary);
-  background-color: #ffffff;
+  background-color: var(--bg-card);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
@@ -436,18 +514,18 @@ code, kbd, samp, pre {
 }
 
 .form-control:hover {
-  border-color: var(--navy-600);
+  border-color: var(--brand-purple);
 }
 
 .form-control:focus {
-  border-color: var(--brand-blue);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-  background-color: #ffffff;
+  border-color: var(--brand-purple);
+  box-shadow: 0 0 0 3px var(--brand-glow);
+  background-color: var(--bg-card);
 }
 
 .form-control.error {
   border-color: var(--danger);
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  box-shadow: 0 0 0 3px rgba(217, 68, 90, 0.15);
 }
 
 .form-hint {
@@ -522,7 +600,7 @@ textarea.form-control {
 }
 
 .table tbody tr:hover {
-  background-color: #F8FAFC;
+  background-color: var(--bg-card-subtle);
 }
 
 .table tbody tr:last-child td {
@@ -538,7 +616,7 @@ textarea.form-control {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(11, 19, 43, 0.6);
+  background-color: rgba(36, 26, 61, 0.6);
   backdrop-filter: blur(6px);
   z-index: 1000;
   display: flex;
@@ -579,7 +657,7 @@ textarea.form-control {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(11, 19, 43, 0.5);
+  background-color: rgba(36, 26, 61, 0.5);
   backdrop-filter: blur(4px);
   z-index: 1000;
   opacity: 0;
@@ -653,10 +731,10 @@ textarea.form-control {
 }
 
 .toast {
-  background: #ffffff;
+  background: var(--bg-card);
   border-radius: var(--radius-md);
   padding: 14px 18px;
-  box-shadow: var(--shadow-xl), 0 0 0 1px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow-xl), 0 0 0 1px rgba(36, 26, 61, 0.08);
   display: flex;
   align-items: flex-start;
   gap: 12px;
@@ -691,7 +769,7 @@ textarea.form-control {
 .toast-title {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--navy-900);
+  color: var(--text-primary);
 }
 
 .toast-message {
@@ -730,7 +808,7 @@ textarea.form-control {
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background: linear-gradient(90deg, var(--bg-card-subtle) 25%, var(--bg-raised) 50%, var(--bg-card-subtle) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius-sm);
@@ -784,6 +862,7 @@ textarea.form-control {
 .mt-16 { margin-top: 16px; }
 .mt-18 { margin-top: 18px; }
 .mt-2 { margin-top: 2px; }
+.mt-20 { margin-top: 20px; }
 .mt-24 { margin-top: 24px; }
 .mt-4 { margin-top: 4px; }
 .mt-6 { margin-top: 6px; }
@@ -912,7 +991,7 @@ textarea.form-control {
 .text-brand-blue { color: var(--brand-blue); }
 .text-brand-blue-tint-border { color: var(--brand-blue-tint-border); }
 .text-brand-blue-tint-text { color: var(--brand-blue-tint-text); }
-.text-brand-indigo { color: var(--brand-indigo); }
+.text-brand-indigo { color: var(--lavender-400); }
 .text-danger { color: var(--danger); }
 .text-danger-text { color: var(--danger-text); }
 .text-faint-on-dark { color: var(--text-faint-on-dark); }
@@ -921,8 +1000,8 @@ textarea.form-control {
 .text-link-on-dark { color: var(--link-on-dark); }
 .text-link-on-dark-hover { color: var(--link-on-dark-hover); }
 .text-muted { color: var(--text-muted); }
-.text-navy-700 { color: var(--navy-700); }
-.text-navy-900 { color: var(--navy-900); }
+.text-navy-700 { color: var(--text-secondary); }
+.text-navy-900 { color: var(--text-primary); }
 .text-secondary { color: var(--text-secondary); }
 .text-success { color: var(--success); }
 .text-success-text { color: var(--success-text); }
@@ -934,7 +1013,7 @@ textarea.form-control {
 .bg-border-light { background: var(--border-light); }
 .bg-brand-blue { background: var(--brand-blue); }
 .bg-brand-blue-tint-bg { background: var(--brand-blue-tint-bg); }
-.bg-brand-indigo { background: var(--brand-indigo); }
+.bg-brand-indigo { background: var(--lavender-400); }
 .bg-card-subtle { background: var(--bg-card-subtle); }
 .bg-danger-bg { background: var(--danger-bg); }
 .bg-info-bg { background: var(--info-bg); }
@@ -953,10 +1032,10 @@ textarea.form-control {
 .bd-1-solid-brand-blue-tint-border { border: 1px solid var(--brand-blue-tint-border); }
 .bd-1-solid-danger-border { border: 1px solid var(--danger-border); }
 .bd-1-solid-info-border { border: 1px solid var(--info-border); }
-.bd-1-solid-navy-700 { border: 1px solid var(--navy-700); }
+.bd-1-solid-navy-700 { border: 1px solid var(--border-strong); }
 .bd-2-solid-border-strong { border: 2px solid var(--border-strong); }
 .bl-4-solid-brand-blue { border-left: 4px solid var(--brand-blue); }
-.bl-4-solid-brand-indigo { border-left: 4px solid var(--brand-indigo); }
+.bl-4-solid-brand-indigo { border-left: 4px solid var(--lavender-400); }
 .bl-4-solid-danger { border-left: 4px solid var(--danger); }
 .bl-4-solid-success { border-left: 4px solid var(--success); }
 .bl-4-solid-warning { border-left: 4px solid var(--warning); }
@@ -966,8 +1045,8 @@ textarea.form-control {
 .radius-circle { border-radius: 50%; }
 .radius-md { border-radius: var(--radius-md); }
 .radius-sm { border-radius: var(--radius-sm); }
-.ring-brand { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2); }
-.ring-success { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3); }
+.ring-brand { box-shadow: 0 0 0 4px rgba(109, 79, 224, 0.2); }
+.ring-success { box-shadow: 0 0 0 3px rgba(47, 158, 110, 0.3); }
 .shadow-lg { box-shadow: var(--shadow-lg); }
 .shadow-md { box-shadow: var(--shadow-md); }
 .shadow-sm { box-shadow: var(--shadow-sm); }

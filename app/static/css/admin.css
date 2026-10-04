@@ -4,8 +4,8 @@
 
 /* Admin Body & Layout */
 body.admin-body {
-  background-color: #F8FAFC;
-  color: var(--navy-900);
+  background-color: var(--bg-main);
+  color: var(--text-primary);
   margin: 0;
   display: flex;
   min-height: 100vh;
@@ -15,8 +15,8 @@ body.admin-body {
 /* Admin Sidebar */
 .admin-sidebar {
   width: 260px;
-  background: linear-gradient(180deg, var(--navy-950) 0%, var(--navy-900) 100%);
-  color: #94A3B8;
+  background: var(--bg-sidebar);
+  color: var(--text-secondary);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -24,7 +24,7 @@ body.admin-body {
   bottom: 0;
   left: 0;
   z-index: 150;
-  border-right: 1px solid var(--navy-800);
+  border-right: 1px solid var(--border-light);
   transition: transform var(--transition-smooth);
 }
 
@@ -34,22 +34,33 @@ body.admin-body {
   display: flex;
   align-items: center;
   gap: 12px;
-  border-bottom: 1px solid var(--navy-800);
-  color: #ffffff;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-primary);
   font-family: var(--font-display);
+}
+
+.sidebar-brand-name {
+  display: block;
   font-weight: 800;
   font-size: 1.15rem;
+}
+
+.sidebar-brand-tagline {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
 }
 
 .sidebar-crest {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, var(--brand-blue) 0%, #4F46E5 100%);
+  background: var(--brand-purple);
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
+  color: var(--on-brand);
 }
 
 .sidebar-menu {
@@ -67,7 +78,7 @@ body.admin-body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #64748B;
+  color: var(--text-muted);
   padding: 12px 12px 6px;
 }
 
@@ -78,7 +89,7 @@ body.admin-body {
   padding: 10px 14px;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #94A3B8;
+  color: var(--text-secondary);
   border-radius: var(--radius-md);
   transition: all var(--transition-fast);
   cursor: pointer;
@@ -86,14 +97,14 @@ body.admin-body {
 }
 
 .sidebar-item a:hover {
-  color: #ffffff;
+  color: var(--text-primary);
   background-color: rgba(255, 255, 255, 0.06);
 }
 
 .sidebar-item.active a {
-  color: #ffffff;
-  background: linear-gradient(90deg, rgba(37, 99, 235, 0.25) 0%, rgba(37, 99, 235, 0.05) 100%);
-  border-left: 3px solid var(--brand-blue);
+  color: var(--nav-active-text);
+  background: var(--nav-active-bg);
+  box-shadow: inset 3px 0 0 var(--butter-accent);
 }
 
 .sidebar-icon {
@@ -104,7 +115,7 @@ body.admin-body {
 
 .sidebar-user {
   padding: 18px 20px;
-  border-top: 1px solid var(--navy-800);
+  border-top: 1px solid var(--border-light);
   background: rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
@@ -116,7 +127,7 @@ body.admin-body {
   height: 36px;
   border-radius: 50%;
   background: var(--brand-blue);
-  color: #ffffff;
+  color: var(--on-brand);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,7 +148,7 @@ body.admin-body {
 /* Admin Top Bar */
 .admin-topbar {
   height: 72px;
-  background-color: #ffffff;
+  background-color: var(--bg-card);
   border-bottom: 1px solid var(--border-light);
   padding: 0 32px;
   display: flex;
@@ -174,9 +185,9 @@ body.admin-body {
 }
 
 .global-search input:focus {
-  background-color: #ffffff;
+  background-color: var(--bg-card);
   border-color: var(--brand-blue);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  box-shadow: 0 0 0 3px rgba(109, 79, 224, 0.12);
 }
 
 .global-search svg {
@@ -224,7 +235,7 @@ body.admin-body {
 }
 
 .kpi-card {
-  background: #ffffff;
+  background: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-lg);
   padding: 22px;
@@ -270,7 +281,7 @@ body.admin-body {
   font-family: var(--font-display);
   font-size: 2.1rem;
   font-weight: 800;
-  color: var(--navy-900);
+  color: var(--text-primary);
   line-height: 1;
   margin-bottom: 8px;
 }
@@ -292,7 +303,7 @@ body.admin-body {
 }
 
 .chart-card {
-  background: #ffffff;
+  background: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-lg);
   padding: 24px;
@@ -380,7 +391,7 @@ body.admin-body {
 .dossier-tab.active {
   color: var(--brand-blue);
   border-bottom-color: var(--brand-blue);
-  background: #ffffff;
+  background: var(--bg-card);
 }
 
 /* Action Area */
@@ -396,7 +407,7 @@ body.admin-body {
    specific to one admin feature (login screen, decision/program bars,
    spam row highlight). */
 .login-bg-gradient {
-  background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-900) 100%);
+  background: linear-gradient(135deg, var(--bg-sidebar) 0%, var(--bg-main) 100%);
 }
 
 .bar-fill {

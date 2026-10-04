@@ -18,7 +18,7 @@ from .chatbot import chat_with_gemini
 from .schemas import ApplicationStatusIn, ChatMessageIn, DecisionOut, LoginIn, OverrideIn, PortalApplicationIn, PortalDecisionOut, SubmissionIn
 from .security import create_access_token, require_admin
 
-app = FastAPI(title="DSADPS Agent API", version="1.0.0")
+app = FastAPI(title="AdmitShield Agent API", version="1.0.0")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 
