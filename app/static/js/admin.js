@@ -2,10 +2,10 @@
  * Northstar University - Admin Admissions SaaS Console
  * Complete Interactive Controller for Data, Visualizations & DSADPS Security Gate
  */
-
+ 
 document.addEventListener('DOMContentLoaded', () => {
   Toast.init();
-
+ 
   // State
   const state = {
     activityList: [],
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     pollInterval: 5000,
     pollTimer: null
   };
-
+ 
   // DOM Elements
   const loginView = document.getElementById('loginView');
   const adminApp = document.getElementById('adminApp');
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const logoutBtn = document.getElementById('logoutBtn');
   const sidebarNavItems = document.querySelectorAll('.sidebar-item a[data-admin-tab]');
   const adminTabPanes = document.querySelectorAll('.admin-tab-pane');
-
+ 
   // Check initial authentication
   function checkAuth() {
     const token = Api.getToken();
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
       stopPolling();
     }
   }
-
+ 
   // Handle Login
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
@@ -56,11 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const usernameInput = document.getElementById('adminUsername');
       const passwordInput = document.getElementById('adminPassword');
       const submitBtn = loginForm.querySelector('button[type="submit"]');
-
+ 
       submitBtn.disabled = true;
       submitBtn.textContent = 'Authenticating…';
       if (loginError) loginError.style.display = 'none';
-
+ 
       try {
         await Api.login(usernameInput.value.trim(), passwordInput.value);
         Toast.show('Welcome Back', `Authenticated as ${usernameInput.value.trim()}`, 'success');
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-
+ 
   // Handle Logout
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
@@ -86,18 +86,18 @@ document.addEventListener('DOMContentLoaded', () => {
       checkAuth();
     });
   }
-
+ 
   window.addEventListener('admin-auth-expired', () => {
     Toast.show('Session Expired', 'Please sign in again.', 'warning');
     checkAuth();
   });
-
+ 
   // Admin Tab Navigation
   function switchAdminTab(targetTabId) {
     adminTabPanes.forEach(pane => {
       pane.style.display = pane.id === targetTabId ? 'block' : 'none';
     });
-
+ 
     sidebarNavItems.forEach(item => {
       const parent = item.parentElement;
       if (item.getAttribute('data-admin-tab') === targetTabId) {
@@ -106,11 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
         parent.classList.remove('active');
       }
     });
-
+ 
     // Close mobile sidebar if open
     document.getElementById('adminSidebar')?.classList.remove('open');
   }
-
+ 
   sidebarNavItems.forEach(item => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
@@ -118,19 +118,19 @@ document.addEventListener('DOMContentLoaded', () => {
       if (targetId) switchAdminTab(targetId);
     });
   });
-
+ 
   // Mobile sidebar toggle
   document.getElementById('sidebarToggleBtn')?.addEventListener('click', () => {
     document.getElementById('adminSidebar')?.classList.toggle('open');
   });
-
+ 
   // -------------------------------------------------------------
   // Data Loading & Polling
   // -------------------------------------------------------------
   async function loadAllData() {
     const refreshIcon = document.getElementById('refreshSpinner');
     if (refreshIcon) refreshIcon.classList.add('animate-pulse');
-
+ 
     try {
       const [activityData, appsData, summaryData, aiData, xgbData] = await Promise.all([
         Api.getActivity(150),
@@ -139,63 +139,63 @@ document.addEventListener('DOMContentLoaded', () => {
         Api.getAiStatus(),
         Api.getXgbStatus()
       ]);
-
+ 
       state.activityList = activityData || [];
       state.applicationsList = appsData || [];
       state.summary = summaryData || {};
       state.aiStatus = aiData || {};
       state.xgbStatus = xgbData || {};
-
+ 
       renderKPIs();
       renderCharts();
       renderLiveFeed();
       renderApplicationsTable();
       renderSecurityConsole();
       renderVerificationHub();
-
+ 
       const lastRefreshed = document.getElementById('lastRefreshedTime');
       if (lastRefreshed) lastRefreshed.textContent = new Date().toLocaleTimeString();
-
+ 
     } catch (err) {
       console.error('Failed to load admin data:', err);
     } finally {
       if (refreshIcon) refreshIcon.classList.remove('animate-pulse');
     }
   }
-
+ 
   function startPolling() {
     stopPolling();
     if (state.pollInterval > 0) {
       state.pollTimer = setInterval(loadAllData, state.pollInterval);
     }
   }
-
+ 
   function stopPolling() {
     if (state.pollTimer) {
       clearInterval(state.pollTimer);
       state.pollTimer = null;
     }
   }
-
+ 
   // Refresh interval selector
   document.getElementById('pollIntervalSelect')?.addEventListener('change', (e) => {
     state.pollInterval = parseInt(e.target.value, 10);
     startPolling();
     Toast.show('Polling Updated', state.pollInterval > 0 ? `Auto-refresh set to ${state.pollInterval / 1000}s` : 'Auto-refresh paused', 'info');
   });
-
+ 
   document.getElementById('manualRefreshBtn')?.addEventListener('click', () => {
     loadAllData();
     Toast.show('Refreshed', 'Latest decisions and submissions synchronized.', 'info');
   });
-
+ 
   // -------------------------------------------------------------
   // Render KPI Metrics
   // -------------------------------------------------------------
   function renderKPIs() {
     const apps = state.applicationsList;
     const activities = state.activityList;
-
+ 
     // Count from the full applications list (not the 150 newest activity rows), so the
     // total and the three decision counts always add up. Application.status already
     // reflects admin overrides.
@@ -204,19 +204,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const allowedCount = decided.filter(x => x === 'allow').length;
     const captchaCount = decided.filter(x => x === 'captcha').length;
     const blockedCount = decided.filter(x => x === 'block').length;
-
+ 
     document.getElementById('kpiTotalApps').textContent = totalCount;
     document.getElementById('kpiAllowedApps').textContent = allowedCount;
     document.getElementById('kpiCaptchaApps').textContent = captchaCount;
     document.getElementById('kpiBlockedApps').textContent = blockedCount;
-
+ 
     // Percentages
     const allowedPct = totalCount ? Math.round((allowedCount / totalCount) * 100) : 0;
     document.getElementById('kpiAllowedSubtext').textContent = `${allowedPct}% acceptance rate`;
-
+ 
     const blockedPct = totalCount ? Math.round((blockedCount / totalCount) * 100) : 0;
     document.getElementById('kpiBlockedSubtext').textContent = `${blockedPct}% flagged by security`;
-
+ 
     // AI Model KPI
     const ai = state.aiStatus;
     const aiStatusBadge = document.getElementById('kpiAiStatusText');
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   }
-
+ 
   // -------------------------------------------------------------
   // Render Visual Analytics & Charts
   // -------------------------------------------------------------
@@ -239,41 +239,41 @@ document.addEventListener('DOMContentLoaded', () => {
     renderDecisionDonutChart();
     renderProgramsDistributionChart();
   }
-
+ 
   function renderWeeklyTrendChart() {
     const container = document.getElementById('weeklyTrendSvgContainer');
     if (!container) return;
-
+ 
     // Aggregate submissions by last 7 days
     const now = new Date();
     const days = [];
     const dayCounts = [];
-
+ 
     for (let i = 6; i >= 0; i--) {
       const d = new Date(now);
       d.setDate(d.getDate() - i);
       const dateStr = d.toISOString().split('T')[0];
       const dayLabel = d.toLocaleDateString(undefined, { weekday: 'short', month: 'numeric', day: 'numeric' });
       days.push({ dateStr, dayLabel });
-
+ 
       const count = state.activityList.filter(x => {
         const itemDate = (x.created_at || '').split('T')[0];
         return itemDate === dateStr;
       }).length;
       dayCounts.push(count);
     }
-
+ 
     const maxCount = Math.max(...dayCounts, 5);
     const width = 560;
     const height = 180;
     const padding = 35;
-
+ 
     const points = dayCounts.map((val, idx) => {
       const x = padding + (idx * ((width - (padding * 2)) / 6));
       const y = height - padding - ((val / maxCount) * (height - (padding * 2)));
       return { x, y, val, label: days[idx].dayLabel };
     });
-
+ 
     // Create SVG Path
     let pathD = `M ${points[0].x} ${points[0].y}`;
     for (let i = 1; i < points.length; i++) {
@@ -285,10 +285,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const cpy2 = curr.y;
       pathD += ` C ${cpx1} ${cpy1}, ${cpx2} ${cpy2}, ${curr.x} ${curr.y}`;
     }
-
+ 
     // Gradient fill area
     const areaD = `${pathD} L ${points[points.length - 1].x} ${height - padding} L ${points[0].x} ${height - padding} Z`;
-
+ 
     container.innerHTML = `
       <svg viewBox="0 0 ${width} ${height}" class="w-100pct h-100pct overflow-visible">
         <defs>
@@ -297,17 +297,17 @@ document.addEventListener('DOMContentLoaded', () => {
             <stop offset="100%" stop-color="var(--brand-purple)" stop-opacity="0.0"/>
           </linearGradient>
         </defs>
-
+ 
         <!-- Grid Lines -->
         <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="var(--border-strong)" stroke-width="1"/>
         <line x1="${padding}" y1="${height / 2}" x2="${width - padding}" y2="${height / 2}" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3,3"/>
-
+ 
         <!-- Area -->
         <path d="${areaD}" fill="url(#chartGlow)" />
-
+ 
         <!-- Line -->
         <path d="${pathD}" fill="none" stroke="var(--brand-purple)" stroke-width="3" stroke-linecap="round" />
-
+ 
         <!-- Points & Labels -->
         ${points.map(p => `
           <circle cx="${p.x}" cy="${p.y}" r="5" fill="var(--bg-card)" stroke="var(--brand-purple)" stroke-width="2.5" />
@@ -317,21 +317,21 @@ document.addEventListener('DOMContentLoaded', () => {
       </svg>
     `;
   }
-
+ 
   function renderDecisionDonutChart() {
     const container = document.getElementById('donutChartContainer');
     if (!container) return;
-
+ 
     const decided = state.applicationsList.length ? state.applicationsList.map(x => x.status) : state.activityList.map(x => x.final_action);
     const total = decided.length || 1;
     const allowed = decided.filter(x => x === 'allow').length;
     const captcha = decided.filter(x => x === 'captcha').length;
     const blocked = decided.filter(x => x === 'block').length;
-
+ 
     const allowedPct = Math.round((allowed / total) * 100);
     const captchaPct = Math.round((captcha / total) * 100);
     const blockedPct = Math.round((blocked / total) * 100);
-
+ 
     container.innerHTML = `
       <div class="d-flex flexdir-column gap-px-14">
         <div>
@@ -343,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="bar-fill bg-success" style="--fill: ${allowedPct}%"></div>
           </div>
         </div>
-
+ 
         <div>
           <div class="flex items-center justify-between fs-0_85 mb-4">
             <span class="fw-600 text-navy-900">Secondary Verification (Captcha)</span>
@@ -353,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="bar-fill bg-warning" style="--fill: ${captchaPct}%"></div>
           </div>
         </div>
-
+ 
         <div>
           <div class="flex items-center justify-between fs-0_85 mb-4">
             <span class="fw-600 text-navy-900">Held / Blocked (Security Flag)</span>
@@ -366,21 +366,21 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
   }
-
+ 
   function renderProgramsDistributionChart() {
     const container = document.getElementById('programsChartContainer');
     if (!container) return;
-
+ 
     const apps = state.applicationsList;
     const progMap = {};
     apps.forEach(a => {
       const p = a.program || 'Unassigned';
       progMap[p] = (progMap[p] || 0) + 1;
     });
-
+ 
     const total = apps.length || 1;
     const entries = Object.entries(progMap).sort((a, b) => b[1] - a[1]);
-
+ 
     container.innerHTML = entries.map(([prog, count]) => {
       const pct = Math.round((count / total) * 100);
       return `
@@ -396,25 +396,25 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
     }).join('') || '<div class="text-muted fs-0_85">No application data available yet.</div>';
   }
-
+ 
   // -------------------------------------------------------------
   // Render Live Activity Feed
   // -------------------------------------------------------------
   function renderLiveFeed() {
     const container = document.getElementById('liveFeedRows');
     if (!container) return;
-
+ 
     const topItems = state.activityList.slice(0, 6);
     if (!topItems.length) {
       container.innerHTML = `<tr><td colspan="6" class="text-center p-24 text-muted">No activity recorded yet. Run the attack simulator or submit a portal form.</td></tr>`;
       return;
     }
-
+ 
     container.innerHTML = topItems.map(item => {
       const timeStr = item.created_at ? new Date(item.created_at + (item.created_at.includes('Z') ? '' : 'Z')).toLocaleTimeString() : '—';
       const riskClass = item.risk_score > 80 ? 'score-high' : (item.risk_score >= 40 ? 'score-med' : 'score-low');
       const actionBadge = item.final_action === 'allow' ? 'badge-success' : (item.final_action === 'captcha' ? 'badge-warning' : 'badge-danger');
-
+ 
       return `
         <tr>
           <td><span class="fs-0_8 text-muted fw-500">${timeStr}</span></td>
@@ -440,7 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
     }).join('');
   }
-
+ 
   // -------------------------------------------------------------
   // Render Applications Table with Multi-Filter
   // -------------------------------------------------------------
@@ -448,7 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tbody = document.getElementById('applicationsTableBody');
     const countDisplay = document.getElementById('applicationsTotalCount');
     if (!tbody) return;
-
+ 
     // Determine dataSource: use applicationsList if available, or fall back to activityList
     let list = state.applicationsList.length ? state.applicationsList : state.activityList.map(act => ({
       id: act.application_id || act.id,
@@ -466,7 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
       activity_id: act.id,
       confirmed_spam: false
     }));
-
+ 
     // Apply Search
     if (state.searchQuery) {
       const q = state.searchQuery.toLowerCase();
@@ -478,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
         (item.program && item.program.toLowerCase().includes(q))
       );
     }
-
+ 
     // Apply Status Filter
     if (state.statusFilter !== 'all') {
       if (state.statusFilter === 'spam') {
@@ -487,23 +487,23 @@ document.addEventListener('DOMContentLoaded', () => {
         list = list.filter(item => item.status === state.statusFilter);
       }
     }
-
+ 
     // Apply Program Filter
     if (state.programFilter !== 'all') {
       list = list.filter(item => (item.program || '').includes(state.programFilter));
     }
-
+ 
     // Apply Risk Filter
     if (state.riskFilter !== 'all') {
       if (state.riskFilter === 'low') list = list.filter(item => item.risk_score < 40);
       else if (state.riskFilter === 'med') list = list.filter(item => item.risk_score >= 40 && item.risk_score <= 80);
       else if (state.riskFilter === 'high') list = list.filter(item => item.risk_score > 80);
     }
-
+ 
     if (countDisplay) {
       countDisplay.textContent = `Showing ${list.length} records`;
     }
-
+ 
     if (!list.length) {
       tbody.innerHTML = `
         <tr>
@@ -516,7 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       return;
     }
-
+ 
     tbody.innerHTML = list.map(item => {
       const initials = (item.full_name || 'U').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
       const submittedDate = item.submitted_at ? new Date(item.submitted_at + (item.submitted_at.includes('Z') ? '' : 'Z')).toLocaleDateString() : '—';
@@ -524,7 +524,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const riskClass = riskScore > 80 ? 'score-high' : (riskScore >= 40 ? 'score-med' : 'score-low');
       const actionBadge = item.status === 'allow' ? 'badge-success' : (item.status === 'captcha' ? 'badge-warning' : 'badge-danger');
       const isSpam = item.confirmed_spam;
-
+ 
       // AI Anomaly display (Isolation Forest)
       let aiTag = '<span class="badge badge-neutral fs-0_7">IF: N/A</span>';
       if (item.ai_anomaly_score !== null && item.ai_anomaly_score !== undefined) {
@@ -534,7 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
           aiTag = `<span class="badge badge-success fs-0_7">IF: ${esc(item.ai_anomaly_score.toFixed(0))}</span>`;
         }
       }
-
+ 
       // XGBoost display
       let xgbTag = '<span class="badge badge-neutral fs-0_7">XGB: N/A</span>';
       if (item.xgb_prediction) {
@@ -542,7 +542,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const conf = item.xgb_confidence !== null ? ` ${item.xgb_confidence.toFixed(0)}%` : '';
         xgbTag = `<span class="badge ${xgbBadge} fs-0_7">XGB: ${esc(item.xgb_prediction)}${esc(conf)}</span>`;
       }
-
+ 
       return `
         <tr class="${isSpam ? 'row-spam' : ''}">
           <td>
@@ -594,28 +594,28 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
     }).join('');
   }
-
+ 
   // Filter Event Listeners
   document.getElementById('tableSearchInput')?.addEventListener('input', (e) => {
     state.searchQuery = e.target.value;
     renderApplicationsTable();
   });
-
+ 
   document.getElementById('statusFilterSelect')?.addEventListener('change', (e) => {
     state.statusFilter = e.target.value;
     renderApplicationsTable();
   });
-
+ 
   document.getElementById('programFilterSelect')?.addEventListener('change', (e) => {
     state.programFilter = e.target.value;
     renderApplicationsTable();
   });
-
+ 
   document.getElementById('riskFilterSelect')?.addEventListener('change', (e) => {
     state.riskFilter = e.target.value;
     renderApplicationsTable();
   });
-
+ 
   // Top Global Search redirects to Applications
   document.getElementById('globalSearchInput')?.addEventListener('input', (e) => {
     state.searchQuery = e.target.value;
@@ -624,7 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tableSearch) tableSearch.value = e.target.value;
     renderApplicationsTable();
   });
-
+ 
   // -------------------------------------------------------------
   // Student Dossier Drawer (Slide-Over)
   // -------------------------------------------------------------
@@ -635,7 +635,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderDossierContent(app);
     document.getElementById('dossierDrawerBackdrop')?.classList.add('active');
   };
-
+ 
   window.openActivityDossier = (actId) => {
     const act = state.activityList.find(x => x.id === actId);
     if (!act) return;
@@ -661,7 +661,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderDossierContent(app);
     document.getElementById('dossierDrawerBackdrop')?.classList.add('active');
   };
-
+ 
   function renderDossierContent(app) {
     document.getElementById('dossierCandidateName').textContent = app.full_name || 'Anonymous Applicant';
     document.getElementById('dossierCandidateEmail').textContent = app.email || '—';
@@ -672,9 +672,9 @@ document.addEventListener('DOMContentLoaded', () => {
       statusBadge.className = `badge ${app.status === 'allow' ? 'badge-success' : (app.status === 'captcha' ? 'badge-warning' : 'badge-danger')}`;
       statusBadge.textContent = app.status;
     }
-
+ 
     const payload = app.payload || {};
-
+ 
     // Dossier Tabs Content: Overview, Statement, Security, Documents
     document.getElementById('dossierTabOverview').innerHTML = `
       <div class="d-grid grid-2-even gap-px-18 mb-20">
@@ -689,7 +689,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="fs-0_8 text-secondary">${esc(payload.city || 'Verified Location')}</span>
         </div>
       </div>
-
+ 
       <div class="card p-20 mb-20">
         <h4 class="fs-0_95 text-navy-900 mb-12">Candidate Profile & Contact</h4>
         <div class="d-grid grid-2-even gap-px-12 fs-0_875">
@@ -701,14 +701,14 @@ document.addEventListener('DOMContentLoaded', () => {
           <div><span class="text-muted">GPA / Score:</span> <strong>${esc(payload.gpa_score || '3.9 / 4.0')}</strong></div>
         </div>
       </div>
-
+ 
       <div class="card p-20 mb-20">
         <h4 class="fs-0_95 text-navy-900 mb-8">Applicant Statement of Purpose</h4>
         <p class="fs-0_875 text-secondary lh-1_6 font-italic bg-card-subtle p-14 radius-md">
           "${esc(payload.statement || 'No statement provided.')}"
         </p>
       </div>
-
+ 
       <!-- Security Breakdown -->
       <div class="card p-20 ${app.risk_score > 80 ? 'bl-4-solid-danger' : (app.risk_score >= 40 ? 'bl-4-solid-warning' : 'bl-4-solid-success')}">
         <div class="flex items-center justify-between mb-12">
@@ -728,7 +728,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div>XGBoost Prediction: <strong>${esc(app.xgb_prediction || 'Not trained')}</strong>${app.xgb_confidence ? ` (${esc(app.xgb_confidence.toFixed(1))}% confidence)` : ''}</div>
         </div>
       </div>
-
+ 
       <!-- Action Area -->
       <div class="action-box">
         <h4 class="fs-0_95 text-navy-900 mb-12">Admissions Decision & Override</h4>
@@ -756,39 +756,39 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
   }
-
+ 
   // Close Dossier Drawer
   document.getElementById('closeDossierBtn')?.addEventListener('click', () => {
     document.getElementById('dossierDrawerBackdrop')?.classList.remove('active');
   });
-
+ 
   // Save Override
   window.saveDossierOverride = async () => {
     const app = state.selectedApp;
     if (!app) return;
-
+ 
     const actionSelect = document.getElementById('dossierActionSelect');
     const noteInput = document.getElementById('dossierNoteInput');
     const spamCheck = document.getElementById('dossierSpamCheck');
-
+ 
     const action = actionSelect.value;
     const note = noteInput.value.trim();
-
+ 
     if (!note) {
       Toast.show('Note Required', 'Please enter a justification note for the audit log.', 'warning');
       noteInput.focus();
       return;
     }
-
+ 
     try {
       const actId = app.activity_id || app.id;
       await Api.overrideActivity(actId, action, note);
-
+ 
       // If spam checked
       if (spamCheck && spamCheck.checked !== app.confirmed_spam) {
         await Api.toggleSpam(app.id, spamCheck.checked);
       }
-
+ 
       Toast.show('Override Saved', `Decision updated to ${action.toUpperCase()}`, 'success');
       document.getElementById('dossierDrawerBackdrop')?.classList.remove('active');
       loadAllData();
@@ -796,7 +796,7 @@ document.addEventListener('DOMContentLoaded', () => {
       Toast.show('Override Failed', err.message || 'Could not save override.', 'error');
     }
   };
-
+ 
   // Toggle Spam directly
   window.toggleSpamRecord = async (appId, confirmed) => {
     try {
@@ -807,20 +807,20 @@ document.addEventListener('DOMContentLoaded', () => {
       Toast.show('Error', err.message || 'Could not update spam flag.', 'error');
     }
   };
-
+ 
   // -------------------------------------------------------------
   // Document Verification Hub Queue
   // -------------------------------------------------------------
   function renderVerificationHub() {
     const container = document.getElementById('verificationCardsGrid');
     if (!container) return;
-
+ 
     const list = state.applicationsList.slice(0, 8);
     if (!list.length) {
       container.innerHTML = '<div class="text-muted p-30">No documents in queue.</div>';
       return;
     }
-
+ 
     container.innerHTML = list.map(item => `
       <div class="card card-hover">
         <div class="flex items-center justify-between mb-12">
@@ -842,7 +842,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <strong class="text-navy-900">Government ID</strong>
           </div>
         </div>
-
+ 
         <div class="flex items-center gap-2">
           <button class="btn btn-success btn-sm flex-1" data-action="toast" data-title="Verified" data-message="Applicant credentials approved." data-type="success">
             Approve ✓
@@ -854,7 +854,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `).join('');
   }
-
+ 
   // -------------------------------------------------------------
   // Security & Threat Console (AI Training, Spam Purge, Reports)
   // -------------------------------------------------------------
@@ -863,30 +863,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiSamplesCount = document.getElementById('secAiSamples');
     const aiTrainedText = document.getElementById('secAiTrained');
     const spamRecordsCount = document.getElementById('secSpamRecordsCount');
-
+ 
     if (aiSamplesCount) aiSamplesCount.textContent = `${ai.samples || 0} / ${ai.minimum_samples || 20} required samples`;
     if (aiTrainedText) aiTrainedText.textContent = ai.trained ? 'Active & Trained' : 'Training Baseline Incomplete';
-
+ 
     // XGBoost status
     const xgb = state.xgbStatus || {};
     const xgbTrainedText = document.getElementById('secXgbTrained');
     const xgbSamplesCount = document.getElementById('secXgbSamples');
     const xgbAccuracy = document.getElementById('secXgbAccuracy');
-
+ 
     if (xgbTrainedText) xgbTrainedText.textContent = xgb.trained ? 'Active & Trained' : 'Not Trained Yet';
     if (xgbSamplesCount) xgbSamplesCount.textContent = `${xgb.samples || 0} / ${xgb.minimum_samples || 30} required samples`;
     if (xgbAccuracy) xgbAccuracy.textContent = xgb.trained ? `${(xgb.accuracy * 100).toFixed(1)}%` : '—';
-
+ 
     const confirmedSpamCount = state.applicationsList.filter(x => x.confirmed_spam).length;
     if (spamRecordsCount) spamRecordsCount.textContent = `${confirmedSpamCount} confirmed spam records`;
   }
-
+ 
   // Train Isolation Forest
   document.getElementById('trainAiBtn')?.addEventListener('click', async () => {
     const btn = document.getElementById('trainAiBtn');
     btn.disabled = true;
     btn.textContent = 'Training Model…';
-
+ 
     try {
       const result = await Api.trainAi();
       Toast.show('Isolation Forest Trained', result.message || 'Isolation Forest baseline model successfully trained.', 'success');
@@ -898,13 +898,30 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.textContent = 'Train Isolation Forest';
     }
   });
-
+ 
+  // Train Isolation Forest (Security tab button — separate ID to avoid duplicate)
+  document.getElementById('trainAiSecurityBtn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('trainAiSecurityBtn');
+    btn.disabled = true;
+    btn.textContent = 'Training Model…';
+    try {
+      const result = await Api.trainAi();
+      Toast.show('Isolation Forest Trained', result.message || 'Isolation Forest baseline model successfully trained.', 'success');
+      loadAllData();
+    } catch (err) {
+      Toast.show('Training Incomplete', err.message || 'Needs at least 20 normal allowed submissions to train.', 'warning');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Train Isolation Forest';
+    }
+  });
+ 
   // Train XGBoost
   document.getElementById('trainXgbBtn')?.addEventListener('click', async () => {
     const btn = document.getElementById('trainXgbBtn');
     btn.disabled = true;
     btn.textContent = 'Training XGBoost…';
-
+ 
     try {
       const result = await Api.trainXgb();
       Toast.show('XGBoost Trained', result.message || 'XGBoost classifier trained successfully.', 'success');
@@ -916,7 +933,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.textContent = 'Train XGBoost Model';
     }
   });
-
+ 
   // Safe Spam Cleanup Modal
   const cleanupModal = document.getElementById('spamCleanupModal');
   document.getElementById('openCleanupModalBtn')?.addEventListener('click', () => {
@@ -924,16 +941,16 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('cleanupTargetCount').textContent = confirmedCount;
     cleanupModal?.classList.add('active');
   });
-
+ 
   document.getElementById('closeCleanupModalBtn')?.addEventListener('click', () => {
     cleanupModal?.classList.remove('active');
   });
-
+ 
   document.getElementById('confirmPurgeSpamBtn')?.addEventListener('click', async () => {
     const btn = document.getElementById('confirmPurgeSpamBtn');
     btn.disabled = true;
     btn.textContent = 'Purging…';
-
+ 
     try {
       const result = await Api.cleanupSpam();
       Toast.show('Safe Cleanup Completed', `Deleted ${result.deleted_confirmed_spam_records} spam records. Audit logs retained.`, 'success');
@@ -946,21 +963,21 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.textContent = 'Confirm Safe Purge';
     }
   });
-
+ 
   // Report Downloads
   document.getElementById('downloadCsvBtn')?.addEventListener('click', () => {
     Api.downloadReport('daily.csv', 'daily-attack-summary.csv');
     Toast.show('Export Started', 'Downloading daily attack summary CSV.', 'info');
   });
-
+ 
   document.getElementById('downloadGraphBtn')?.addEventListener('click', () => {
     Api.downloadReport('weekly-trend.png', 'weekly-attack-trend.png');
     Toast.show('Export Started', 'Downloading weekly trend graph PNG.', 'info');
   });
-
+ 
   // Initial check
   checkAuth();
-
+ 
   // CSP forbids inline event-handler attributes, so buttons carry data-action and are wired here
   // (the generic click dispatcher lives in api.js).
   Object.assign(window.UiActions, {
@@ -971,3 +988,4 @@ document.addEventListener('DOMContentLoaded', () => {
     'save-override': () => window.saveDossierOverride(),
   });
 });
+ 
