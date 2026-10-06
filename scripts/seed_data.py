@@ -8,10 +8,7 @@ Usage:
     python scripts/seed_data.py --no-train   # skip AI model training
 """
 import argparse
-import json
-import os
 import random
-import secrets
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -21,8 +18,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from faker import Faker
 
-from app.database import Base, SessionLocal, engine, ensure_schema
+from app.database import SessionLocal, ensure_schema
+from pydantic import ValidationError
 from app.models import ActivityLog, Application
+from app.schemas import SubmissionIn
+from app.submission import process_submission
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -120,46 +120,6 @@ def random_ip(pool=None) -> str:
     return f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
 
 
-def make_reference_code(dt: datetime) -> str:
-    return f"CAP-{dt:%Y%m%d}-{secrets.token_hex(3).upper()}"
-
-
-def compute_risk(
-    ip_hits=0,
-    has_duplicate_email=False,
-    has_similar_name=False,
-    flood_ratio=0.0,
-):
-    """Compute a realistic risk score + reasons + action (mirrors detector.py logic)."""
-    reasons = []
-
-    ip_signal = min(ip_hits / 3, 1.0)
-    duplicate_signal = 1.0 if has_duplicate_email or has_similar_name else 0.0
-    velocity_signal = min(flood_ratio, 1.0)
-
-    score = round(min(100.0, ip_signal * 40 + duplicate_signal * 30 + velocity_signal * 30), 2)
-
-    if ip_hits >= 3:
-        reasons.append(f"IP submitted {ip_hits} times in the last minute (limit 3)")
-    if has_duplicate_email:
-        reasons.append("Email exactly matches an existing application")
-    elif has_similar_name:
-        reasons.append("Name is 92% similar to an existing application")
-    if flood_ratio > 1.0:
-        reasons.append("Flood threshold exceeded: high traffic volume in five minutes")
-    if not reasons:
-        reasons.append("No duplicate, rapid-IP, or flood indicators detected")
-
-    if score > 80:
-        action = "block"
-    elif score >= 40:
-        action = "captcha"
-    else:
-        action = "allow"
-
-    return score, reasons, action
-
-
 # ---------------------------------------------------------------------------
 # Seed generators
 # ---------------------------------------------------------------------------
@@ -180,7 +140,6 @@ def generate_normal(count, base_time):
         program = random.choice(PROGRAMS)
         city = random.choice(INDIAN_CITIES)
         ip = random_ip()
-        score, reasons, action = compute_risk()
 
         records.append({
             "full_name": name,
@@ -189,9 +148,7 @@ def generate_normal(count, base_time):
             "program": program,
             "ip_address": ip,
             "submitted_at": submitted_at,
-            "status": action,
             "confirmed_spam": False,
-            "reference_code": make_reference_code(submitted_at),
             "payload": {
                 "date_of_birth": random_dob(),
                 "city": city,
@@ -199,8 +156,6 @@ def generate_normal(count, base_time):
                 "phone": random_phone(),
                 "program": program,
             },
-            "risk_score": score,
-            "reasons": reasons,
         })
     return records
 
@@ -242,12 +197,6 @@ def generate_suspicious(count, base_time, normal_names):
 
         program = random.choice(PROGRAMS)
         city = random.choice(INDIAN_CITIES)
-        score, reasons, action = compute_risk(
-            ip_hits=ip_hits,
-            has_duplicate_email=has_dup_email,
-            has_similar_name=has_sim_name,
-            flood_ratio=random.uniform(0.1, 0.5),
-        )
 
         records.append({
             "full_name": name,
@@ -256,9 +205,7 @@ def generate_suspicious(count, base_time, normal_names):
             "program": program,
             "ip_address": ip,
             "submitted_at": submitted_at,
-            "status": action,
             "confirmed_spam": False,
-            "reference_code": make_reference_code(submitted_at),
             "payload": {
                 "date_of_birth": random_dob(),
                 "city": city,
@@ -266,8 +213,6 @@ def generate_suspicious(count, base_time, normal_names):
                 "phone": random_phone(),
                 "program": program,
             },
-            "risk_score": score,
-            "reasons": reasons,
         })
     return records
 
@@ -278,27 +223,19 @@ def generate_attacks(count, base_time):
     attack_ips = [random_ip() for _ in range(3)]
     attack_emails = ["bot.attacker@tempmail.org", "spam.flood@throwaway.com", "fake.apps@mailinator.com"]
 
+    burst_start = base_time
     for i in range(count):
-        # Attacks cluster in short bursts (within a few hours)
-        burst_day = random.randint(0, 6)
-        burst_hour = random.uniform(0, 2)  # attacks happen within a 2-hour window
-        offset = timedelta(days=burst_day, hours=burst_hour, minutes=random.uniform(0, 10))
-        submitted_at = base_time - offset
-        ip = random.choice(attack_ips)
-
-        # High IP hits + duplicate email + some flood
-        ip_hits = random.randint(4, 10)
-        flood_ratio = random.uniform(0.5, 1.5)
+        # A bot fires in bursts: ~6 submissions seconds apart from one IP, then a quiet gap.
+        # The pipeline only sees an "IP over its limit" if they land inside one minute.
+        if i % 6 == 0:
+            burst_start = base_time - timedelta(days=random.randint(0, 6), hours=random.uniform(0, 20))
+            ip = random.choice(attack_ips)
+        submitted_at = burst_start + timedelta(seconds=(i % 6) * 5)
 
         name = random.choice(["Attack Bot", "Test User", "Spam Account", "Fake Applicant", "Bot Submit"])
         email = random.choice(attack_emails)
         program = random.choice(PROGRAMS[:4])  # attackers usually target popular programs
 
-        score, reasons, action = compute_risk(
-            ip_hits=ip_hits,
-            has_duplicate_email=True,
-            flood_ratio=flood_ratio,
-        )
         # Some attacks get manually confirmed as spam
         confirmed_spam = random.random() > 0.5
 
@@ -309,9 +246,7 @@ def generate_attacks(count, base_time):
             "program": program,
             "ip_address": ip,
             "submitted_at": submitted_at,
-            "status": action,
             "confirmed_spam": confirmed_spam,
-            "reference_code": make_reference_code(submitted_at),
             "payload": {
                 "date_of_birth": "2000-01-01",
                 "city": "Unknown",
@@ -319,8 +254,6 @@ def generate_attacks(count, base_time):
                 "phone": "+91-0000000000",
                 "program": program,
             },
-            "risk_score": score,
-            "reasons": reasons,
         })
     return records
 
@@ -357,52 +290,32 @@ def seed(total_count=500, append=False, train_model=True):
     all_records = normal_records + suspicious_records + attack_records
     random.shuffle(all_records)
 
-    # Insert into database
-    inserted = 0
-    for rec in all_records:
-        app = Application(
-            full_name=rec["full_name"],
-            email=rec["email"],
-            reference_code=rec["reference_code"],
-            phone=rec["phone"],
-            program=rec["program"],
-            ip_address=rec["ip_address"],
-            submitted_at=rec["submitted_at"],
-            status=rec["status"],
-            payload=json.dumps(rec["payload"]),
-            confirmed_spam=rec["confirmed_spam"],
-        )
-        db.add(app)
-        db.flush()
-
-        log = ActivityLog(
-            application_id=app.id,
-            full_name=rec["full_name"],
-            email=rec["email"],
-            ip_address=rec["ip_address"],
-            created_at=rec["submitted_at"],
-            risk_score=rec["risk_score"],
-            ai_anomaly_score=None,
-            ai_status="not_trained",
-            suggested_action=rec["status"],
-            final_action=rec["status"],
-            reasons=rec["reasons"],
-        )
-        db.add(log)
+    # Every record goes through the SAME pipeline as a live submission (rules + both ML
+    # models + audit log), replayed in time order so the rate/flood windows make sense.
+    # Nothing here writes a status by hand.
+    decisions = {"allow": 0, "captcha": 0, "block": 0}
+    inserted = skipped = spam_count = 0
+    sample_allowed = []
+    for rec in sorted(all_records, key=lambda r: r["submitted_at"]):
+        try:
+            data = SubmissionIn(full_name=rec["full_name"], email=rec["email"], ip_address=rec["ip_address"], payload=rec["payload"])
+        except ValidationError:
+            skipped += 1
+            continue
+        decision, application = process_submission(data, db, at=rec["submitted_at"])
+        decisions[decision.action] += 1
         inserted += 1
-
+        if rec["confirmed_spam"]:
+            application.confirmed_spam = True
+            spam_count += 1
+        elif decision.action == "allow" and len(sample_allowed) < 5:
+            sample_allowed.append((application.reference_code, rec["email"], rec["full_name"]))
     db.commit()
 
-    # Summary
-    allow_count = sum(1 for r in all_records if r["status"] == "allow")
-    captcha_count = sum(1 for r in all_records if r["status"] == "captcha")
-    block_count = sum(1 for r in all_records if r["status"] == "block")
-    spam_count = sum(1 for r in all_records if r["confirmed_spam"])
-
-    print(f"\nInserted {inserted} records into the database.")
-    print(f"  Allow:   {allow_count}")
-    print(f"  Captcha: {captcha_count}")
-    print(f"  Block:   {block_count}")
+    print(f"\nInserted {inserted} records through the detection pipeline ({skipped} skipped as invalid).")
+    print(f"  Allow:   {decisions['allow']}")
+    print(f"  Captcha: {decisions['captcha']}")
+    print(f"  Block:   {decisions['block']}")
     print(f"  Confirmed spam: {spam_count}")
 
     # Train the Isolation Forest model
@@ -415,12 +328,10 @@ def seed(total_count=500, append=False, train_model=True):
         else:
             print(f"  Training skipped: {result.get('message', 'unknown reason')}")
 
-    # Print some sample reference codes for testing the portal
-    sample_allowed = [r for r in all_records if r["status"] == "allow"][:5]
     if sample_allowed:
         print("\nSample reference codes for portal 'Track Status' testing:")
-        for r in sample_allowed:
-            print(f"  {r['reference_code']}  |  {r['email']}  |  {r['full_name']}")
+        for ref, email, name in sample_allowed:
+            print(f"  {ref}  |  {email}  |  {name}")
 
     db.close()
     print("\nDone! Start the server and visit:")

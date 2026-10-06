@@ -15,10 +15,7 @@ and activity logs are populated automatically.
 """
 import argparse
 import csv
-import json
-import secrets
 import sys
-from datetime import datetime
 from difflib import SequenceMatcher
 from pathlib import Path
 
@@ -26,7 +23,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.database import SessionLocal, ensure_schema
 from app.detector import analyse_submission, choose_action
-from app.models import ActivityLog, Application
+from pydantic import ValidationError
+from app.schemas import SubmissionIn
+from app.submission import process_submission
 
 # ---------------------------------------------------------------------------
 # Column mapping - maps various header names to our canonical field names
@@ -137,14 +136,6 @@ def import_csv(file_path, default_program="", default_ip="127.0.0.1", dry_run=Fa
         statement = get("statement", "Imported application.")
         ip_address = get("ip_address", default_ip)
 
-        # Run through the detection engine
-        score, reasons = analyse_submission(db, full_name, email, ip_address)
-        action = choose_action(score)
-        risk_dist[action] = risk_dist.get(action, 0) + 1
-
-        now = datetime.utcnow()
-        reference_code = f"CAP-{now:%Y%m%d}-{secrets.token_hex(3).upper()}"
-
         payload = {
             "date_of_birth": dob,
             "city": city,
@@ -152,38 +143,22 @@ def import_csv(file_path, default_program="", default_ip="127.0.0.1", dry_run=Fa
             "phone": phone,
             "program": program,
         }
+        try:
+            data = SubmissionIn(full_name=full_name, email=email, ip_address=ip_address, payload=payload)
+        except ValidationError as exc:
+            print(f"  Row {row_num}: Skipped - {exc.errors()[0]['loc'][0]}: {exc.errors()[0]['msg']}")
+            skipped += 1
+            continue
 
-        if not dry_run:
-            app = Application(
-                full_name=full_name,
-                email=email,
-                reference_code=reference_code,
-                phone=phone,
-                program=program,
-                ip_address=ip_address,
-                submitted_at=now,
-                status=action,
-                payload=json.dumps(payload),
-                confirmed_spam=False,
-            )
-            db.add(app)
-            db.flush()
-
-            log = ActivityLog(
-                application_id=app.id,
-                full_name=full_name,
-                email=email,
-                ip_address=ip_address,
-                created_at=now,
-                risk_score=score,
-                ai_anomaly_score=None,
-                ai_status="not_trained",
-                suggested_action=action,
-                final_action=action,
-                reasons=reasons,
-            )
-            db.add(log)
-
+        if dry_run:
+            # Score only: analyse_submission reads the DB but writes nothing.
+            score, _reasons = analyse_submission(db, full_name, email, ip_address)
+            action = choose_action(score)
+        else:
+            # Same single pipeline as a live submission: rules + ML scores + audit log.
+            decision, _application = process_submission(data, db)
+            action = decision.action
+        risk_dist[action] = risk_dist.get(action, 0) + 1
         imported += 1
 
     if not dry_run:

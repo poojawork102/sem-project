@@ -173,6 +173,7 @@ def predict(
     ip_address: str,
     payload_size: int,
     program: str,
+    at: datetime | None = None,
 ) -> tuple[str | None, float | None]:
     """Predict the action class and confidence for a new submission.
 
@@ -183,7 +184,7 @@ def predict(
 
     artifact = joblib.load(MODEL_PATH)
     model = artifact["model"]
-    features = np.array([_features_for(db, full_name, email, ip_address, payload_size, program)])
+    features = np.array([_features_for(db, full_name, email, ip_address, payload_size, program, at)])
     proba = model.predict_proba(features)[0]
     pred_class = int(np.argmax(proba))
     confidence = float(proba[pred_class])
