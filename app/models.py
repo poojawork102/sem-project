@@ -1,7 +1,15 @@
+import enum
 from datetime import datetime
 from sqlalchemy import Boolean, DateTime, Float, Integer, JSON, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 from .database import Base
+
+
+class Action(str, enum.Enum):
+    """The only three decisions the system can make. Stored as plain strings in the DB."""
+    ALLOW = "allow"
+    CAPTCHA = "captcha"
+    BLOCK = "block"
 
 
 class Application(Base):
@@ -15,7 +23,7 @@ class Application(Base):
     program: Mapped[str] = mapped_column(String(120), default="")
     ip_address: Mapped[str] = mapped_column(String(64), index=True)
     submitted_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
-    status: Mapped[str] = mapped_column(String(24), default="allowed")
+    status: Mapped[str] = mapped_column(String(24), default=Action.ALLOW.value)
     payload: Mapped[str] = mapped_column(Text, default="{}")
     confirmed_spam: Mapped[bool] = mapped_column(Boolean, default=False)
 
