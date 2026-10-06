@@ -35,6 +35,9 @@ class DecisionOut(BaseModel):
     action: Literal["allow", "captcha", "block"]
     reasons: list[str]
     created_at: datetime
+    # True when action == "captcha": the decision is recorded but no challenge is enforced.
+    captcha_simulated: bool = False
+    notice: str | None = None
 
 
 class PortalDecisionOut(DecisionOut):

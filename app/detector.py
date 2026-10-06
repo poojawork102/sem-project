@@ -7,6 +7,9 @@ from .config import settings
 from .models import Application
 
 
+HARD_RULE_SCORE = 100.0
+
+
 def similarity(left: str, right: str) -> float:
     return SequenceMatcher(None, left.lower().strip(), right.lower().strip()).ratio()
 
@@ -29,7 +32,15 @@ def analyse_submission(db: Session, full_name: str, email: str, ip_address: str)
 
     # REQ-4: IP 40%, duplicate name/email 30%, velocity 30%.
     score = round(min(100.0, (ip_signal * 40 + duplicate_signal * 30 + velocity_signal * 30)), 2)
+    # Hard rule: the weighted sum alone can never pass 70 without a flood, which would
+    # make "block" unreachable. Two independent attack signals together (IP over its
+    # limit AND a duplicate) are decisive, so the score is raised to the maximum.
+    hard_rule_hit = ip_count >= settings.rapid_submission_limit and duplicate_signal == 1.0
+    if hard_rule_hit:
+        score = HARD_RULE_SCORE
     reasons: list[str] = []
+    if hard_rule_hit:
+        reasons.append("Hard rule: IP over its rate limit AND duplicate name/email -> block")
     if ip_count >= settings.rapid_submission_limit:
         reasons.append(f"IP submitted {ip_count} times in the last minute (limit {settings.rapid_submission_limit})")
     if exact_email:

@@ -1,12 +1,14 @@
 import json
 import secrets
+import threading
 from datetime import datetime, timedelta
 from pathlib import Path
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
-from .config import settings
+from .config import settings, validate_secrets
+from .ratelimit import RateLimiter
 from .database import ensure_schema, get_db
 from .detector import analyse_submission, choose_action
 from .models import ActivityLog, Application
@@ -21,9 +23,27 @@ from .security import create_access_token, require_admin, require_submissions_ap
 app = FastAPI(title="DSADPS Agent API", version="1.0.0")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
+_submission_lock = threading.Lock()
+CAPTCHA_NOTICE = "Simulated: no CAPTCHA challenge is enforced yet; this decision is recorded for admin review only."
+# Failed logins only: 5 wrong attempts per client IP in 5 minutes -> HTTP 429.
+login_limiter = RateLimiter(max_events=5, window_seconds=300)
+# Every status lookup counts: 10 per client IP per minute -> HTTP 429 (slows guessing of reference codes).
+status_limiter = RateLimiter(max_events=10, window_seconds=60)
+
+
+def client_ip(request: Request) -> str:
+    return request.client.host if request.client else "unknown"
+
+
+def mask_name(full_name: str) -> str:
+    """'Priya Patil' -> 'Priya P.' so a guessed reference code does not reveal the full name."""
+    parts = full_name.split()
+    return " ".join([parts[0]] + [f"{p[0]}." for p in parts[1:]]) if parts else ""
+
 
 @app.on_event("startup")
 def start() -> None:
+    validate_secrets()
     Path("data").mkdir(exist_ok=True)
     ensure_schema()
     start_scheduler()
@@ -51,29 +71,48 @@ def dashboard():
 
 
 @app.post("/auth/login")
-def login(data: LoginIn):
-    if data.username != settings.admin_username or data.password != settings.admin_password:
+def login(data: LoginIn, request: Request):
+    ip = client_ip(request)
+    if login_limiter.is_blocked(ip):
+        raise HTTPException(status_code=429, detail="Too many failed login attempts. Try again in a few minutes.")
+    # compare_digest takes constant time, so response timing does not leak how much matched.
+    # Both fields are always compared (no short-circuit) and encoded so non-ASCII input is safe.
+    user_ok = secrets.compare_digest(data.username.encode(), settings.admin_username.encode())
+    pass_ok = secrets.compare_digest(data.password.encode(), settings.admin_password.encode())
+    if not (user_ok and pass_ok):
+        login_limiter.record(ip)
         raise HTTPException(status_code=401, detail="Incorrect admin credentials")
+    login_limiter.reset(ip)
     return {"access_token": create_access_token(data.username), "token_type": "bearer"}
 
 
 def process_submission(data: SubmissionIn, db: Session) -> DecisionOut:
     """Shared security gate used by the portal and a future external portal integration."""
-    score, reasons = analyse_submission(db, data.full_name, data.email, data.ip_address)
     payload_bytes = len(json.dumps(data.payload).encode("utf-8"))
-    ai_score, agent_status = assess_ai(db, data.full_name, str(data.email), data.ip_address, payload_bytes)
     program = str(data.payload.get("program", ""))
+    # ML scores are supplementary and do not affect the limits, so they run outside the lock.
+    ai_score, agent_status = assess_ai(db, data.full_name, str(data.email), data.ip_address, payload_bytes)
     xgb_pred, xgb_conf = xgb_predict(db, data.full_name, str(data.email), data.ip_address, payload_bytes, program)
-    action = choose_action(score)
     reference_code = f"CAP-{datetime.utcnow():%Y%m%d}-{secrets.token_hex(3).upper()}"
-    application = Application(full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, status=action, reference_code=reference_code, phone=str(data.payload.get("phone", "")), program=program, payload=json.dumps(data.payload))
-    db.add(application)
-    db.flush()
-    log = ActivityLog(application_id=application.id, full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, risk_score=score, ai_anomaly_score=ai_score, ai_status=agent_status, suggested_action=action, final_action=action, reasons=reasons, xgb_prediction=xgb_pred, xgb_confidence=xgb_conf)
-    db.add(log)
-    db.commit()
+    # Race fix: analyse_submission COUNTS earlier rows and we then INSERT this one. Without
+    # a lock, N concurrent requests could all count "0 so far" and all pass the limit.
+    # Holding the lock over count + insert + commit makes that sequence atomic per process.
+    # Limitation: it does not protect multiple uvicorn workers/containers; for that,
+    # use a DB-level lock (e.g. Postgres advisory lock) or a shared counter such as Redis.
+    with _submission_lock:
+        score, reasons = analyse_submission(db, data.full_name, data.email, data.ip_address)
+        action = choose_action(score)
+        application = Application(full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, status=action, reference_code=reference_code, phone=str(data.payload.get("phone", "")), program=program, payload=json.dumps(data.payload))
+        db.add(application)
+        db.flush()
+        log = ActivityLog(application_id=application.id, full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, risk_score=score, ai_anomaly_score=ai_score, ai_status=agent_status, suggested_action=action, final_action=action, reasons=reasons, xgb_prediction=xgb_pred, xgb_confidence=xgb_conf)
+        db.add(log)
+        db.commit()
     db.refresh(log)
-    return DecisionOut(activity_id=log.id, risk_score=score, ai_anomaly_score=ai_score, ai_status=agent_status, action=action, reasons=reasons, created_at=log.created_at)
+    # No CAPTCHA widget is wired in yet, so "captcha" is a recorded decision only.
+    # Say so explicitly instead of implying the applicant was actually challenged.
+    is_captcha = action == "captcha"
+    return DecisionOut(activity_id=log.id, risk_score=score, ai_anomaly_score=ai_score, ai_status=agent_status, action=action, reasons=reasons, created_at=log.created_at, captcha_simulated=is_captcha, notice=CAPTCHA_NOTICE if is_captcha else None)
 
 
 @app.post("/v1/submissions", response_model=DecisionOut)
@@ -94,26 +133,24 @@ def submit_portal_application(data: PortalApplicationIn, request: Request, db: S
 
 
 @app.post("/v1/portal/application-status")
-def portal_application_status(data: ApplicationStatusIn, db: Session = Depends(get_db)):
+def portal_application_status(data: ApplicationStatusIn, request: Request, db: Session = Depends(get_db)):
+    ip = client_ip(request)
+    if status_limiter.is_blocked(ip):
+        raise HTTPException(status_code=429, detail="Too many status lookups. Please wait a minute and try again.")
+    status_limiter.record(ip)
     application = db.query(Application).filter(Application.reference_code == data.reference_code.upper(), Application.email == str(data.email)).first()
     if not application:
         raise HTTPException(status_code=404, detail="No application matches that reference and email.")
     labels = {"allow": "Application received", "captcha": "Verification required", "block": "Application held for review"}
-    payload_data = {}
-    try:
-        payload_data = json.loads(application.payload) if application.payload else {}
-    except Exception:
-        payload_data = {}
+    # Data minimisation: the 6-hex ref code is a weak secret, so return only what the status
+    # page needs. Phone, DOB, statement and the email are never sent back; the name is masked.
     return {
         "reference_code": application.reference_code,
         "program": application.program,
         "submitted_at": application.submitted_at,
         "status": labels.get(application.status, application.status),
         "raw_status": application.status,
-        "full_name": application.full_name,
-        "email": application.email,
-        "phone": application.phone,
-        "details": payload_data,
+        "full_name": mask_name(application.full_name),
     }
 
 

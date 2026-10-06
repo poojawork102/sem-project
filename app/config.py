@@ -25,3 +25,18 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+# Placeholder values shipped in the code or in .env.example; never acceptable at runtime.
+INSECURE_SECRETS = {"", "development-only-change-me", "replace-with-a-long-random-secret"}
+INSECURE_PASSWORDS = {"", "change-me", "change-me-before-deploying"}
+
+
+def validate_secrets(current: Settings = settings) -> None:
+    """Refuse to start with default credentials (anyone could forge admin tokens)."""
+    problems = []
+    if current.jwt_secret in INSECURE_SECRETS:
+        problems.append("JWT_SECRET is unset or a default placeholder")
+    if current.admin_password in INSECURE_PASSWORDS:
+        problems.append("ADMIN_PASSWORD is unset or a default placeholder")
+    if problems:
+        raise RuntimeError("Insecure configuration: " + "; ".join(problems) + ". Set strong values in .env and restart.")
