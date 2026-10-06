@@ -21,14 +21,14 @@ Working college-admission portal plus the **Data Shuffling Attack Detection and 
 1. Install Python 3.12 and create a virtual environment.
 
    ```powershell
-   cd dsadps-agent
+   cd sem-project
    py -3.12 -m venv .venv
    .\.venv\Scripts\Activate.ps1
    pip install -r requirements.txt
    Copy-Item .env.example .env
    ```
 
-2. Open `.env` and set a strong `JWT_SECRET` and a non-default `ADMIN_PASSWORD`.
+2. Open `.env` and set a strong `JWT_SECRET` and a non-default `ADMIN_PASSWORD`. **The server refuses to start with the placeholder values.** Set `SUBMISSIONS_API_KEY` too if an external system will call `/v1/submissions` (it is disabled while empty).
 
 3. Start the API.
 
@@ -36,18 +36,18 @@ Working college-admission portal plus the **Data Shuffling Attack Detection and 
    uvicorn app.main:app --reload
    ```
 
-4. Open `http://127.0.0.1:8000/` for the applicant admission portal, `http://127.0.0.1:8000/admin` for the protected dashboard, or `http://127.0.0.1:8000/docs` for the API. Use `POST /v1/submissions` as the integration endpoint for an external admission portal.
+4. Open `http://127.0.0.1:8000/` for the applicant admission portal, `http://127.0.0.1:8000/admin` for the protected dashboard, or `http://127.0.0.1:8000/docs` for the API. Use `POST /v1/submissions` (header `X-API-Key`) as the integration endpoint for an external admission portal; the built-in portal uses `/v1/portal/applications`, which takes the applicant IP from the connection itself.
 
 5. Simulate repeated bot submissions in a second terminal.
 
    ```powershell
-   python scripts/simulate_attack.py --attack --count 6
+   python scripts/simulate_attack.py --attack --count 6 --api-key <SUBMISSIONS_API_KEY>
    ```
 
 6. Run the baseline tests.
 
    ```powershell
-   pytest
+   python -m pytest
    ```
 
 ## Train the AI agent
@@ -77,23 +77,22 @@ Log in to the dashboard, click **Train AI agent**, then run a new attack simulat
 
 ## Docker option
 
-Set `DATABASE_URL=postgresql+psycopg://dsadps:dsadps_dev_password@db:5432/dsadps` in `.env`, add `psycopg[binary]` to requirements, then run:
+Set `POSTGRES_PASSWORD` (and the other secrets) in `.env`, then run:
 
 ```powershell
 docker compose up --build
 ```
 
-## GitHub
+Compose points the API at the bundled Postgres automatically. The container runs as a non-root user and has a `/health` check.
 
-Create an empty GitHub repository first, then run:
+## Security notes
 
-```powershell
-git init
-git add .
-git commit -m "Initial DSADPS agent API"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/dsadps-agent.git
-git push -u origin main
-```
+- Scores, thresholds and reasons are admin-only; applicants only see the outcome and a reference code.
+- Every page is served with a Content-Security-Policy (`script-src 'self'`); applicant text is HTML-escaped before display.
+- The admin token lives in `sessionStorage` (cleared when the tab closes). Production should move to an HttpOnly cookie plus CSRF protection.
+- Login attempts and status lookups are rate limited per IP, in memory (reset on restart, per process).
+- The CAPTCHA decision is **recorded only**: no challenge is shown yet.
+- The count-then-insert lock is per process; run a single worker or use a database lock for multiple workers.
+- The chatbot sends applicant names (emails are masked) to Google Gemini; do not enable it for real applicant data without consent.
 
 Never commit `.env`, database files, reports containing applicant data, or real CAPTCHA/email credentials.
