@@ -2,6 +2,9 @@ services:
   api:
     build: .
     env_file: .env
+    environment:
+      # Overrides DATABASE_URL from .env so the container talks to the compose Postgres.
+      DATABASE_URL: postgresql+psycopg://dsadps:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/dsadps
     ports:
       - "8000:8000"
     volumes:
@@ -14,13 +17,13 @@ services:
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: dsadps
-      POSTGRES_PASSWORD: dsadps_dev_password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
       POSTGRES_DB: dsadps
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U dsadps -d dsadps"]
       interval: 5s
       timeout: 5s
       retries: 10
+    # Bound to localhost only: the database must not be reachable from the network.
     ports:
-      - "5432:5432"
-
+      - "127.0.0.1:5432:5432"
