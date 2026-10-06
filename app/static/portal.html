@@ -812,7 +812,7 @@
             <h2 class="fs-1_8 text-navy-900">Document Vault & Verification</h2>
             <p class="text-secondary">Manage official certificates, transcripts, and ID verification records.</p>
           </div>
-          <button class="btn btn-primary btn-sm" onclick="document.getElementById('fileUploadInput').click()">
+          <button class="btn btn-primary btn-sm" data-action="click-target" data-target="fileUploadInput">
             <svg class="w-16px h-16px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
             Upload New Document
           </button>
@@ -833,7 +833,7 @@
             </p>
             <div class="flex items-center justify-between bt-1-solid-border-light pt-12">
               <span class="fs-0_775 text-muted">Uploaded Sep 16, 2026</span>
-              <button class="btn btn-ghost btn-sm" onclick="Toast.show('Preview Document', 'Opening verified transcript view.', 'info')">Preview</button>
+              <button class="btn btn-ghost btn-sm" data-action="toast" data-title="Preview Document" data-message="Opening verified transcript view." data-type="info">Preview</button>
             </div>
           </div>
 
@@ -851,7 +851,7 @@
             </p>
             <div class="flex items-center justify-between bt-1-solid-border-light pt-12">
               <span class="fs-0_775 text-muted">Uploaded Sep 16, 2026</span>
-              <button class="btn btn-ghost btn-sm" onclick="Toast.show('Preview Document', 'Opening passport scan preview.', 'info')">Preview</button>
+              <button class="btn btn-ghost btn-sm" data-action="toast" data-title="Preview Document" data-message="Opening passport scan preview." data-type="info">Preview</button>
             </div>
           </div>
 
@@ -869,7 +869,7 @@
             </p>
             <div class="flex items-center justify-between bt-1-solid-border-light pt-12">
               <span class="fs-0_775 text-muted">Uploaded Sep 17, 2026</span>
-              <button class="btn btn-ghost btn-sm" onclick="Toast.show('Preview Document', 'Opening statement document.', 'info')">Preview</button>
+              <button class="btn btn-ghost btn-sm" data-action="toast" data-title="Preview Document" data-message="Opening statement document." data-type="info">Preview</button>
             </div>
           </div>
 
@@ -887,7 +887,7 @@
             </p>
             <div class="flex items-center justify-between bt-1-solid-border-light pt-12">
               <span class="fs-0_775 text-muted">Not yet uploaded</span>
-              <button class="btn btn-secondary btn-sm" onclick="document.getElementById('fileUploadInput').click()">Upload</button>
+              <button class="btn btn-secondary btn-sm" data-action="click-target" data-target="fileUploadInput">Upload</button>
             </div>
           </div>
         </div>
@@ -940,7 +940,7 @@
                 📞 +1 (800) 555-NORTHSTAR · ✉️ admissions@northstar.edu
               </div>
             </div>
-            <button class="btn btn-primary" onclick="Toast.show('Live Support', 'Admissions advisor chat connected.', 'info')">
+            <button class="btn btn-primary" data-action="toast" data-title="Live Support" data-message="Admissions advisor chat connected." data-type="info">
               Contact Admissions
             </button>
           </div>

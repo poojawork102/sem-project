@@ -87,15 +87,15 @@ const Api = {
   TOKEN_KEY: 'dsadps_admin_token',
 
   getToken() {
-    return localStorage.getItem(this.TOKEN_KEY) || '';
+    return sessionStorage.getItem(this.TOKEN_KEY) || '';
   },
 
   setToken(token) {
-    localStorage.setItem(this.TOKEN_KEY, token);
+    sessionStorage.setItem(this.TOKEN_KEY, token);
   },
 
   clearToken() {
-    localStorage.removeItem(this.TOKEN_KEY);
+    sessionStorage.removeItem(this.TOKEN_KEY);
   },
 
   getHeaders(requiresAuth = false) {
@@ -245,3 +245,26 @@ const Api = {
 window.esc = esc;
 window.Toast = Toast;
 window.Api = Api;
+
+// ---------------------------------------------------------------------------
+// Click dispatcher. The Content-Security-Policy blocks inline event-handler attributes,
+// so buttons declare data-action="name" and this single listener runs the action.
+// Pages add their own actions to window.UiActions (see admin.js).
+// ---------------------------------------------------------------------------
+window.UiActions = {
+  toast: (el) => Toast.show(el.dataset.title, el.dataset.message, el.dataset.type || 'info'),
+  'click-target': (el) => { const target = document.getElementById(el.dataset.target); if (target) target.click(); },
+  print: () => window.print(),
+  'remove-doc': (el) => {
+    const target = document.getElementById(el.dataset.target);
+    if (target) target.remove();
+    Toast.show('File Removed', 'Document deleted.', 'info');
+  },
+};
+
+document.addEventListener('click', (event) => {
+  const el = event.target.closest('[data-action]');
+  if (!el) return;
+  const action = window.UiActions[el.dataset.action];
+  if (action) action(el);
+});

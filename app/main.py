@@ -29,6 +29,38 @@ login_limiter = RateLimiter(max_events=5, window_seconds=300)
 status_limiter = RateLimiter(max_events=10, window_seconds=60)
 
 
+# Content-Security-Policy: scripts only from our own origin (no inline script, no eval), so
+# an injected <script> or onerror= attribute cannot run even if an escaping bug slips in.
+# 'unsafe-inline' is allowed for styles only (the admin charts set a CSS variable inline).
+CSP = "; ".join([
+    "default-src 'self'",
+    "script-src 'self'",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src https://fonts.gstatic.com",
+    "img-src 'self' data:",
+    "connect-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+])
+DOCS_PATHS = ("/docs", "/redoc", "/openapi.json")  # Swagger UI loads scripts from a CDN
+
+
+@app.middleware("http")
+async def security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Referrer-Policy"] = "no-referrer"
+    response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+    if request.url.path not in DOCS_PATHS:
+        response.headers["Content-Security-Policy"] = CSP
+    if request.url.path.startswith(("/v1/", "/auth/")):
+        response.headers["Cache-Control"] = "no-store"  # applicant/admin data must not sit in caches
+    return response
+
+
 def client_ip(request: Request) -> str:
     return request.client.host if request.client else "unknown"
 
