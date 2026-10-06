@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Northstar Admissions Console | AdmitShield Admin Dashboard</title>
+  <title>AdmitShield | Admissions security</title>
   <meta name="description" content="Production-ready admissions management and security threat monitoring dashboard for university administrators.">
 
   <!-- Shared Design System & Admin Stylesheets -->
@@ -27,8 +27,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="fs-1_25 text-navy-900">Northstar University</h3>
-          <span class="fs-0_75 tt-uppercase fw-700 text-brand-blue ls-em-0_05">Admissions Command Console</span>
+          <h3 class="fs-1_25 text-navy-900">AdmitShield</h3>
+          <span class="fs-0_75 tt-uppercase fw-700 text-brand-blue ls-em-0_05">Admissions security</span>
         </div>
       </div>
 
@@ -39,12 +39,12 @@
       <form id="loginForm">
         <div class="form-group">
           <label class="form-label">Admin Username</label>
-          <input type="text" id="adminUsername" class="form-control" value="admin" required autocomplete="username">
+          <input type="text" id="adminUsername" class="form-control" required autocomplete="username">
         </div>
 
         <div class="form-group">
           <label class="form-label">Password</label>
-          <input type="password" id="adminPassword" class="form-control" value="123" required autocomplete="current-password">
+          <input type="password" id="adminPassword" class="form-control" required autocomplete="current-password">
         </div>
 
         <div id="loginError" class="hidden p-10-14 bg-danger-bg bd-1-solid-danger-border radius-sm text-danger fs-0_825 fw-600 mb-18"></div>
@@ -303,7 +303,7 @@
                 <h3 class="card-title">Live Admission Activity & Screening Log</h3>
                 <span class="card-subtitle">Real-time incoming submissions evaluated by AdmitShield</span>
               </div>
-              <button class="btn btn-secondary btn-sm" onclick="switchAdminTab('admin-tab-applications')">
+              <button class="btn btn-secondary btn-sm" data-action="switch-tab" data-tab="admin-tab-applications">
                 View All Applications →
               </button>
             </div>

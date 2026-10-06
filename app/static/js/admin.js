@@ -196,10 +196,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const apps = state.applicationsList;
     const activities = state.activityList;
 
-    const totalCount = apps.length || activities.length;
-    const allowedCount = activities.filter(x => x.final_action === 'allow').length;
-    const captchaCount = activities.filter(x => x.final_action === 'captcha').length;
-    const blockedCount = activities.filter(x => x.final_action === 'block').length;
+    // Count from the full applications list (not the 150 newest activity rows), so the
+    // total and the three decision counts always add up. Application.status already
+    // reflects admin overrides.
+    const decided = apps.length ? apps.map(x => x.status) : activities.map(x => x.final_action);
+    const totalCount = decided.length;
+    const allowedCount = decided.filter(x => x === 'allow').length;
+    const captchaCount = decided.filter(x => x === 'captcha').length;
+    const blockedCount = decided.filter(x => x === 'block').length;
 
     document.getElementById('kpiTotalApps').textContent = totalCount;
     document.getElementById('kpiAllowedApps').textContent = allowedCount;
@@ -318,10 +322,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('donutChartContainer');
     if (!container) return;
 
-    const total = state.activityList.length || 1;
-    const allowed = state.activityList.filter(x => x.final_action === 'allow').length;
-    const captcha = state.activityList.filter(x => x.final_action === 'captcha').length;
-    const blocked = state.activityList.filter(x => x.final_action === 'block').length;
+    const decided = state.applicationsList.length ? state.applicationsList.map(x => x.status) : state.activityList.map(x => x.final_action);
+    const total = decided.length || 1;
+    const allowed = decided.filter(x => x === 'allow').length;
+    const captcha = decided.filter(x => x === 'captcha').length;
+    const blocked = decided.filter(x => x === 'block').length;
 
     const allowedPct = Math.round((allowed / total) * 100);
     const captchaPct = Math.round((captcha / total) * 100);
@@ -427,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </span>
           </td>
           <td>
-            <button class="btn btn-secondary btn-sm" onclick="openActivityDossier(${Number(item.id)})">
+            <button class="btn btn-secondary btn-sm" data-action="activity-dossier" data-id="${Number(item.id)}">
               Review
             </button>
           </td>
@@ -577,10 +582,10 @@ document.addEventListener('DOMContentLoaded', () => {
           </td>
           <td>
             <div class="flex items-center gap-2">
-              <button class="btn btn-secondary btn-sm" onclick="openApplicationDossier(${Number(item.id)})">
+              <button class="btn btn-secondary btn-sm" data-action="application-dossier" data-id="${Number(item.id)}">
                 Dossier
               </button>
-              <button class="btn btn-ghost btn-sm" title="Toggle Spam" onclick="toggleSpamRecord(${Number(item.id)}, ${!isSpam})">
+              <button class="btn btn-ghost btn-sm" title="Toggle Spam" data-action="toggle-spam" data-id="${Number(item.id)}" data-confirmed="${!isSpam}">
                 <svg class="w-15px h-15px ${isSpam ? 'text-success' : 'text-danger'}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
               </button>
             </div>
@@ -744,7 +749,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <input type="checkbox" id="dossierSpamCheck" ${app.confirmed_spam ? 'checked' : ''} class="w-16px h-16px">
             Mark as Confirmed Spam (REQ-12)
           </label>
-          <button type="button" class="btn btn-primary" onclick="saveDossierOverride()">
+          <button type="button" class="btn btn-primary" data-action="save-override">
             Save Decision Override
           </button>
         </div>
@@ -839,10 +844,10 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <div class="flex items-center gap-2">
-          <button class="btn btn-success btn-sm flex-1" onclick="Toast.show('Verified', 'Applicant credentials approved.', 'success')">
+          <button class="btn btn-success btn-sm flex-1" data-action="toast" data-title="Verified" data-message="Applicant credentials approved." data-type="success">
             Approve ✓
           </button>
-          <button class="btn btn-danger btn-sm" onclick="Toast.show('Attention Needed', 'Document flagged for re-upload.', 'warning')">
+          <button class="btn btn-danger btn-sm" data-action="toast" data-title="Attention Needed" data-message="Document flagged for re-upload." data-type="warning">
             Reject ✕
           </button>
         </div>
@@ -955,4 +960,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial check
   checkAuth();
+
+  // CSP forbids inline event-handler attributes, so buttons carry data-action and are wired here
+  // (the generic click dispatcher lives in api.js).
+  Object.assign(window.UiActions, {
+    'switch-tab': (el) => switchAdminTab(el.dataset.tab),
+    'activity-dossier': (el) => window.openActivityDossier(Number(el.dataset.id)),
+    'application-dossier': (el) => window.openApplicationDossier(Number(el.dataset.id)),
+    'toggle-spam': (el) => window.toggleSpamRecord(Number(el.dataset.id), el.dataset.confirmed === 'true'),
+    'save-override': () => window.saveDossierOverride(),
+  });
 });

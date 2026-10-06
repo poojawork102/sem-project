@@ -129,6 +129,10 @@ body.admin-theme {
   --brand-purple: #B09BFF;
   --brand-purple-hover: #C9BBFF;
   --brand-purple-deep: #B09BFF;
+  /* Aliases must be re-declared here: var() resolves where it is declared (:root), so without
+     this the legacy --brand-blue stayed the light-theme purple on the dark admin background. */
+  --brand-blue: var(--brand-purple);
+  --brand-blue-hover: var(--brand-purple-hover);
   --on-brand: #1A1230;
   --butter-accent: #FFE08A;
   --btn-shadow: 0 8px 20px -8px rgba(176,155,255,.6);
@@ -566,7 +570,7 @@ textarea.form-control {
   -webkit-overflow-scrolling: touch;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-light);
-  background-color: #ffffff;
+  background-color: var(--bg-card);
 }
 
 .table {
@@ -634,7 +638,7 @@ textarea.form-control {
 }
 
 .modal-content {
-  background-color: #ffffff;
+  background-color: var(--bg-card);
   border-radius: var(--radius-xl);
   max-width: 580px;
   width: 100%;
@@ -677,7 +681,7 @@ textarea.form-control {
   width: 100%;
   max-width: 640px;
   height: 100%;
-  background-color: #ffffff;
+  background-color: var(--bg-card);
   box-shadow: -4px 0 25px rgba(0, 0, 0, 0.15);
   z-index: 1001;
   transform: translateX(100%);

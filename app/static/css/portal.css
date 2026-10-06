@@ -192,7 +192,7 @@
 
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 24px;
 }
 
@@ -203,11 +203,12 @@
 
 .metric-number {
   font-family: var(--font-display);
-  font-size: 2.25rem;
+  font-size: clamp(1.25rem, 2.4vw, 2.25rem);
   font-weight: 800;
   color: var(--text-primary);
   line-height: 1;
   margin-bottom: 6px;
+  overflow-wrap: anywhere;
 }
 
 .metric-number span {

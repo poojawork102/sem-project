@@ -440,3 +440,14 @@ body.admin-body {
   .admin-topbar { padding: 0 16px; }
   .admin-main { padding: 18px 16px; }
 }
+
+/* Login-card crest (portal.css, which defines it for the portal, is not loaded here) */
+.brand-crest {
+  background: var(--brand-purple);
+  color: var(--on-brand);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
