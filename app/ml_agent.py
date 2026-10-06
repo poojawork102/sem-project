@@ -40,11 +40,11 @@ def train(db: Session) -> dict:
     return {"trained": True, "samples": len(samples), "message": "Isolation Forest trained from approved normal submissions."}
 
 
-def assess(db: Session, full_name: str, email: str, ip_address: str, payload_size: int) -> tuple[float | None, str]:
+def assess(db: Session, full_name: str, email: str, ip_address: str, payload_size: int, at: datetime | None = None) -> tuple[float | None, str]:
     if not MODEL_PATH.exists():
         return None, "not_trained"
     artifact = joblib.load(MODEL_PATH)
-    raw = float(artifact["model"].decision_function([features_for(db, full_name, email, ip_address, payload_size)])[0])
+    raw = float(artifact["model"].decision_function([features_for(db, full_name, email, ip_address, payload_size, at)])[0])
     spread = max(artifact["max_raw"] - artifact["min_raw"], 0.001)
     # Lower Isolation Forest decision values are more unusual; 0=normal, 100=very anomalous.
     score = round(max(0.0, min(100.0, (artifact["max_raw"] - raw) / spread * 100)), 2)

@@ -5,11 +5,11 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app import main
+from app import main, submission
 from app.config import Settings, settings, validate_secrets
 from app.database import Base, get_db
 from app.detector import analyse_submission, choose_action
-from app.models import Application
+from app.models import ActivityLog, Application
 
 
 @pytest.fixture()
@@ -123,7 +123,7 @@ def test_successful_login_resets_failure_count(client, monkeypatch):
 
 # ---- Item 6: concurrent requests cannot all bypass the IP limit -----------------
 
-def test_concurrent_submissions_respect_ip_limit(client):
+def test_concurrent_submissions_respect_ip_limit(client, session_factory):
     names = ["Alpha Zeta", "Bravo Yankee", "Charlie Xray", "Delta Whiskey", "Echo Victor", "Foxtrot Uniform", "Golf Tango", "Hotel Sierra"]
 
     def submit(name):
@@ -131,8 +131,10 @@ def test_concurrent_submissions_respect_ip_limit(client):
         return client.post("/v1/portal/applications", json=portal_body(name, email)).json()
 
     with ThreadPoolExecutor(max_workers=8) as pool:
-        results = list(pool.map(submit, names))
-    flagged = [r for r in results if any("IP submitted" in reason for reason in r["reasons"])]
+        list(pool.map(submit, names))
+    # Reasons are admin-only (the portal response hides them), so read the audit log.
+    with session_factory() as db:
+        flagged = [row for row in db.query(ActivityLog).all() if any("IP submitted" in reason for reason in row.reasons)]
     # Limit is 3 per minute: serialized, exactly the 4th..8th see the IP over the limit.
     assert len(flagged) == len(names) - settings.rapid_submission_limit
 
@@ -140,7 +142,7 @@ def test_concurrent_submissions_respect_ip_limit(client):
 # ---- Item 7: CAPTCHA is labelled as simulated ----------------------------------
 
 def test_captcha_decision_is_flagged_as_simulated(client, monkeypatch):
-    monkeypatch.setattr(main, "choose_action", lambda score: "captcha")
+    monkeypatch.setattr(submission, "choose_action", lambda score: "captcha")
     body = client.post("/v1/portal/applications", json=portal_body()).json()
     assert body["action"] == "captcha"
     assert body["captcha_simulated"] is True

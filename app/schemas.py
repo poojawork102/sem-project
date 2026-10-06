@@ -3,6 +3,10 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
+# Cap on the JSON payload stored per submission (the portal form is well under 5 KB).
+MAX_PAYLOAD_BYTES = 20_000
+
+
 class SubmissionIn(BaseModel):
     full_name: str = Field(min_length=2, max_length=160)
     email: EmailStr
@@ -40,8 +44,13 @@ class DecisionOut(BaseModel):
     notice: str | None = None
 
 
-class PortalDecisionOut(DecisionOut):
+class PortalDecisionOut(BaseModel):
+    """What an applicant may see: the outcome only, never the risk score or reasons."""
+    action: Literal["allow", "captcha", "block"]
+    created_at: datetime
     reference_code: str
+    captcha_simulated: bool = False
+    notice: str | None = None
 
 
 class OverrideIn(BaseModel):

@@ -20,8 +20,13 @@ class RateLimiter:
 
     def _recent(self, key: str) -> list[float]:
         cutoff = time.monotonic() - self.window_seconds
-        self._events[key] = [t for t in self._events[key] if t > cutoff]
-        return self._events[key]
+        recent = [t for t in self._events.get(key, []) if t > cutoff]
+        if recent:
+            self._events[key] = recent
+        else:
+            # Drop idle keys so the dict cannot grow forever with one entry per IP ever seen.
+            self._events.pop(key, None)
+        return recent
 
     def is_blocked(self, key: str) -> bool:
         with self._lock:
@@ -29,7 +34,8 @@ class RateLimiter:
 
     def record(self, key: str) -> None:
         with self._lock:
-            self._recent(key).append(time.monotonic())
+            self._recent(key)
+            self._events[key].append(time.monotonic())
 
     def reset(self, key: str) -> None:
         with self._lock:

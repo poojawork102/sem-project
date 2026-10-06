@@ -1,21 +1,21 @@
 import json
 import secrets
-import threading
 from datetime import datetime, timedelta
 from pathlib import Path
 from fastapi import Depends, FastAPI, HTTPException, Request
+from sqlalchemy import func
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from .config import settings, validate_secrets
 from .ratelimit import RateLimiter
 from .database import ensure_schema, get_db
-from .detector import analyse_submission, choose_action
-from .models import ActivityLog, Application
+from .submission import process_submission
+from .models import Action, ActivityLog, Application
 from .reports import daily_csv, summary, weekly_trend_png
 from .scheduler import scheduler, start_scheduler
-from .ml_agent import assess as assess_ai, status as ai_status, train as train_ai
-from .xgboost_agent import predict as xgb_predict, status as xgb_status, train as xgb_train
+from .ml_agent import status as ai_status, train as train_ai
+from .xgboost_agent import status as xgb_status, train as xgb_train
 from .chatbot import chat_with_gemini
 from .schemas import ApplicationStatusIn, ChatMessageIn, DecisionOut, LoginIn, OverrideIn, PortalApplicationIn, PortalDecisionOut, SubmissionIn
 from .security import create_access_token, require_admin, require_submissions_api_key
@@ -23,8 +23,6 @@ from .security import create_access_token, require_admin, require_submissions_ap
 app = FastAPI(title="DSADPS Agent API", version="1.0.0")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-_submission_lock = threading.Lock()
-CAPTCHA_NOTICE = "Simulated: no CAPTCHA challenge is enforced yet; this decision is recorded for admin review only."
 # Failed logins only: 5 wrong attempts per client IP in 5 minutes -> HTTP 429.
 login_limiter = RateLimiter(max_events=5, window_seconds=300)
 # Every status lookup counts: 10 per client IP per minute -> HTTP 429 (slows guessing of reference codes).
@@ -86,50 +84,22 @@ def login(data: LoginIn, request: Request):
     return {"access_token": create_access_token(data.username), "token_type": "bearer"}
 
 
-def process_submission(data: SubmissionIn, db: Session) -> DecisionOut:
-    """Shared security gate used by the portal and a future external portal integration."""
-    payload_bytes = len(json.dumps(data.payload).encode("utf-8"))
-    program = str(data.payload.get("program", ""))
-    # ML scores are supplementary and do not affect the limits, so they run outside the lock.
-    ai_score, agent_status = assess_ai(db, data.full_name, str(data.email), data.ip_address, payload_bytes)
-    xgb_pred, xgb_conf = xgb_predict(db, data.full_name, str(data.email), data.ip_address, payload_bytes, program)
-    reference_code = f"CAP-{datetime.utcnow():%Y%m%d}-{secrets.token_hex(3).upper()}"
-    # Race fix: analyse_submission COUNTS earlier rows and we then INSERT this one. Without
-    # a lock, N concurrent requests could all count "0 so far" and all pass the limit.
-    # Holding the lock over count + insert + commit makes that sequence atomic per process.
-    # Limitation: it does not protect multiple uvicorn workers/containers; for that,
-    # use a DB-level lock (e.g. Postgres advisory lock) or a shared counter such as Redis.
-    with _submission_lock:
-        score, reasons = analyse_submission(db, data.full_name, data.email, data.ip_address)
-        action = choose_action(score)
-        application = Application(full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, status=action, reference_code=reference_code, phone=str(data.payload.get("phone", "")), program=program, payload=json.dumps(data.payload))
-        db.add(application)
-        db.flush()
-        log = ActivityLog(application_id=application.id, full_name=data.full_name, email=str(data.email), ip_address=data.ip_address, risk_score=score, ai_anomaly_score=ai_score, ai_status=agent_status, suggested_action=action, final_action=action, reasons=reasons, xgb_prediction=xgb_pred, xgb_confidence=xgb_conf)
-        db.add(log)
-        db.commit()
-    db.refresh(log)
-    # No CAPTCHA widget is wired in yet, so "captcha" is a recorded decision only.
-    # Say so explicitly instead of implying the applicant was actually challenged.
-    is_captcha = action == "captcha"
-    return DecisionOut(activity_id=log.id, risk_score=score, ai_anomaly_score=ai_score, ai_status=agent_status, action=action, reasons=reasons, created_at=log.created_at, captcha_simulated=is_captcha, notice=CAPTCHA_NOTICE if is_captcha else None)
-
-
 @app.post("/v1/submissions", response_model=DecisionOut)
 def assess_submission(data: SubmissionIn, _key: str = Depends(require_submissions_api_key), db: Session = Depends(get_db)):
     """Integration endpoint for a partner's existing admission portal over TLS in
     production. Requires an X-API-Key header because, unlike /v1/portal/applications,
     the caller (not this server) is trusted to report the real applicant IP."""
-    return process_submission(data, db)
+    decision, _application = process_submission(data, db)
+    return decision
 
 
 @app.post("/v1/portal/applications", response_model=PortalDecisionOut)
 def submit_portal_application(data: PortalApplicationIn, request: Request, db: Session = Depends(get_db)):
-    client_ip = request.client.host if request.client else "unknown"
     payload = data.model_dump(exclude={"full_name", "email"})
-    result = process_submission(SubmissionIn(full_name=data.full_name, email=data.email, ip_address=client_ip, payload=payload), db)
-    application = db.get(Application, db.get(ActivityLog, result.activity_id).application_id)
-    return PortalDecisionOut(**result.model_dump(), reference_code=application.reference_code or "")
+    decision, application = process_submission(SubmissionIn(full_name=data.full_name, email=data.email, ip_address=client_ip(request), payload=payload), db)
+    # The applicant only learns the outcome. The score and reasons stay admin-only,
+    # otherwise an attacker could read the thresholds back and tune around them.
+    return PortalDecisionOut(action=decision.action, created_at=decision.created_at, captcha_simulated=decision.captcha_simulated, notice=decision.notice, reference_code=application.reference_code or "")
 
 
 @app.post("/v1/portal/application-status")
@@ -138,10 +108,10 @@ def portal_application_status(data: ApplicationStatusIn, request: Request, db: S
     if status_limiter.is_blocked(ip):
         raise HTTPException(status_code=429, detail="Too many status lookups. Please wait a minute and try again.")
     status_limiter.record(ip)
-    application = db.query(Application).filter(Application.reference_code == data.reference_code.upper(), Application.email == str(data.email)).first()
+    application = db.query(Application).filter(Application.reference_code == data.reference_code.strip().upper(), func.lower(Application.email) == str(data.email).lower()).first()
     if not application:
         raise HTTPException(status_code=404, detail="No application matches that reference and email.")
-    labels = {"allow": "Application received", "captcha": "Verification required", "block": "Application held for review"}
+    labels = {Action.ALLOW.value: "Application received", Action.CAPTCHA.value: "Verification required", Action.BLOCK.value: "Application held for review"}
     # Data minimisation: the 6-hex ref code is a weak secret, so return only what the status
     # page needs. Phone, DOB, statement and the email are never sent back; the name is masked.
     return {
